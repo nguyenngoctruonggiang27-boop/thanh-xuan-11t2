@@ -94,6 +94,9 @@
     ::-webkit-scrollbar-track { background: #FFFDF7; }
     ::-webkit-scrollbar-thumb { background: #F4B8CE; border-radius: 9999px; border: 2px solid #FFFDF7; }
     ::-webkit-scrollbar-thumb:hover { background: #E05780; }
+    /* Đĩa than quay chậm */
+    @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .animate-spin-slow { animation: spinSlow 4s linear infinite; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-pastel-pink selection:text-pastel-ink">
