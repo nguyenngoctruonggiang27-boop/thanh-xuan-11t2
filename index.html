@@ -80,27 +80,6 @@ body {
 .polaroid-card {
   background-color: #FFF9F4 !important; /* Nền ảnh polaroid hơi ngả cam sữa cực nhạt */
 }
-
-/* 3. HIỆU ỨNG CHO KẸP NƠ, CÀ RỐT CHIBI LƠ LỬNG */
-.floating-doodle {
-  position: fixed; /* Bám theo màn hình khi lướt */
-  z-index: -1; 
-  opacity: 0.9; 
-  pointer-events: none;
-  animation: floatAround 8s ease-in-out infinite alternate;
-}
-.doodle-1 { top: 12%; left: 4%; font-size: 3.5rem; animation-delay: 0s; }   /* Kẹp Nơ */
-.doodle-2 { top: 40%; right: 3%; font-size: 3rem; animation-delay: 1.5s; }  /* Cà rốt */
-.doodle-3 { bottom: 15%; left: 6%; font-size: 4rem; animation-delay: 3s; }  /* Gấu */
-.doodle-4 { top: 18%; right: 18%; font-size: 2.8rem; animation-delay: 4.5s; } /* Dâu tây */
-.doodle-5 { bottom: 25%; right: 12%; font-size: 3.2rem; animation-delay: 2s; }  /* Hoa tulip */
-
-@keyframes floatAround {
-  0% { transform: translateY(0px) rotate(0deg) scale(1); }
-  50% { transform: translateY(-25px) rotate(15deg) scale(1.1); }
-  100% { transform: translateY(10px) rotate(-10deg) scale(0.95); }
-}
-
     /* Hiệu ứng viền sổ tay cuốn vở ở mép trái màn hình */
     body::before {
       content: "";
