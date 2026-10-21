@@ -55,34 +55,50 @@
   --dot-color: rgba(255, 105, 180, 0.15); /* Chấm bi đậm hơn một chút */
 }
 
+/* 1. MÀU NỀN BÊN NGOÀI: Đậm hơn, lưới rõ hơn và loang màu rực rỡ */
 body {
-  background-color: #FFFDF7; /* Màu nền gốc */
-  /* Phối 4 mảng màu loang pastel và lưới ô ly */
+  background-color: #FCE4EC; /* Nền tảng màu hồng phấn */
   background-image: 
-    /* Lưới học sinh cute */
-    linear-gradient(to right, rgba(255, 182, 193, 0.6) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 182, 193, 0.6) 1px, transparent 1px),
-    /* Mảng màu hồng góc trên trái */
-    radial-gradient(circle at 10% 10%, rgba(255, 214, 224, 0.9) 0%, transparent 45%),
-    /* Mảng màu xanh mây góc trên phải */
-    radial-gradient(circle at 90% 15%, rgba(200, 231, 255, 0.9) 0%, transparent 45%),
-    /* Mảng màu vàng bơ góc dưới phải */
-    radial-gradient(circle at 85% 90%, rgba(255, 243, 176, 0.8) 0%, transparent 45%),
-    /* Mảng màu tím lavender góc dưới trái */
-    radial-gradient(circle at 15% 85%, rgba(229, 212, 255, 0.8) 0%, transparent 45%);
-  
-  background-size: 
-    30px 30px, /* Kích thước viền lưới dọc */
-    30px 30px, /* Kích thước viền lưới ngang */
-    100vw 100vh, /* Mảng màu 1 */
-    100vw 100vh, /* Mảng màu 2 */
-    100vw 100vh, /* Mảng màu 3 */
-    100vw 100vh; /* Mảng màu 4 */
-    
-  background-attachment: fixed; /* Cố định mảng màu khi cuộn trang */
+    linear-gradient(to right, rgba(255, 143, 171, 0.35) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 143, 171, 0.35) 1px, transparent 1px),
+    radial-gradient(circle at 10% 10%, rgba(255, 179, 198, 0.9) 0%, transparent 45%),
+    radial-gradient(circle at 90% 15%, rgba(186, 225, 255, 0.9) 0%, transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba(255, 235, 153, 0.8) 0%, transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(229, 212, 255, 0.9) 0%, transparent 45%);
+  background-size: 30px 30px, 30px 30px, 100vw 100vh, 100vw 100vh, 100vw 100vh, 100vw 100vh;
+  background-attachment: fixed; /* Cố định nền khi cuộn trang */
   color: #3D314A;
   overflow-x: hidden;
   position: relative;
+}
+
+/* 2. CÁC Ô VUÔNG BÊN TRONG: Đổi từ trắng sang Kem Sữa Ấm (khác biệt với nền ngoài) */
+.bg-white\/90, .bg-white\/95, .bg-pastel-cream {
+  background-color: rgba(255, 252, 248, 0.92) !important; /* Trắng kem sữa */
+  border-color: #FFC0CB !important; /* Đổi viền các ô thành hồng pastel */
+}
+.polaroid-card {
+  background-color: #FFF9F4 !important; /* Nền ảnh polaroid hơi ngả cam sữa cực nhạt */
+}
+
+/* 3. HIỆU ỨNG CHO KẸP NƠ, CÀ RỐT CHIBI LƠ LỬNG */
+.floating-doodle {
+  position: fixed; /* Bám theo màn hình khi lướt */
+  z-index: -1; 
+  opacity: 0.9; 
+  pointer-events: none;
+  animation: floatAround 8s ease-in-out infinite alternate;
+}
+.doodle-1 { top: 12%; left: 4%; font-size: 3.5rem; animation-delay: 0s; }   /* Kẹp Nơ */
+.doodle-2 { top: 40%; right: 3%; font-size: 3rem; animation-delay: 1.5s; }  /* Cà rốt */
+.doodle-3 { bottom: 15%; left: 6%; font-size: 4rem; animation-delay: 3s; }  /* Gấu */
+.doodle-4 { top: 18%; right: 18%; font-size: 2.8rem; animation-delay: 4.5s; } /* Dâu tây */
+.doodle-5 { bottom: 25%; right: 12%; font-size: 3.2rem; animation-delay: 2s; }  /* Hoa tulip */
+
+@keyframes floatAround {
+  0% { transform: translateY(0px) rotate(0deg) scale(1); }
+  50% { transform: translateY(-25px) rotate(15deg) scale(1.1); }
+  100% { transform: translateY(10px) rotate(-10deg) scale(0.95); }
 }
 
     /* Hiệu ứng viền sổ tay cuốn vở ở mép trái màn hình */
@@ -104,6 +120,12 @@ body {
       z-index: 35;
       pointer-events: none;
     }
+    <!-- Bố cục trang trí Chibi dễ thương -->
+  <div class="floating-doodle doodle-1">🎀</div> <!-- Kẹp nơ -->
+  <div class="floating-doodle doodle-2">🥕</div> <!-- Củ cà rốt -->
+  <div class="floating-doodle doodle-3">🧸</div> <!-- Gấu bông -->
+  <div class="floating-doodle doodle-4">🍓</div> <!-- Trái dâu -->
+  <div class="floating-doodle doodle-5">🌷</div> <!-- Hoa tulip -->
     .washi-tape {
       position: absolute; top: -11px; left: 50%; transform: translateX(-50%) rotate(-2deg);
       width: 96px; height: 24px; background: rgba(255, 214, 224, 0.78);
