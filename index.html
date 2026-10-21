@@ -234,7 +234,20 @@
           <div class="text-2xl mb-1">💌</div><div id="statGuestbookCount" class="font-hand text-3xl font-bold text-pastel-pinkDeep">0</div><div class="text-xs font-bold text-pastel-muted mt-1">Lời lưu bút</div>
         </div>
       </div>
-
+<!-- ĐỒNG HỒ ĐẾM NGƯỢC THPT QUỐC GIA 2028 -->
+      <div class="bg-white/90 rounded-3xl p-6 border-2 border-dashed border-pastel-blueDark shadow-soft flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden mb-8">
+        <div class="washi-tape washi-blue"></div>
+        <div>
+          <h3 class="font-hand text-2xl font-bold text-pastel-ink">⏳ Hẹn giờ Thanh Xuân</h3>
+          <p class="text-sm text-pastel-muted mt-1">Đếm ngược đến Kỳ thi THPT Quốc Gia 2028</p>
+        </div>
+        <div class="flex gap-2 sm:gap-3 text-center">
+          <div class="bg-pastel-blue/30 rounded-xl p-3 w-16 sm:w-20 border border-blue-100"><span id="cdDays" class="block font-hand text-2xl sm:text-3xl font-bold text-sky-700">00</span><span class="text-[10px] font-bold uppercase text-sky-900">Ngày</span></div>
+          <div class="bg-pastel-pink/30 rounded-xl p-3 w-16 sm:w-20 border border-pink-100"><span id="cdHours" class="block font-hand text-2xl sm:text-3xl font-bold text-pastel-pinkDeep">00</span><span class="text-[10px] font-bold uppercase text-pastel-pinkDeep">Giờ</span></div>
+          <div class="bg-pastel-butter/50 rounded-xl p-3 w-16 sm:w-20 border border-amber-100"><span id="cdMins" class="block font-hand text-2xl sm:text-3xl font-bold text-amber-700">00</span><span class="text-[10px] font-bold uppercase text-amber-800">Phút</span></div>
+          <div class="bg-pastel-lavender/40 rounded-xl p-3 w-16 sm:w-20 border border-purple-100"><span id="cdSecs" class="block font-hand text-2xl sm:text-3xl font-bold text-purple-700">00</span><span class="text-[10px] font-bold uppercase text-purple-800">Giây</span></div>
+        </div>
+      </div>
       <div class="space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <h2 class="font-hand text-2xl sm:text-3xl font-bold text-pastel-ink">✨ Góc Kỷ Niệm Của Lớp</h2>
@@ -450,6 +463,20 @@
       🌸 <strong>Thanh Xuân T2 2025-2028</strong> — Sổ lưu niệm học đường trực tuyến
     </div>
   </footer>
+  <!-- TRẠM RADIO THANH XUÂN -->
+  <div id="lofiRadio" class="fixed bottom-6 left-6 z-40 flex items-center gap-3 bg-white/90 backdrop-blur-md px-4 py-3 rounded-full border-2 border-pink-200 shadow-polaroid hover:scale-105 transition cursor-pointer" onclick="toggleMusic()">
+    <div id="diskIcon" class="w-10 h-10 rounded-full bg-pastel-ink flex items-center justify-center animate-spin-slow" style="animation-play-state: paused;">
+      <div class="w-3 h-3 rounded-full bg-pastel-pink"></div>
+    </div>
+    <div class="pr-2">
+      <p class="font-hand text-sm font-bold text-pastel-ink">Trạm Radio T2</p>
+      <p id="musicStatus" class="text-[10px] font-bold text-pastel-muted">Đang tạm dừng (Bấm để phát)</p>
+    </div>
+    <!-- Link nhạc Lofi không bản quyền. Ban có thể thay bằng link MP3 khác nếu muốn -->
+    <audio id="bgMusicAudio" loop>
+      <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+    </audio>
+  </div>
 
   <!-- ============================================================================
        MODALS
@@ -1051,7 +1078,45 @@
       if(t==='.env.example') triggerBrowserDownload(new Blob(['VITE_SUPABASE_URL=\nVITE_SUPABASE_ANON_KEY='],{type:'text/plain'}), ".env.example");
     }
     function populateSqlAndDocsPreviews() { document.getElementById("sqlSchemaPreviewBox").value = "-- Paste schema here"; } // Omitted full string for brevity, it will use DB if synced.
+// --- XỬ LÝ ĐỒNG HỒ ĐẾM NGƯỢC ---
+    const targetDate = new Date("2028-06-25T00:00:00").getTime();
+    setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+      if (distance < 0) return;
+      document.getElementById("cdDays").textContent = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+      document.getElementById("cdHours").textContent = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+      document.getElementById("cdMins").textContent = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+      document.getElementById("cdSecs").textContent = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
+    }, 1000);
 
+    // --- XỬ LÝ TRẠM RADIO TỰ ĐỘNG ---
+    let isMusicPlaying = false;
+    function toggleMusic() {
+      const bgMusic = document.getElementById("bgMusicAudio");
+      const diskIcon = document.getElementById("diskIcon");
+      const musicStatus = document.getElementById("musicStatus");
+      if (!bgMusic) return;
+
+      if (isMusicPlaying) {
+        bgMusic.pause();
+        diskIcon.style.animationPlayState = 'paused';
+        musicStatus.textContent = "Đang tạm dừng (Bấm để phát)";
+      } else {
+        bgMusic.volume = 0.5;
+        bgMusic.play().then(() => {
+          diskIcon.style.animationPlayState = 'running';
+          musicStatus.textContent = "Đang phát Lofi Chill 🎵";
+        }).catch(e => console.log("Trình duyệt chặn autoplay"));
+      }
+      isMusicPlaying = !isMusicPlaying;
+    }
+
+    // Tự động bật nhạc khi người dùng click lần đầu tiên vào web
+    document.body.addEventListener('click', function autoPlayMusicOnce() {
+      if (!isMusicPlaying) toggleMusic();
+      document.body.removeEventListener('click', autoPlayMusicOnce);
+    }, { once: true });
     window.addEventListener("DOMContentLoaded", () => { switchSection("home"); initSupabaseApp(); });
   </script>
 </body>
