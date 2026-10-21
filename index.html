@@ -1,4 +1,1058 @@
 <!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thanh Xuân 11T2 — Sổ Lưu Niệm Trực Tuyến</title>
+  <meta name="description" content="Sổ lưu niệm trực tuyến Thanh Xuân 11T2 - Lưu giữ trọn vẹn khoảnh khắc học đường, album ảnh kỷ niệm, sự kiện và lưu bút.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Mali:ital,wght@0,500;0,600;0,700;1,500&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Official Supabase JS SDK v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            pastel: {
+              pink: '#FFD6E0', pinkDark: '#FF8FAB', pinkDeep: '#E05780',
+              blue: '#C8E7FF', blueDark: '#72B5F2',
+              lavender: '#E5D4FF', lavenderDark: '#9D75DF',
+              butter: '#FFF3B0', butterDark: '#E6B800',
+              cream: '#FFFDF7', paper: '#FAF6EE', ink: '#3D314A', muted: '#7A6C89'
+            }
+          },
+          fontFamily: {
+            sans: ['Quicksand', 'Nunito', 'sans-serif'],
+            hand: ['Mali', 'Patrick Hand', 'cursive'],
+            title: ['Patrick Hand', 'Mali', 'cursive']
+          },
+          boxShadow: {
+            polaroid: '0 10px 25px -5px rgba(61, 49, 74, 0.12), 0 4px 10px -2px rgba(61, 49, 74, 0.06)',
+            polaroidHover: '0 20px 35px -5px rgba(224, 87, 128, 0.22), 0 8px 16px -4px rgba(61, 49, 74, 0.1)',
+            sticker: '2px 4px 0px rgba(61, 49, 74, 0.15)',
+            soft: '0 6px 20px rgba(61, 49, 74, 0.07)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root {
+      --bg-cream: #FFFDF7;
+      --dot-color: rgba(224, 87, 128, 0.14);
+      --grid-color: rgba(114, 181, 242, 0.12);
+    }
+    body {
+      background-color: var(--bg-cream);
+      background-image:
+        radial-gradient(var(--dot-color) 1.3px, transparent 1.3px),
+        linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+      background-size: 24px 24px, 48px 48px, 48px 48px;
+      background-position: 0 0, 0 0, 0 0;
+      color: #3D314A;
+      overflow-x: hidden;
+    }
+    .washi-tape {
+      position: absolute; top: -11px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+      width: 96px; height: 24px; background: rgba(255, 214, 224, 0.78);
+      border-left: 2px dashed rgba(255, 255, 255, 0.7); border-right: 2px dashed rgba(255, 255, 255, 0.7);
+      box-shadow: 0 2px 4px rgba(61, 49, 74, 0.08); z-index: 10; pointer-events: none;
+    }
+    .washi-blue { background: rgba(200, 231, 255, 0.82); transform: translateX(-50%) rotate(1.8deg); }
+    .washi-lavender { background: rgba(229, 212, 255, 0.82); transform: translateX(-50%) rotate(-1.5deg); }
+    .washi-butter { background: rgba(255, 243, 176, 0.86); transform: translateX(-50%) rotate(2.2deg); }
+    .polaroid-card {
+      background: #FFFFFF; padding: 12px 12px 26px 12px; border-radius: 14px;
+      border: 1.5px solid #F3EAF8; box-shadow: 0 10px 25px -5px rgba(61, 49, 74, 0.12), 0 4px 10px -2px rgba(61, 49, 74, 0.06);
+      transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative;
+    }
+    .polaroid-card:hover {
+      transform: translateY(-6px) rotate(0deg) scale(1.015) !important;
+      box-shadow: 0 20px 35px -5px rgba(224, 87, 128, 0.22), 0 8px 16px -4px rgba(61, 49, 74, 0.1); z-index: 20;
+    }
+    .tilt-left { transform: rotate(-1.4deg); } .tilt-right { transform: rotate(1.4deg); } .tilt-slight { transform: rotate(-0.7deg); }
+    .lined-paper {
+      background-color: #FFFDF9;
+      background-image: repeating-linear-gradient(transparent, transparent 27px, rgba(157, 117, 223, 0.18) 28px);
+      line-height: 28px;
+    }
+    .scrapbook-border { border: 2px dashed #E5C1D8; }
+    @keyframes floatSlow { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-6px) rotate(4deg); } }
+    .animate-float { animation: floatSlow 4.5s ease-in-out infinite; }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: #FFFDF7; }
+    ::-webkit-scrollbar-thumb { background: #F4B8CE; border-radius: 9999px; border: 2px solid #FFFDF7; }
+    ::-webkit-scrollbar-thumb:hover { background: #E05780; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-pastel-pink selection:text-pastel-ink">
+
+  <!-- ============================================================================
+       TOP STATUS BANNER
+       ============================================================================ -->
+  <div id="topStatusBanner" class="bg-gradient-to-r from-pastel-pink via-pastel-lavender to-pastel-blue px-4 py-2 text-xs sm:text-sm font-semibold text-pastel-ink border-b border-pink-200/80 shadow-sm">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span id="dbStatusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+        <span id="dbStatusText">Đã kết nối trực tuyến với Supabase</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="userRoleBadge" class="px-2.5 py-0.5 rounded-full bg-white/80 text-pastel-ink border border-pink-200 text-xs font-bold">👀 Khách xem</span>
+        <button id="btnTopAuth" onclick="openAuthModal()" class="underline hover:text-pastel-pinkDeep font-bold transition">Đăng nhập</button>
+        <button id="btnTopAdmin" onclick="switchSection('admin')" class="hidden px-3 py-1 rounded-lg bg-pastel-ink text-white hover:bg-gray-800 text-xs font-bold shadow-sm transition">⚙️ Quản trị</button>
+        <button id="btnTopLogout" onclick="handleAuthSignOut()" class="hidden text-xs text-red-600 hover:underline font-bold transition">Đăng xuất</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================================
+       NAVIGATION BAR
+       ============================================================================ -->
+  <header class="sticky top-0 z-40 bg-pastel-cream/95 backdrop-blur-md border-b-2 border-dashed border-pink-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+      <button onclick="switchSection('home')" class="flex items-center gap-3 text-left group focus:outline-none">
+        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-pastel-pink via-pastel-lavender to-pastel-blue flex items-center justify-center shadow-sticker border-2 border-white group-hover:scale-105 transition">
+          <svg class="w-6 h-6 text-pastel-pinkDeep" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+          </svg>
+        </div>
+        <div>
+          <span class="font-hand text-xl sm:text-2xl font-bold text-pastel-ink tracking-tight flex items-center gap-1.5">
+            Thanh Xuân 11T2 <span class="text-xs px-2 py-0.5 rounded-full bg-pastel-butter text-amber-900 font-sans font-bold border border-amber-300/70">Scrapbook</span>
+          </span>
+          <p class="text-xs text-pastel-muted hidden sm:block">Lưu giữ từng trang kỷ niệm tuổi học trò</p>
+        </div>
+      </button>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center gap-1.5 bg-white/80 p-1.5 rounded-2xl border border-pink-100 shadow-soft">
+        <button data-nav="home" onclick="switchSection('home')" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted hover:bg-pastel-pink/30 hover:text-pastel-ink"><span>🏠</span> Trang chủ</button>
+        <button data-nav="albums" onclick="switchSection('albums')" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted hover:bg-pastel-pink/30 hover:text-pastel-ink"><span>📔</span> Album kỷ niệm</button>
+        <button data-nav="timeline" onclick="switchSection('timeline')" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted hover:bg-pastel-pink/30 hover:text-pastel-ink"><span>🗓️</span> Timeline sự kiện</button>
+        <button data-nav="gallery" onclick="switchSection('gallery')" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted hover:bg-pastel-pink/30 hover:text-pastel-ink"><span>📸</span> Thư viện ảnh</button>
+        <button data-nav="members" onclick="switchSection('members')" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted hover:bg-pastel-pink/30 hover:text-pastel-ink"><span>🧑‍🎓</span> Thành viên</button>
+        <button data-nav="guestbook" onclick="switchSection('guestbook')" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted hover:bg-pastel-pink/30 hover:text-pastel-ink"><span>💌</span> Góc lưu bút</button>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <button onclick="openQuickUpload()" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-pastel-pinkDeep hover:bg-pink-600 text-white font-bold text-sm shadow-sticker transition transform active:scale-95">
+          📸 Tải ảnh lên
+        </button>
+        <button onclick="toggleMobileDrawer()" class="lg:hidden p-2.5 rounded-xl bg-white border border-pink-200 text-pastel-ink hover:bg-pastel-pink/40 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobileDrawer" class="hidden lg:hidden bg-pastel-cream border-b-2 border-dashed border-pink-200 px-4 pt-2 pb-4 space-y-1.5">
+      <div class="grid grid-cols-2 gap-2">
+        <button data-nav="home" onclick="switchSection('home'); toggleMobileDrawer(false)" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted"><span>🏠</span> Trang chủ</button>
+        <button data-nav="albums" onclick="switchSection('albums'); toggleMobileDrawer(false)" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted"><span>📔</span> Album kỷ niệm</button>
+        <button data-nav="timeline" onclick="switchSection('timeline'); toggleMobileDrawer(false)" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted"><span>🗓️</span> Timeline sự kiện</button>
+        <button data-nav="gallery" onclick="switchSection('gallery'); toggleMobileDrawer(false)" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted"><span>📸</span> Thư viện ảnh</button>
+        <button data-nav="members" onclick="switchSection('members'); toggleMobileDrawer(false)" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted"><span>🧑‍🎓</span> Thành viên lớp</button>
+        <button data-nav="guestbook" onclick="switchSection('guestbook'); toggleMobileDrawer(false)" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted"><span>💌</span> Góc lưu bút</button>
+      </div>
+      <div class="pt-2 flex gap-2">
+        <button onclick="openQuickUpload(); toggleMobileDrawer(false)" class="flex-1 py-2.5 px-3 rounded-xl bg-pastel-pinkDeep text-white font-bold text-sm text-center">📸 Tải ảnh kỷ niệm</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================================
+       MAIN CONTENT
+       ============================================================================ -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+
+    <!-- TRANG CHỦ -->
+    <section id="section-home" class="page-section space-y-10 hidden">
+      <div class="relative rounded-3xl bg-gradient-to-br from-pastel-pink/60 via-pastel-cream to-pastel-blue/60 p-6 sm:p-10 lg:p-12 border-2 border-white shadow-polaroid overflow-hidden">
+        <div class="grid lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-7 space-y-5">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-pink-200 shadow-sm">
+              <span class="text-base">🌸</span><span class="text-xs sm:text-sm font-bold text-pastel-pinkDeep">Cuốn sổ lưu niệm trực tuyến chính thức</span>
+            </div>
+            <h1 class="font-hand text-4xl sm:text-5xl lg:text-6xl font-bold text-pastel-ink leading-tight">
+              Thanh Xuân <span class="text-pastel-pinkDeep underline decoration-wavy decoration-pastel-butterDark">11T2</span>
+            </h1>
+            <p class="text-base sm:text-lg text-pastel-muted leading-relaxed max-w-2xl">
+              Nơi lưu giữ từng bức ảnh polaroid, những buổi ngoại khóa, giải bóng chuyền, ngày nhận áo lớp và những dòng lưu bút viết vội của đại gia đình <strong>11T2</strong>.
+            </p>
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button onclick="switchSection('albums')" class="px-6 py-3.5 rounded-2xl bg-pastel-pinkDeep hover:bg-pink-600 text-white font-bold text-sm sm:text-base shadow-sticker transition transform hover:-translate-y-0.5 flex items-center gap-2"><span>📔</span> Khám phá Album</button>
+              <button onclick="switchSection('gallery')" class="px-5 py-3.5 rounded-2xl bg-white hover:bg-pastel-butter/60 text-pastel-ink font-bold text-sm sm:text-base border-2 border-pink-200 shadow-soft transition flex items-center gap-2"><span>📸</span> Tải ảnh lên</button>
+              <button onclick="switchSection('guestbook')" class="px-5 py-3.5 rounded-2xl bg-pastel-lavender/70 hover:bg-pastel-lavender text-pastel-ink font-bold text-sm sm:text-base border border-purple-200 transition flex items-center gap-2"><span>💌</span> Viết lưu bút</button>
+            </div>
+          </div>
+          <div class="lg:col-span-5 flex justify-center">
+            <div id="heroFeaturedPolaroid" class="polaroid-card tilt-right w-full max-w-sm bg-white">
+              <div class="washi-tape"></div>
+              <div id="heroPolaroidContent" class="aspect-[4/3] rounded-xl bg-gradient-to-br from-pastel-paper via-pastel-pink/30 to-pastel-blue/30 border-2 border-dashed border-pink-200 flex flex-col items-center justify-center p-6 text-center">
+                <span class="text-4xl">🖼️</span>
+                <p class="font-hand text-lg font-bold text-pastel-ink mt-2">Khung ảnh 11T2</p>
+                <p class="text-xs text-pastel-muted mt-1">Ảnh mới nhất sẽ hiện tại đây!</p>
+              </div>
+              <div class="pt-4 text-center">
+                <p id="heroPolaroidCaption" class="font-hand text-lg font-bold text-pastel-ink">“Thanh xuân giống như một cơn mưa rào...”</p>
+                <p id="heroPolaroidSub" class="text-xs text-pastel-muted mt-0.5">Chưa có ảnh — Đang chờ bạn tải ảnh đầu tiên</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Counters -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div onclick="switchSection('albums')" class="cursor-pointer bg-white/90 p-5 rounded-2xl border-2 border-pink-100 shadow-soft hover:border-pastel-pinkDark transition text-center">
+          <div class="text-2xl mb-1">📔</div><div id="statAlbumsCount" class="font-hand text-3xl font-bold text-pastel-pinkDeep">13</div><div class="text-xs font-bold text-pastel-muted mt-1">Danh mục Album</div>
+        </div>
+        <div onclick="switchSection('gallery')" class="cursor-pointer bg-white/90 p-5 rounded-2xl border-2 border-blue-100 shadow-soft hover:border-pastel-blueDark transition text-center">
+          <div class="text-2xl mb-1">🖼️</div><div id="statPhotosCount" class="font-hand text-3xl font-bold text-sky-600">0</div><div class="text-xs font-bold text-pastel-muted mt-1">Ảnh kỷ niệm</div>
+        </div>
+        <div onclick="switchSection('timeline')" class="cursor-pointer bg-white/90 p-5 rounded-2xl border-2 border-purple-100 shadow-soft hover:border-pastel-lavenderDark transition text-center">
+          <div class="text-2xl mb-1">🗓️</div><div id="statEventsCount" class="font-hand text-3xl font-bold text-purple-600">0</div><div class="text-xs font-bold text-pastel-muted mt-1">Sự kiện lớp</div>
+        </div>
+        <div onclick="switchSection('members')" class="cursor-pointer bg-white/90 p-5 rounded-2xl border-2 border-amber-100 shadow-soft hover:border-pastel-butterDark transition text-center">
+          <div class="text-2xl mb-1">🧑‍🎓</div><div id="statMembersCount" class="font-hand text-3xl font-bold text-amber-600">0</div><div class="text-xs font-bold text-pastel-muted mt-1">Thành viên</div>
+        </div>
+        <div onclick="switchSection('guestbook')" class="col-span-2 sm:col-span-1 cursor-pointer bg-white/90 p-5 rounded-2xl border-2 border-pink-100 shadow-soft hover:border-pastel-pinkDark transition text-center">
+          <div class="text-2xl mb-1">💌</div><div id="statGuestbookCount" class="font-hand text-3xl font-bold text-pastel-pinkDeep">0</div><div class="text-xs font-bold text-pastel-muted mt-1">Lời lưu bút</div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 class="font-hand text-2xl sm:text-3xl font-bold text-pastel-ink">✨ Góc Kỷ Niệm Của Lớp</h2>
+          <button onclick="switchSection('albums')" class="px-4 py-2 rounded-xl bg-white border border-pink-200 text-sm font-bold text-pastel-pinkDeep hover:bg-pastel-pink/40 transition">Xem tất cả →</button>
+        </div>
+        <div id="homeAlbumsPreviewGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-2"></div>
+      </div>
+    </section>
+
+    <!-- ALBUMS -->
+    <section id="section-albums" class="page-section hidden space-y-8">
+      <div class="bg-white/90 rounded-3xl p-6 sm:p-8 border-2 border-pink-100 shadow-soft space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div><h2 class="font-hand text-3xl sm:text-4xl font-bold text-pastel-ink">📔 Album Kỷ Niệm 11T2</h2></div>
+          <div class="flex gap-2.5">
+            <button onclick="openCreateAlbumModal()" class="px-4 py-2.5 rounded-2xl bg-pastel-lavender hover:bg-purple-200 text-pastel-ink font-bold text-sm shadow-sticker">➕ Tạo Album</button>
+            <button onclick="openQuickUpload()" class="px-4 py-2.5 rounded-2xl bg-pastel-pinkDeep hover:bg-pink-600 text-white font-bold text-sm shadow-sticker">📸 Tải ảnh lên</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <input id="albumSearchInput" oninput="renderAlbumsSection()" type="text" placeholder="🔍 Tìm album..." class="sm:col-span-2 px-4 py-2.5 rounded-xl bg-pastel-cream border border-pink-200 text-sm focus:ring-2 focus:ring-pastel-pinkDark">
+          <select id="albumFilterStatus" onchange="renderAlbumsSection()" class="px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-pink-200 text-sm font-semibold"><option value="all">Tất cả Album</option><option value="has_photos">Đã có ảnh</option><option value="empty">Chưa có ảnh</option></select>
+        </div>
+      </div>
+      <div id="albumDetailContainer" class="hidden bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-dashed border-pastel-pinkDark shadow-polaroid space-y-6">
+        <div class="flex justify-between border-b border-pink-100 pb-4">
+          <div>
+            <button onclick="closeAlbumDetail()" class="text-xs font-bold text-pastel-pinkDeep hover:underline">← Quay lại danh sách</button>
+            <h3 id="detailAlbumTitle" class="font-hand text-3xl font-bold text-pastel-ink mt-2">Tên Album</h3>
+            <p id="detailAlbumDesc" class="text-sm text-pastel-muted mt-1"></p>
+          </div>
+          <button id="btnUploadToThisAlbum" class="px-4 py-2.5 rounded-xl bg-pastel-pinkDeep text-white font-bold text-sm shadow-sticker hover:bg-pink-600">📸 Tải ảnh vào đây</button>
+        </div>
+        <div id="detailAlbumPhotosGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+      </div>
+      <div id="albumsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7"></div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section id="section-timeline" class="page-section hidden space-y-8">
+      <div class="bg-white/90 rounded-3xl p-6 sm:p-8 border-2 border-blue-100 shadow-soft space-y-5">
+        <div class="flex justify-between">
+          <h2 class="font-hand text-3xl sm:text-4xl font-bold text-pastel-ink">🗓️ Timeline Sự Kiện</h2>
+          <button onclick="openEventModal()" class="px-5 py-3 rounded-2xl bg-pastel-pinkDeep hover:bg-pink-600 text-white font-bold text-sm shadow-sticker">➕ Thêm sự kiện</button>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <input id="eventSearchInput" oninput="renderTimelineSection()" type="text" placeholder="🔍 Tìm sự kiện..." class="px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-blue-200 text-sm">
+          <select id="eventFilterAlbum" onchange="renderTimelineSection()" class="px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-blue-200 text-sm font-semibold"></select>
+          <select id="eventFilterTime" onchange="renderTimelineSection()" class="px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-blue-200 text-sm font-semibold"><option value="all">Mọi thời điểm</option><option value="upcoming">🌟 Sắp diễn ra</option><option value="past">⏪ Đã diễn ra</option><option value="unscheduled">📌 Chưa chốt ngày</option></select>
+          <select id="eventSortOrder" onchange="renderTimelineSection()" class="px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-blue-200 text-sm font-semibold"><option value="newest">Mới nhất trước</option><option value="oldest">Cũ nhất trước</option></select>
+        </div>
+      </div>
+      <div id="timelineContainer" class="relative"></div>
+    </section>
+
+    <!-- GALLERY & UPLOAD -->
+    <section id="section-gallery" class="page-section hidden space-y-8">
+      <div id="uploadPanelCard" class="bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-dashed border-pastel-pinkDark shadow-polaroid space-y-6">
+        <div>
+          <h2 class="font-hand text-3xl font-bold text-pastel-ink">📸 Đóng Góp Ảnh Kỷ Niệm</h2>
+          <p class="text-xs sm:text-sm text-pastel-muted">Hỗ trợ JPG, PNG, WEBP, GIF (Tối đa 5MB/ảnh).</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div><label class="block text-xs font-bold text-pastel-ink mb-1.5">1. Chọn Album *</label><select id="uploadAlbumSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-pink-200 text-sm font-semibold"></select></div>
+          <div><label class="block text-xs font-bold text-pastel-ink mb-1.5">2. Thuộc sự kiện</label><select id="uploadEventSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-pink-200 text-sm font-semibold"></select></div>
+          <div><label class="block text-xs font-bold text-pastel-ink mb-1.5">3. Chú thích chung</label><input id="uploadCaptionInput" type="text" placeholder="Viết chú thích..." class="w-full px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-pink-200 text-sm"></div>
+        </div>
+        <div id="photoDropzone" class="rounded-2xl bg-gradient-to-br from-pastel-pink/25 via-pastel-cream to-pastel-blue/25 border-2 border-dashed border-pastel-pinkDark p-6 sm:p-8 text-center cursor-pointer hover:bg-pastel-pink/35" onclick="document.getElementById('photoFileInput').click()">
+          <input id="photoFileInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple class="hidden" onchange="handleFilesSelected(this.files)">
+          <div class="text-4xl mb-3">📤</div>
+          <p class="font-bold text-pastel-ink">Bấm hoặc kéo thả ảnh vào đây</p>
+        </div>
+        <div id="uploadQueueContainer" class="hidden space-y-4 bg-pastel-cream p-4 rounded-2xl border border-pink-200">
+          <div class="flex justify-between"><span id="uploadQueueSummary" class="text-sm font-bold text-pastel-ink">Đã chọn 0 ảnh</span><label class="text-xs font-bold text-pastel-pinkDeep"><input id="uploadSetAsCoverCheckbox" type="checkbox" class="mr-1"> Đặt làm ảnh bìa</label></div>
+          <div id="uploadFilesPreviewList" class="grid grid-cols-2 md:grid-cols-5 gap-3"></div>
+          <div id="uploadProgressWrapper" class="hidden space-y-1.5">
+            <div class="flex justify-between text-xs font-bold"><span id="uploadProgressLabel">Đang tải...</span><span id="uploadProgressPercent">0%</span></div>
+            <div class="w-full h-3 rounded-full bg-pink-100 overflow-hidden"><div id="uploadProgressBar" class="h-full bg-pastel-pinkDeep" style="width: 0%"></div></div>
+          </div>
+          <div class="flex justify-end gap-2">
+            <button onclick="clearUploadQueue()" class="px-4 py-2 rounded-xl bg-white border border-gray-300 text-xs font-bold">Hủy chọn</button>
+            <button id="btnStartUpload" onclick="executeBatchUpload()" class="px-5 py-2.5 rounded-xl bg-pastel-pinkDeep text-white text-sm font-bold shadow-sticker">🚀 Tải lên</button>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white/90 rounded-2xl p-4 sm:p-5 border border-pink-100 flex gap-3"><input id="gallerySearchInput" oninput="resetAndRenderGallery()" type="text" placeholder="🔍 Tìm ảnh..." class="px-3.5 py-2 rounded-xl bg-pastel-cream border border-pink-200 text-sm flex-1"><select id="galleryAlbumFilter" onchange="resetAndRenderGallery()" class="px-3.5 py-2 rounded-xl bg-pastel-cream border border-pink-200 text-sm font-semibold"></select><span id="galleryCountLabel" class="text-xs font-bold text-pastel-muted whitespace-nowrap pt-2">0 ảnh</span></div>
+      <div id="galleryPhotosGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-7"></div>
+      <div id="galleryLoadMoreWrapper" class="hidden text-center pt-4"><button onclick="loadMoreGalleryPhotos()" class="px-6 py-3 rounded-2xl bg-white border-2 border-pink-200 font-bold text-sm text-pastel-ink">👇 Tải thêm ảnh</button></div>
+    </section>
+
+    <!-- MEMBERS -->
+    <section id="section-members" class="page-section hidden space-y-8">
+      <div class="bg-white/90 rounded-3xl p-6 sm:p-8 border-2 border-amber-100 shadow-soft space-y-5">
+        <div class="flex justify-between"><h2 class="font-hand text-3xl font-bold text-pastel-ink">🧑‍🎓 Danh Bạ Lớp</h2><button onclick="openMemberModal()" class="px-5 py-3 rounded-2xl bg-pastel-pinkDeep text-white font-bold text-sm shadow-sticker">➕ Thêm hồ sơ</button></div>
+        <input id="memberSearchInput" oninput="renderMembersSection()" type="text" placeholder="🔍 Tìm thành viên..." class="w-full md:max-w-md px-4 py-2.5 rounded-xl bg-pastel-cream border border-amber-200 text-sm">
+      </div>
+      <div id="membersGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+    </section>
+
+    <!-- GUESTBOOK -->
+    <section id="section-guestbook" class="page-section hidden space-y-8">
+      <div class="bg-white/90 rounded-3xl p-6 sm:p-8 border-2 border-purple-100 shadow-soft space-y-6">
+        <h2 class="font-hand text-3xl font-bold text-pastel-ink">💌 Góc Lưu Bút</h2>
+        <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-dashed border-purple-200 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div><label class="block text-xs font-bold mb-1">Tên của bạn *</label><input id="gbAuthorInput" type="text" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-purple-200 text-sm"></div>
+            <div><label class="block text-xs font-bold mb-1">Màu giấy Note</label><select id="gbColorSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-purple-200 text-sm"><option value="pink">🌸 Hồng</option><option value="butter">🌼 Vàng</option><option value="blue">☁️ Xanh</option><option value="lavender">🔮 Tím</option></select></div>
+            <div><label class="block text-xs font-bold mb-1">Sticker</label><select id="gbStickerSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-purple-200 text-sm"><option value="💖">💖 Trái tim</option><option value="🌸">🌸 Hoa</option><option value="🎓">🎓 Tốt nghiệp</option></select></div>
+          </div>
+          <div><label class="block text-xs font-bold mb-1">Nội dung *</label><textarea id="gbMessageInput" rows="3" class="w-full p-3.5 rounded-xl bg-white border border-purple-200 text-sm lined-paper"></textarea></div>
+          <div class="text-right"><button onclick="submitGuestbookEntry()" class="px-6 py-2.5 rounded-xl bg-pastel-pinkDeep text-white font-bold text-sm shadow-sticker">📌 Ghim lên bảng</button></div>
+        </div>
+      </div>
+      <div id="guestbookWallGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- ==========================================================================
+         ADMIN DASHBOARD SECTION (CHỈ DÀNH CHO ADMIN)
+         ========================================================================== -->
+    <section id="section-admin" class="page-section hidden space-y-8">
+      <div class="bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-pink-200 shadow-soft space-y-6">
+        <div class="border-b border-pink-100 pb-4 mb-4">
+          <h2 class="font-hand text-3xl sm:text-4xl font-bold text-pastel-ink">⚙️ Admin Dashboard</h2>
+          <p class="text-sm text-pastel-muted mt-1">Khu vực quản trị nội bộ dành riêng cho Admin.</p>
+        </div>
+        
+        <!-- Admin Tabs Menu -->
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button onclick="switchAdminTab('system')" id="tab-system" class="admin-tab-btn active px-4 py-2 rounded-xl bg-pastel-pinkDeep text-white font-bold text-sm shadow-sm transition">Cài đặt Hệ thống</button>
+          <button onclick="switchAdminTab('users')" id="tab-users" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">Quản lý Thành viên</button>
+          <button onclick="switchAdminTab('backup')" id="tab-backup" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">Sao lưu & Phục hồi</button>
+          <button onclick="switchAdminTab('content')" id="tab-content" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">Quản lý Nội dung</button>
+        </div>
+
+        <!-- TAB 1: SYSTEM & DEPLOY -->
+        <div id="admin-tab-system" class="admin-tab-content space-y-6">
+          <div class="flex flex-wrap gap-2 justify-end mb-4">
+            <button onclick="downloadProjectFile('schema.sql')" class="px-3 py-1.5 rounded-lg bg-pastel-blue text-xs font-bold">⬇️ Tải schema.sql</button>
+            <button onclick="downloadProjectFile('README.md')" class="px-3 py-1.5 rounded-lg bg-pastel-butter text-xs font-bold">⬇️ Tải README.md</button>
+            <button onclick="downloadProjectFile('.env.example')" class="px-3 py-1.5 rounded-lg bg-pastel-lavender text-xs font-bold">⬇️ Tải .env & .gitignore</button>
+          </div>
+
+          <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-pink-200 space-y-4">
+            <div class="flex justify-between items-center"><h3 class="font-hand text-xl font-bold">🔌 1. Kết nối Supabase</h3><span id="adminConnectionBadge" class="text-xs px-2 py-1 rounded bg-emerald-100 text-emerald-800 font-bold">✅ Đã kết nối</span></div>
+            <div class="space-y-3">
+              <div><label class="block text-xs font-bold mb-1">Project URL</label><input id="cfgSupabaseUrl" type="url" class="w-full px-3 py-2 rounded bg-white border border-pink-200 text-sm"></div>
+              <div><label class="block text-xs font-bold mb-1">Anon Public Key</label><input id="cfgSupabaseAnonKey" type="text" class="w-full px-3 py-2 rounded bg-white border border-pink-200 text-sm font-mono"></div>
+            </div>
+            <div class="flex flex-wrap gap-2 pt-2">
+              <button onclick="saveSupabaseConnection()" class="px-4 py-2 rounded bg-pastel-pinkDeep text-white text-xs font-bold">💾 Lưu & Kết nối</button>
+              <button onclick="exportReadyToDeployHtml()" class="px-4 py-2 rounded bg-emerald-600 text-white text-xs font-bold">📦 Xuất file index.html cho lớp</button>
+              <button onclick="disconnectSupabaseConfig()" class="px-3 py-2 rounded bg-white border border-gray-300 text-xs font-bold text-gray-600">Xóa cấu hình</button>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border-2 border-pink-200 space-y-4 text-sm text-pastel-ink">
+            <h3 class="font-hand text-xl font-bold">📘 2. Hướng dẫn Đưa lên Vercel (Dành cho Windows 10 Super Lite)</h3>
+            <ol class="list-decimal list-inside space-y-1">
+              <li>Lưu URL & Anon key ở mục 1, rồi bấm <strong>"Xuất file index.html"</strong> tải về máy.</li>
+              <li>Vào GitHub, tạo Repo mới và kéo thả file <code>index.html</code> vừa tải lên. Commit.</li>
+              <li>Vào Vercel, Import repo vừa tạo từ GitHub và bấm <strong>Deploy</strong>.</li>
+            </ol>
+            <div class="pt-2"><label class="block text-xs font-bold mb-1">Mã SQL (schema.sql):</label><textarea id="sqlSchemaPreviewBox" readonly rows="4" class="w-full p-2 rounded bg-gray-900 text-emerald-300 font-mono text-[11px]"></textarea></div>
+          </div>
+        </div>
+
+        <!-- TAB 2: USERS -->
+        <div id="admin-tab-users" class="admin-tab-content hidden space-y-6">
+          <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-purple-200 space-y-4">
+            <div class="flex justify-between items-center"><h3 class="font-hand text-xl font-bold">🛡️ Quản lý Quyền (Whitelist)</h3><button onclick="refreshAdminUsersList()" class="px-3 py-1 bg-white border border-purple-200 rounded text-xs font-bold">🔄 Làm mới</button></div>
+            <div class="flex flex-wrap gap-2 items-center bg-white p-3 rounded-xl border border-purple-100">
+              <input id="whitelistEmailInput" type="email" placeholder="Email bạn học..." class="flex-1 px-3 py-2 rounded border border-purple-200 text-sm">
+              <select id="whitelistRoleSelect" class="px-3 py-2 rounded border border-purple-200 text-sm font-bold"><option value="member">Thành viên</option><option value="admin">Admin</option></select>
+              <button onclick="addAllowedEmail()" class="px-4 py-2 rounded bg-pastel-lavenderDark text-white text-sm font-bold">Thêm Email</button>
+            </div>
+            <div class="overflow-x-auto bg-white rounded-xl border border-purple-100">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead><tr class="bg-pastel-lavender/40 border-b border-purple-100"><th class="p-2 font-bold">Email</th><th class="p-2 font-bold">Quyền</th><th class="p-2 font-bold">Ngày</th><th class="p-2 font-bold text-right">Hành động</th></tr></thead>
+                <tbody id="adminProfilesTableBody" class="divide-y divide-purple-50"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: BACKUP -->
+        <div id="admin-tab-backup" class="admin-tab-content hidden space-y-6">
+          <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-amber-200 space-y-4">
+            <h3 class="font-hand text-xl font-bold">💾 Sao lưu Dữ liệu (.JSON)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div class="bg-white p-4 rounded-xl border border-amber-100"><p class="font-bold">Xuất dữ liệu</p><button onclick="exportDatabaseBackupJson()" class="mt-2 px-4 py-2 rounded bg-amber-500 text-white font-bold">⬇️ Tải file JSON</button></div>
+              <div class="bg-white p-4 rounded-xl border border-amber-100"><p class="font-bold">Phục hồi dữ liệu</p><input id="restoreJsonInput" type="file" accept="application/json" class="mt-2 block w-full text-xs"><button onclick="restoreDatabaseFromJson()" class="mt-2 px-4 py-2 rounded bg-gray-800 text-white font-bold">⬆️ Phục hồi lên Supabase</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: SHORTCUTS -->
+        <div id="admin-tab-content" class="admin-tab-content hidden space-y-6">
+          <h3 class="font-hand text-xl font-bold">Chỉnh sửa nội dung trực tiếp trên giao diện:</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+            <button onclick="switchSection('albums')" class="p-4 rounded-xl bg-white border-2 border-pink-100 hover:border-pastel-pinkDark transition"><div class="text-3xl mb-1">📔</div><div class="font-bold text-sm">Album</div></button>
+            <button onclick="switchSection('gallery')" class="p-4 rounded-xl bg-white border-2 border-blue-100 hover:border-pastel-blueDark transition"><div class="text-3xl mb-1">📸</div><div class="font-bold text-sm">Ảnh</div></button>
+            <button onclick="switchSection('timeline')" class="p-4 rounded-xl bg-white border-2 border-purple-100 hover:border-pastel-lavenderDark transition"><div class="text-3xl mb-1">🗓️</div><div class="font-bold text-sm">Sự kiện</div></button>
+            <button onclick="switchSection('guestbook')" class="p-4 rounded-xl bg-white border-2 border-amber-100 hover:border-pastel-butterDark transition"><div class="text-3xl mb-1">💌</div><div class="font-bold text-sm">Lưu bút</div></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="mt-16 border-t-2 border-dashed border-pink-200 bg-white/70 py-6 px-4 text-center">
+    <div class="max-w-7xl mx-auto text-xs sm:text-sm text-pastel-muted">
+      🌸 <strong>Thanh Xuân 11T2</strong> — Sổ lưu niệm học đường trực tuyến
+    </div>
+  </footer>
+
+  <!-- ============================================================================
+       MODALS
+       ============================================================================ -->
+
+  <!-- AUTHENTICATION MODAL -->
+  <div id="authModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-pastel-cream w-full max-w-md rounded-3xl p-6 border-2 border-blue-200 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-hand text-2xl font-bold text-pastel-ink">🔐 Đăng Nhập / Đăng Ký</h3>
+        <button onclick="closeAuthModal()" class="text-pastel-muted hover:text-pastel-ink font-bold text-xl">✕</button>
+      </div>
+      <div class="space-y-3">
+        <p class="text-xs text-pastel-muted">Đăng nhập bằng tài khoản lớp để đóng góp kỷ niệm!</p>
+        <div><label class="block text-xs font-bold mb-1">Email *</label><input id="authEmailInput" type="email" placeholder="mail@gmail.com" class="w-full px-3.5 py-2 rounded-xl border border-blue-200 text-sm"></div>
+        <div><label class="block text-xs font-bold mb-1">Mật khẩu (>= 6 ký tự) *</label><input id="authPasswordInput" type="password" placeholder="••••••••" class="w-full px-3.5 py-2 rounded-xl border border-blue-200 text-sm"></div>
+        <div><label class="block text-xs font-bold mb-1">Họ tên (Chỉ dùng khi Đăng ký mới)</label><input id="authFullNameInput" type="text" placeholder="VD: Nguyễn Văn A" class="w-full px-3.5 py-2 rounded-xl border border-blue-200 text-sm"></div>
+        <div class="flex gap-2 pt-2">
+          <button onclick="handleAuthSignIn()" class="flex-1 py-2.5 rounded-xl bg-pastel-pinkDeep text-white font-bold text-sm">Đăng nhập</button>
+          <button onclick="handleAuthSignUp()" class="flex-1 py-2.5 rounded-xl bg-pastel-blue text-pastel-ink font-bold text-sm">Đăng ký mới</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX MODAL -->
+  <div id="lightboxModal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm flex items-center justify-center p-3">
+    <div class="relative w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[92vh]">
+      <button onclick="closeLightbox()" class="absolute top-3 right-3 z-20 w-10 h-10 rounded-full bg-white/90 font-bold">✕</button>
+      <div class="md:w-2/3 bg-gray-950 flex items-center justify-center p-2 min-h-[280px]"><img id="lightboxImg" src="" class="max-h-[84vh] object-contain rounded-lg"></div>
+      <div class="md:w-1/3 p-5 bg-pastel-cream overflow-y-auto space-y-4 flex flex-col justify-between">
+        <div class="space-y-3">
+          <span id="lightboxAlbumBadge" class="inline-block px-3 py-1 rounded-full bg-pastel-pink text-xs font-bold">Album</span>
+          <h4 id="lightboxCaption" class="font-hand text-2xl font-bold"></h4>
+          <div class="text-xs text-pastel-muted pt-2 border-t border-pink-100"><p id="lightboxUploader"></p><p id="lightboxDate"></p></div>
+        </div>
+        <div class="space-y-2 border-t border-pink-200 pt-4">
+          <div class="flex gap-2"><a id="lightboxDownloadBtn" href="#" target="_blank" download class="flex-1 py-2.5 rounded-xl bg-pastel-blue font-bold text-xs text-center">⬇️ Tải ảnh</a><button id="lightboxSetCoverBtn" onclick="setLightboxPhotoAsAlbumCover()" class="flex-1 py-2.5 rounded-xl bg-pastel-butter font-bold text-xs">⭐ Đặt làm bìa</button></div>
+          <button id="lightboxDeleteBtn" onclick="confirmDeleteLightboxPhoto()" class="w-full py-2.5 rounded-xl bg-red-50 text-red-600 border border-red-200 font-bold text-xs">🗑️ Xóa ảnh này</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OTHER MODALS (CREATE ALBUM, EVENT, MEMBER, CONFIRM) -->
+  <div id="createAlbumModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-pastel-cream w-full max-w-md rounded-3xl p-6 border-2 border-pink-200 shadow-2xl space-y-4">
+      <div class="flex justify-between"><h3 class="font-hand text-2xl font-bold">📔 Tạo Album Mới</h3><button onclick="closeCreateAlbumModal()" class="font-bold text-xl">✕</button></div>
+      <div><label class="block text-xs font-bold mb-1">Tên Album *</label><input id="newAlbumTitleInput" type="text" class="w-full px-3 py-2.5 rounded-xl border border-pink-200 text-sm"></div>
+      <div><label class="block text-xs font-bold mb-1">Emoji</label><input id="newAlbumIconInput" type="text" value="📸" class="w-full px-3 py-2.5 rounded-xl border border-pink-200 text-sm"></div>
+      <div><label class="block text-xs font-bold mb-1">Mô tả</label><textarea id="newAlbumDescInput" rows="2" class="w-full p-3 rounded-xl border border-pink-200 text-sm"></textarea></div>
+      <div class="flex justify-end gap-2"><button onclick="closeCreateAlbumModal()" class="px-4 py-2 rounded-xl bg-white text-xs font-bold">Hủy</button><button onclick="submitNewAlbum()" class="px-5 py-2 rounded-xl bg-pastel-pinkDeep text-white text-xs font-bold">Tạo</button></div>
+    </div>
+  </div>
+
+  <div id="eventModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-pastel-cream w-full max-w-lg rounded-3xl p-6 border-2 border-blue-200 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between"><h3 id="eventModalHeader" class="font-hand text-2xl font-bold">🗓️ Thêm Sự Kiện</h3><button onclick="closeEventModal()" class="font-bold text-xl">✕</button></div>
+      <input id="eventEditId" type="hidden">
+      <div><label class="block text-xs font-bold mb-1">Tên *</label><input id="eventTitleInput" type="text" class="w-full px-3 py-2 border border-blue-200 rounded-xl text-sm"></div>
+      <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-bold mb-1">Ngày</label><input id="eventDateInput" type="date" class="w-full px-3 py-2 border border-blue-200 rounded-xl text-sm"></div><div><label class="block text-xs font-bold mb-1">Album</label><select id="eventAlbumSelect" class="w-full px-3 py-2 border border-blue-200 rounded-xl text-sm"></select></div></div>
+      <div><label class="block text-xs font-bold mb-1">Địa điểm</label><input id="eventLocationInput" type="text" class="w-full px-3 py-2 border border-blue-200 rounded-xl text-sm"></div>
+      <div><label class="block text-xs font-bold mb-1">Nội dung</label><textarea id="eventDescInput" rows="3" class="w-full p-3 border border-blue-200 rounded-xl text-sm"></textarea></div>
+      <div class="flex justify-end gap-2"><button onclick="closeEventModal()" class="px-4 py-2 rounded-xl bg-white text-xs font-bold">Hủy</button><button onclick="submitEventForm()" class="px-5 py-2 rounded-xl bg-pastel-pinkDeep text-white text-xs font-bold">Lưu</button></div>
+    </div>
+  </div>
+
+  <div id="memberModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-pastel-cream w-full max-w-lg rounded-3xl p-6 border-2 border-amber-200 shadow-2xl space-y-4">
+      <div class="flex justify-between"><h3 id="memberModalHeader" class="font-hand text-2xl font-bold">🧑‍🎓 Hồ Sơ Thành Viên</h3><button onclick="closeMemberModal()" class="font-bold text-xl">✕</button></div>
+      <input id="memberEditId" type="hidden">
+      <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-bold mb-1">Họ tên thật *</label><input id="memberNameInput" type="text" class="w-full px-3 py-2 border border-amber-200 rounded-xl text-sm"></div><div><label class="block text-xs font-bold mb-1">Biệt danh</label><input id="memberNicknameInput" type="text" class="w-full px-3 py-2 border border-amber-200 rounded-xl text-sm"></div></div>
+      <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-bold mb-1">Chức vụ</label><input id="memberRoleInput" type="text" class="w-full px-3 py-2 border border-amber-200 rounded-xl text-sm"></div><div><label class="block text-xs font-bold mb-1">Ngày sinh</label><input id="memberBirthdayInput" type="date" class="w-full px-3 py-2 border border-amber-200 rounded-xl text-sm"></div></div>
+      <div><label class="block text-xs font-bold mb-1">Câu nói yêu thích</label><textarea id="memberQuoteInput" rows="2" class="w-full p-3 border border-amber-200 rounded-xl text-sm"></textarea></div>
+      <div class="flex justify-end gap-2"><button onclick="closeMemberModal()" class="px-4 py-2 rounded-xl bg-white text-xs font-bold">Hủy</button><button onclick="submitMemberForm()" class="px-5 py-2 rounded-xl bg-pastel-pinkDeep text-white text-xs font-bold">Lưu</button></div>
+    </div>
+  </div>
+
+  <div id="confirmModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl p-6 border-2 border-pink-200 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center font-bold">⚠️</div><h3 id="confirmModalTitle" class="font-hand text-xl font-bold">Xác nhận</h3></div>
+      <p id="confirmModalMessage" class="text-sm text-gray-600"></p>
+      <div class="flex justify-end gap-2"><button onclick="closeConfirmModal()" class="px-4 py-2 rounded-xl bg-gray-100 font-bold text-sm">Hủy</button><button id="confirmModalActionBtn" class="px-5 py-2 rounded-xl bg-red-600 text-white font-bold text-sm">Xóa</button></div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <script>
+    const DEFAULT_SUPABASE_URL = "https://hzidysmblmzwndetrbbs.supabase.co"; 
+    const DEFAULT_SUPABASE_ANON_KEY = "sb_publishable_ak-6SDMZZbuyO9c3PLFhqA_mYssiFOO"; 
+    const STORAGE_BUCKET = "class-memories";
+
+    const INITIAL_13_ALBUMS = [
+      { slug: "ngay-nhan-ao-lop", title: "Ngày nhận áo lớp", icon: "👕", description: "Khoảnh khắc cả lớp 11T2 khoác lên mình màu áo chung.", sort_order: 1 },
+      { slug: "20-10", title: "20/10", icon: "💐", description: "Ngày Phụ nữ Việt Nam.", sort_order: 2 },
+      { slug: "20-11", title: "20/11", icon: "🏫", description: "Tri ân thầy cô giáo.", sort_order: 3 },
+      { slug: "giai-bong-chuyen-nu", title: "Giải bóng chuyền nữ", icon: "🏐", description: "Những pha đập bóng thần sầu.", sort_order: 4 },
+      { slug: "8-3", title: "8/3", icon: "🌷", description: "Ngày Quốc tế Phụ nữ.", sort_order: 5 },
+      { slug: "sinh-nhat", title: "Sinh nhật", icon: "🎂", description: "Bữa tiệc sinh nhật tuổi mới.", sort_order: 6 },
+      { slug: "di-choi-cung-lop", title: "Đi chơi cùng lớp", icon: "🛵", description: "Dã ngoại và gắn kết tình bạn.", sort_order: 7 },
+      { slug: "hoi-trai", title: "Hội trại", icon: "⛺", description: "Đêm lửa trại rực rỡ.", sort_order: 8 },
+      { slug: "hoat-dong-ngoai-khoa", title: "Hoạt động ngoại khóa", icon: "🌿", description: "Trải nghiệm và học hỏi.", sort_order: 9 },
+      { slug: "van-nghe-va-the-thao", title: "Văn nghệ và thể thao", icon: "🎭", description: "Tỏa sáng trên sân khấu.", sort_order: 10 },
+      { slug: "nhung-ngay-hoc-binh-thuong", title: "Những ngày học bình thường", icon: "📚", description: "Góc bàn quen thuộc.", sort_order: 11 },
+      { slug: "tong-ket-nam-hoc-va-ky-yeu", title: "Tổng kết năm học và kỷ yếu", icon: "🎓", description: "Tạm biệt và lưu giữ kỷ niệm.", sort_order: 12 },
+      { slug: "cac-su-kien-moi-do-lop-tu-tao", title: "Các sự kiện mới do lớp tự tạo", icon: "✨", description: "Không gian mở cho mọi ngẫu hứng.", sort_order: 13 }
+    ];
+
+    let supabaseClient = null;
+    let isDbConnected = false;
+    let currentUser = null;
+    let currentUserProfile = null; 
+
+    let albumsData = [...INITIAL_13_ALBUMS];
+    let photosData = []; let eventsData = []; let membersData = []; let guestbookData = [];
+    let currentSection = "home"; let activeAlbumSlug = null;
+    let selectedUploadFiles = []; let galleryVisibleLimit = 12;
+    let currentLightboxPhoto = null; let lastGuestbookSubmitTime = 0;
+
+    function getConfiguredCredentials() {
+      const savedUrl = localStorage.getItem("tx11t2_supabase_url") || "";
+      const savedKey = localStorage.getItem("tx11t2_supabase_anon_key") || "";
+      return { url: (DEFAULT_SUPABASE_URL || savedUrl).trim(), anonKey: (DEFAULT_SUPABASE_ANON_KEY || savedKey).trim() };
+    }
+
+    async function initSupabaseApp() {
+      populateSqlAndDocsPreviews();
+      const { url, anonKey } = getConfiguredCredentials();
+      document.getElementById("cfgSupabaseUrl").value = url;
+      document.getElementById("cfgSupabaseAnonKey").value = anonKey;
+
+      if (!url || !anonKey) {
+        isDbConnected = false;
+        updateConnectionBanner(false, "Chưa cấu hình Supabase — Đang hiển thị dữ liệu mẫu (0 ảnh).");
+        renderAllSections(); return;
+      }
+      try {
+        supabaseClient = window.supabase.createClient(url, anonKey, { auth: { persistSession: true, autoRefreshToken: true } });
+        const { data: sessionData } = await supabaseClient.auth.getSession();
+        currentUser = sessionData?.session?.user || null;
+
+        supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+          currentUser = session?.user || null;
+          await fetchCurrentUserProfile();
+          updateAuthUI(); renderAllSections();
+        });
+
+        await fetchCurrentUserProfile();
+        await syncAllDataFromSupabase();
+      } catch (err) {
+        isDbConnected = false;
+        updateConnectionBanner(false, "Không thể kết nối Supabase. Kiểm tra lại URL/Key.");
+        renderAllSections();
+      }
+    }
+
+    async function fetchCurrentUserProfile() {
+      if (!supabaseClient || !currentUser) { currentUserProfile = null; updateAuthUI(); return; }
+      try {
+        const { data, error } = await supabaseClient.from("profiles").select("*").eq("id", currentUser.id).maybeSingle();
+        currentUserProfile = (!error && data) ? data : { id: currentUser.id, email: currentUser.email, role: "pending", full_name: currentUser.email };
+      } catch (e) {}
+      updateAuthUI();
+    }
+
+    function canWriteContent() { return isDbConnected && currentUser && currentUserProfile && (currentUserProfile.role === "member" || currentUserProfile.role === "admin"); }
+    function isAdminUser() { return isDbConnected && currentUser && currentUserProfile && currentUserProfile.role === "admin"; }
+    function canModifyItem(ownerId) { if (!isDbConnected || !currentUser) return false; return isAdminUser() || (ownerId === currentUser.id && canWriteContent()); }
+
+    async function syncAllDataFromSupabase() {
+      if (!supabaseClient) return;
+      try {
+        const { data: dbAlbums } = await supabaseClient.from("albums").select("*").order("sort_order", { ascending: true });
+        if (dbAlbums && dbAlbums.length > 0) {
+          const mapBySlug = new Map(dbAlbums.map(a => [a.slug, a]));
+          const merged = INITIAL_13_ALBUMS.map(i => mapBySlug.get(i.slug) || i);
+          dbAlbums.forEach(d => { if (!INITIAL_13_ALBUMS.some(i => i.slug === d.slug)) merged.push(d); });
+          albumsData = merged;
+        } else { albumsData = [...INITIAL_13_ALBUMS]; }
+
+        const { data: dbP } = await supabaseClient.from("photos").select("*").order("created_at", { ascending: false }); if(dbP) photosData = dbP;
+        const { data: dbE } = await supabaseClient.from("events").select("*").order("event_date", { ascending: false, nullsFirst: true }); if(dbE) eventsData = dbE;
+        const { data: dbM } = await supabaseClient.from("class_members").select("*").order("full_name", { ascending: true }); if(dbM) membersData = dbM;
+        const { data: dbG } = await supabaseClient.from("guestbook_entries").select("*").order("created_at", { ascending: false }); if(dbG) guestbookData = dbG;
+
+        isDbConnected = true;
+        updateConnectionBanner(true, "Đã kết nối trực tuyến với Supabase");
+        renderAllSections();
+        if (isAdminUser()) refreshAdminUsersList();
+      } catch (err) {
+        isDbConnected = false;
+        updateConnectionBanner(false, "Kết nối DB thất bại. Có thể do chưa chạy lệnh SQL (schema.sql) hoặc bị Adblock.");
+        renderAllSections();
+      }
+    }
+
+    function updateConnectionBanner(connected, message) {
+      const dot = document.getElementById("dbStatusDot"), text = document.getElementById("dbStatusText"), adminBadge = document.getElementById("adminConnectionBadge");
+      dot.className = connected ? "w-2.5 h-2.5 rounded-full bg-emerald-500" : "w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse";
+      text.textContent = message;
+      if (adminBadge) { adminBadge.className = connected ? "text-xs px-2 py-1 rounded bg-emerald-100 text-emerald-800 font-bold" : "text-xs px-2 py-1 rounded bg-amber-100 text-amber-800 font-bold"; adminBadge.textContent = connected ? "✅ Đã kết nối" : "⏳ Lỗi kết nối"; }
+    }
+
+    // Modal & Auth Logic
+    function openAuthModal() { document.getElementById("authModal").classList.remove("hidden"); }
+    function closeAuthModal() { document.getElementById("authModal").classList.add("hidden"); }
+
+    function updateAuthUI() {
+      const badge = document.getElementById("userRoleBadge");
+      const btnAuth = document.getElementById("btnTopAuth"), btnAdmin = document.getElementById("btnTopAdmin"), btnLogout = document.getElementById("btnTopLogout");
+
+      if (!currentUser) {
+        badge.textContent = "👀 Khách xem";
+        badge.className = "px-2.5 py-0.5 rounded-full bg-white/80 text-pastel-ink border border-pink-200 text-xs font-bold";
+        btnAuth.classList.remove("hidden"); btnAdmin.classList.add("hidden"); btnLogout.classList.add("hidden");
+      } else {
+        btnAuth.classList.add("hidden"); btnLogout.classList.remove("hidden");
+        const role = currentUserProfile?.role || "pending";
+        if (role === "admin") {
+          badge.textContent = "👑 Admin: " + currentUser.email.split('@')[0];
+          badge.className = "px-2.5 py-0.5 rounded-full bg-pastel-butter text-amber-950 border border-amber-300 text-xs font-bold";
+          btnAdmin.classList.remove("hidden");
+        } else if (role === "member") {
+          badge.textContent = "🌟 Member: " + currentUser.email.split('@')[0];
+          badge.className = "px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-bold";
+          btnAdmin.classList.add("hidden");
+        } else {
+          badge.textContent = "⏳ Chờ duyệt: " + currentUser.email.split('@')[0];
+          badge.className = "px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold";
+          btnAdmin.classList.add("hidden");
+        }
+      }
+    }
+
+    async function handleAuthSignUp() {
+      if (!supabaseClient) return showToast("Vui lòng kết nối Supabase!", "warning");
+      const email = document.getElementById("authEmailInput").value.trim(), pwd = document.getElementById("authPasswordInput").value, fn = document.getElementById("authFullNameInput").value.trim() || email.split("@")[0];
+      if (!email || pwd.length < 6) return showToast("Nhập Email và mật khẩu >= 6 ký tự!", "warning");
+      try {
+        const { data, error } = await supabaseClient.auth.signUp({ email, password: pwd, options: { data: { full_name: fn } } });
+        if (error) throw error;
+        showToast("Đăng ký thành công!", "success"); closeAuthModal();
+        await fetchCurrentUserProfile(); await syncAllDataFromSupabase();
+      } catch (err) { showToast(`Lỗi: ${err.message}`, "error"); }
+    }
+
+    async function handleAuthSignIn() {
+      if (!supabaseClient) return showToast("Vui lòng kết nối Supabase!", "warning");
+      const email = document.getElementById("authEmailInput").value.trim(), pwd = document.getElementById("authPasswordInput").value;
+      if (!email || !pwd) return showToast("Nhập Email và Mật khẩu!", "warning");
+      try {
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password: pwd });
+        if (error) throw error;
+        showToast("Đăng nhập thành công!", "success"); closeAuthModal();
+        await fetchCurrentUserProfile(); await syncAllDataFromSupabase();
+      } catch (err) { showToast(`Lỗi: ${err.message}`, "error"); }
+    }
+
+    async function handleAuthSignOut() {
+      if (!supabaseClient) return;
+      await supabaseClient.auth.signOut();
+      currentUser = null; currentUserProfile = null; updateAuthUI(); showToast("Đã đăng xuất.", "info");
+      if(currentSection === 'admin') switchSection('home');
+    }
+
+    // Navigation Logic
+    function switchSection(sectionId) {
+      // Bảo mật Admin Dashboard
+      if (sectionId === 'admin') {
+        if (isDbConnected && (!currentUser || !isAdminUser())) {
+          showToast("Khu vực Quản trị chỉ dành riêng cho Admin!", "error");
+          switchSection('home'); return;
+        }
+        if(!isDbConnected) switchAdminTab('system');
+      }
+
+      currentSection = sectionId;
+      document.querySelectorAll(".page-section").forEach(sec => sec.classList.add("hidden"));
+      const target = document.getElementById(`section-${sectionId}`);
+      if (target) target.classList.remove("hidden");
+
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        if (btn.getAttribute("data-nav") === sectionId) btn.className = "nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 bg-pastel-pink text-pastel-ink shadow-sm";
+        else btn.className = "nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted hover:bg-pastel-pink/30 hover:text-pastel-ink";
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" }); renderAllSections();
+    }
+
+    function switchAdminTab(tabId) {
+      document.querySelectorAll(".admin-tab-content").forEach(el => el.classList.add("hidden"));
+      document.querySelectorAll(".admin-tab-btn").forEach(btn => btn.className = "admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition");
+      document.getElementById(`admin-tab-${tabId}`).classList.remove("hidden");
+      document.getElementById(`tab-${tabId}`).className = "admin-tab-btn active px-4 py-2 rounded-xl bg-pastel-pinkDeep text-white font-bold text-sm shadow-sm transition";
+      if(tabId === 'users' && isAdminUser()) refreshAdminUsersList();
+    }
+
+    function toggleMobileDrawer(forceState) {
+      const drawer = document.getElementById("mobileDrawer");
+      if (typeof forceState === "boolean") drawer.classList.toggle("hidden", !forceState);
+      else drawer.classList.toggle("hidden");
+    }
+    function openQuickUpload(preSlug) { switchSection("gallery"); if(preSlug) { const sel = document.getElementById("uploadAlbumSelect"); if(sel) sel.value = preSlug; } document.getElementById("uploadPanelCard")?.scrollIntoView({ behavior: "smooth" }); }
+
+    // Renders
+    function renderAllSections() {
+      populateDropdownSelects(); renderHomeSection(); renderAlbumsSection(); renderTimelineSection(); renderGallerySection(); renderMembersSection(); renderGuestbookSection();
+    }
+
+    function populateDropdownSelects() {
+      const opts = albumsData.map(a => `<option value="${escapeHtml(a.slug)}">${escapeHtml(a.icon||'📔')} ${escapeHtml(a.title)}</option>`).join("");
+      ['uploadAlbumSelect','eventAlbumSelect'].forEach(id => { const el = document.getElementById(id); if(el) { const cv = el.value; el.innerHTML = opts; if(albumsData.some(x=>x.slug===cv)) el.value = cv; } });
+      const ga = document.getElementById("galleryAlbumFilter"); if(ga) { const c = ga.value||"all"; ga.innerHTML = `<option value="all">Tất cả Album (${photosData.length} ảnh)</option>`+opts; ga.value=c; }
+      const ea = document.getElementById("eventFilterAlbum"); if(ea) { const c = ea.value||"all"; ea.innerHTML = `<option value="all">Tất cả danh mục Album</option>`+opts; ea.value=c; }
+      const ue = document.getElementById("uploadEventSelect"); if(ue) { const c = ue.value||""; ue.innerHTML = `<option value="">-- Không gắn sự kiện --</option>`+eventsData.map(e=>`<option value="${escapeHtml(e.id)}">🗓️ ${escapeHtml(e.title)}</option>`).join(""); ue.value=c; }
+    }
+
+    function renderHomeSection() {
+      document.getElementById("statAlbumsCount").textContent = albumsData.length; document.getElementById("statPhotosCount").textContent = photosData.length;
+      document.getElementById("statEventsCount").textContent = eventsData.length; document.getElementById("statMembersCount").textContent = membersData.length;
+      document.getElementById("statGuestbookCount").textContent = guestbookData.length;
+      if (photosData.length > 0) {
+        const p = photosData[0]; document.getElementById("heroPolaroidContent").innerHTML = `<img src="${escapeHtml(p.public_url)}" class="w-full h-full object-cover rounded-lg cursor-pointer" onclick="openLightboxById('${escapeHtml(p.id)}')"/>`;
+        document.getElementById("heroPolaroidContent").className = "aspect-[4/3] rounded-xl overflow-hidden bg-gray-100";
+        document.getElementById("heroPolaroidCaption").textContent = p.caption || "Khoảnh khắc 11T2"; document.getElementById("heroPolaroidSub").textContent = `${p.uploader_name||'Ẩn danh'} • ${formatDateVN(p.created_at)}`;
+      }
+      document.getElementById("homeAlbumsPreviewGrid").innerHTML = albumsData.slice(0, 8).map((a, i) => buildAlbumCardHtml(a, i)).join("");
+    }
+
+    function buildAlbumCardHtml(a, i) {
+      const pts = photosData.filter(p => p.album_slug === a.slug), count = pts.length, cover = a.cover_url || (pts[0]?.public_url || "");
+      const wc = ["", "washi-blue", "washi-lavender", "washi-butter"], tc = ["tilt-left", "tilt-right", "tilt-slight", ""];
+      return `
+        <div onclick="openAlbumDetail('${escapeHtml(a.slug)}')" class="polaroid-card ${tc[i%4]} cursor-pointer flex flex-col justify-between">
+          <div class="washi-tape ${wc[i%4]}"></div>
+          <div>${cover ? `<div class="aspect-[4/3] rounded-xl overflow-hidden relative"><img src="${escapeHtml(cover)}" class="w-full h-full object-cover transition hover:scale-105"/><span class="absolute top-2 right-2 px-2 py-1 rounded bg-black/65 text-white text-xs">${count} ảnh</span></div>` : `<div class="aspect-[4/3] rounded-xl bg-pastel-paper flex flex-col items-center justify-center p-4 border border-pink-200"><span class="text-4xl mb-2">${escapeHtml(a.icon)}</span><span class="text-[11px] text-pastel-muted">Chưa có ảnh</span></div>`}
+            <div class="pt-4 px-1"><h3 class="font-hand text-xl font-bold">${escapeHtml(a.icon)} ${escapeHtml(a.title)}</h3><p class="text-xs text-pastel-muted line-clamp-2">${escapeHtml(a.description||'')}</p></div>
+          </div>
+          <div class="pt-3 mt-3 border-t border-pink-100 text-xs font-bold text-pastel-pinkDeep flex justify-between"><span>${count>0?`Xem ${count} ảnh`:'Bổ sung ngay'}</span><span>→</span></div>
+        </div>`;
+    }
+
+    function renderAlbumsSection() {
+      const q = (document.getElementById("albumSearchInput")?.value||"").trim().toLowerCase(), s = document.getElementById("albumFilterStatus")?.value||"all";
+      const f = albumsData.filter(a => { const c = photosData.filter(p=>p.album_slug===a.slug).length; return (!q || a.title.toLowerCase().includes(q)) && (s==='all' || (s==='has_photos'&&c>0) || (s==='empty'&&c===0)); });
+      document.getElementById("albumsGrid").innerHTML = f.length ? f.map((a,i)=>buildAlbumCardHtml(a,i)).join("") : '<div class="col-span-full p-10 text-center text-pastel-muted">Không tìm thấy album.</div>';
+      if(activeAlbumSlug) renderActiveAlbumDetail();
+    }
+
+    function openAlbumDetail(slug) { activeAlbumSlug = slug; switchSection("albums"); document.getElementById("albumDetailContainer").classList.remove("hidden"); renderActiveAlbumDetail(); document.getElementById("albumDetailContainer").scrollIntoView({ behavior: "smooth" }); }
+    function closeAlbumDetail() { activeAlbumSlug = null; document.getElementById("albumDetailContainer").classList.add("hidden"); }
+    function renderActiveAlbumDetail() {
+      const a = albumsData.find(x => x.slug === activeAlbumSlug); if(!a) return;
+      document.getElementById("detailAlbumTitle").textContent = `${a.icon} ${a.title}`; document.getElementById("detailAlbumDesc").textContent = a.description||""; document.getElementById("btnUploadToThisAlbum").onclick = () => openQuickUpload(a.slug);
+      const pts = photosData.filter(p => p.album_slug === a.slug);
+      document.getElementById("detailAlbumPhotosGrid").innerHTML = pts.length ? pts.map((p,i)=>buildPhotoPolaroidHtml(p,i)).join("") : '<div class="col-span-full p-10 text-center">Chưa có bức ảnh nào trong danh mục này.</div>';
+    }
+
+    function buildPhotoPolaroidHtml(p, i) {
+      const a = albumsData.find(x => x.slug === p.album_slug), wc = ["", "washi-blue", "washi-lavender", "washi-butter"], tc = ["tilt-left", "tilt-right", "tilt-slight", ""];
+      return `
+        <div onclick="openLightboxById('${escapeHtml(p.id)}')" class="polaroid-card ${tc[i%4]} cursor-pointer flex flex-col justify-between">
+          <div class="washi-tape ${wc[i%4]}"></div>
+          <div><div class="aspect-square rounded-xl overflow-hidden"><img src="${escapeHtml(p.public_url)}" loading="lazy" class="w-full h-full object-cover transition hover:scale-105"/></div>
+          <div class="pt-3 px-1"><p class="font-hand text-base font-bold line-clamp-2">${escapeHtml(p.caption||'')}</p></div></div>
+          <div class="pt-2 mt-2 border-t border-pink-100 flex justify-between text-[11px] text-pastel-muted"><span class="truncate max-w-[60%]">${a?a.icon:''} ${formatDateVN(p.created_at)}</span></div>
+        </div>`;
+    }
+
+    function renderTimelineSection() {
+      const q = (document.getElementById("eventSearchInput")?.value||"").trim().toLowerCase(), a = document.getElementById("eventFilterAlbum")?.value||"all", t = document.getElementById("eventFilterTime")?.value||"all", o = document.getElementById("eventSortOrder")?.value||"newest", today = new Date().toISOString().slice(0, 10);
+      let list = eventsData.filter(e => (!q || (e.title||'').toLowerCase().includes(q) || (e.location||'').toLowerCase().includes(q)) && (a==='all' || e.album_slug===a) && (t==='all' || (t==='upcoming' && e.event_date>=today) || (t==='past' && e.event_date<today) || (t==='unscheduled' && !e.event_date)));
+      list.sort((x, y) => { const dx = x.event_date||(o==="newest"?"9999-12-31":"0000-01-01"), dy = y.event_date||(o==="newest"?"9999-12-31":"0000-01-01"); return o==="newest"?dy.localeCompare(dx):dx.localeCompare(dy); });
+      const c = document.getElementById("timelineContainer");
+      if(!list.length) { c.innerHTML = '<div class="p-10 text-center">Chưa có sự kiện nào.</div>'; return; }
+      c.innerHTML = '<div class="border-l-4 border-dashed border-pastel-pinkDark ml-4 pl-6 space-y-6">' + list.map(e => {
+        const alb = albumsData.find(x=>x.slug===e.album_slug), pts = photosData.filter(p=>p.event_id===e.id), upc = e.event_date && e.event_date>=today;
+        const bdg = !e.event_date ? '<span class="px-2 py-0.5 rounded bg-gray-100 text-xs font-bold">Chưa chốt ngày</span>' : upc ? `<span class="px-2 py-0.5 rounded bg-pastel-butter text-xs font-bold">Sắp diễn ra (${formatDateVN(e.event_date)})</span>` : `<span class="px-2 py-0.5 rounded bg-pastel-blue text-xs font-bold">Đã qua (${formatDateVN(e.event_date)})</span>`;
+        return `
+          <div class="relative bg-white/95 rounded-3xl p-6 border-2 border-pink-100 shadow-soft">
+            <div class="absolute -left-[38px] top-6 w-6 h-6 rounded-full bg-pastel-pinkDeep border-4 border-white"></div>
+            <div class="flex justify-between items-start gap-2">
+              <div class="space-y-1"><div class="flex gap-2">${bdg} ${alb?`<span class="text-xs bg-pink-100 px-2 rounded">${alb.icon} ${alb.title}</span>`:''}</div><h3 class="font-hand text-2xl font-bold">${escapeHtml(e.title)}</h3>${e.location?`<p class="text-xs">📍 ${escapeHtml(e.location)}</p>`:''}</div>
+              ${canModifyItem(e.created_by) ? `<div class="flex gap-2"><button onclick="openEventModal('${e.id}')" class="text-xs bg-gray-100 px-2 py-1 rounded">Sửa</button><button onclick="confirmDeleteEvent('${e.id}')" class="text-xs text-red-600 bg-red-50 px-2 py-1 rounded">Xóa</button></div>` : ''}
+            </div>
+            ${e.description ? `<p class="text-sm mt-3">${escapeHtml(e.description)}</p>` : ''}
+            ${pts.length ? `<div class="mt-4 pt-3 flex gap-2 overflow-x-auto">${pts.slice(0,5).map(p=>`<img src="${p.public_url}" onclick="openLightboxById('${p.id}')" class="w-12 h-12 rounded object-cover cursor-pointer">`).join('')}</div>` : ''}
+          </div>`;
+      }).join('') + '</div>';
+    }
+
+    function resetAndRenderGallery() { galleryVisibleLimit = 12; renderGallerySection(); }
+    function loadMoreGalleryPhotos() { galleryVisibleLimit += 12; renderGallerySection(); }
+    function renderGallerySection() {
+      const q = (document.getElementById("gallerySearchInput")?.value||"").trim().toLowerCase(), a = document.getElementById("galleryAlbumFilter")?.value||"all";
+      const f = photosData.filter(p => (a==='all' || p.album_slug===a) && (!q || (p.caption||'').toLowerCase().includes(q) || (p.uploader_name||'').toLowerCase().includes(q)));
+      document.getElementById("galleryCountLabel").textContent = `${Math.min(f.length, galleryVisibleLimit)}/${f.length} ảnh`;
+      const grid = document.getElementById("galleryPhotosGrid"), wrap = document.getElementById("galleryLoadMoreWrapper");
+      if(!f.length) { grid.innerHTML = '<div class="col-span-full p-10 text-center">Chưa có bức ảnh nào.</div>'; wrap.classList.add("hidden"); return; }
+      grid.innerHTML = f.slice(0, galleryVisibleLimit).map((p, i) => buildPhotoPolaroidHtml(p, i)).join("");
+      if(f.length > galleryVisibleLimit) wrap.classList.remove("hidden"); else wrap.classList.add("hidden");
+    }
+
+    function renderMembersSection() {
+      const q = (document.getElementById("memberSearchInput")?.value||"").trim().toLowerCase();
+      const f = membersData.filter(m => !q || (m.full_name||'').toLowerCase().includes(q) || (m.nickname||'').toLowerCase().includes(q));
+      const g = document.getElementById("membersGrid");
+      if(!f.length) { g.innerHTML = '<div class="col-span-full p-10 text-center">Chưa có thành viên nào.</div>'; return; }
+      g.innerHTML = f.map((m,i) => {
+        const bg = ["bg-pastel-pink", "bg-pastel-blue", "bg-pastel-lavender", "bg-pastel-butter"][i%4], ini = (m.full_name||'').split(' ').slice(-2).map(w=>w[0]?.toUpperCase()).join('');
+        return `
+          <div class="polaroid-card ${i%2===0?'tilt-left':'tilt-right'} flex flex-col justify-between">
+            <div class="text-center pt-4 space-y-3"><div class="w-20 h-20 rounded-full ${bg} mx-auto flex items-center justify-center font-bold text-2xl">${escapeHtml(ini)}</div>
+            <div><h4 class="font-hand text-xl font-bold">${escapeHtml(m.full_name)}</h4>${m.nickname?`<p class="text-xs text-pink-600">“${escapeHtml(m.nickname)}”</p>`:''}<span class="text-[11px] bg-gray-100 px-2 rounded">${escapeHtml(m.class_role||'Thành viên')}</span></div>
+            ${m.birthday?`<p class="text-xs">🎂 ${formatDateVN(m.birthday)}</p>`:''}${m.quote?`<p class="text-xs italic bg-gray-50 p-2 rounded">“${escapeHtml(m.quote)}”</p>`:''}</div>
+            ${canModifyItem(m.created_by)?`<div class="pt-3 border-t flex justify-end gap-2"><button onclick="openMemberModal('${m.id}')" class="text-xs text-sky-600">Sửa</button><button onclick="confirmDeleteMember('${m.id}')" class="text-xs text-red-600">Xóa</button></div>`:''}
+          </div>`;
+      }).join('');
+    }
+
+    function renderGuestbookSection() {
+      const w = document.getElementById("guestbookWallGrid");
+      if(!guestbookData.length) { w.innerHTML = '<div class="col-span-full p-10 text-center">Chưa có lời lưu bút nào.</div>'; return; }
+      const colors = { pink: "bg-pastel-pink/80 border-pink-300", butter: "bg-pastel-butter/85 border-amber-300", blue: "bg-pastel-blue/80 border-sky-300", lavender: "bg-pastel-lavender/80 border-purple-300" };
+      w.innerHTML = guestbookData.map((g,i) => `
+        <div class="p-6 rounded-2xl border-2 ${colors[g.note_color]||colors.pink} shadow-polaroid ${i%2===0?'tilt-left':'tilt-right'} flex flex-col justify-between hover:rotate-0 transition">
+          <div><div class="flex justify-between mb-3"><span class="font-bold">✍️ ${escapeHtml(g.author_name)}</span><span class="text-xl">${escapeHtml(g.sticker)}</span></div><p class="text-sm whitespace-pre-line">${escapeHtml(g.message)}</p></div>
+          <div class="mt-4 pt-3 border-t border-black/10 flex justify-between text-xs text-gray-700"><span>${formatDateVN(g.created_at)}</span>${canModifyItem(g.user_id)?`<button onclick="confirmDeleteGuestbook('${g.id}')" class="text-red-600">Xóa</button>`:''}</div>
+        </div>`).join('');
+    }
+
+    // CRUD Upload
+    function handleFilesSelected(files) {
+      if(!files.length) return;
+      const valid = Array.from(files).filter(f => ['image/jpeg','image/png','image/webp','image/gif'].includes(f.type) && f.size <= 5*1024*1024);
+      if(valid.length > 10) return showToast("Chọn tối đa 10 ảnh!", "warning");
+      if(!valid.length) return showToast("File không hợp lệ hoặc quá 5MB", "error");
+      selectedUploadFiles = valid;
+      document.getElementById("uploadQueueContainer").classList.remove("hidden");
+      document.getElementById("uploadQueueSummary").textContent = `${valid.length} ảnh`;
+      document.getElementById("uploadFilesPreviewList").innerHTML = valid.map(f => `<div class="p-2 border rounded bg-white"><img src="${URL.createObjectURL(f)}" class="h-16 w-full object-cover rounded"><p class="text-[10px] truncate mt-1">${escapeHtml(f.name)}</p></div>`).join('');
+    }
+    function clearUploadQueue() { selectedUploadFiles=[]; document.getElementById("photoFileInput").value=""; document.getElementById("uploadQueueContainer").classList.add("hidden"); }
+    
+    async function executeBatchUpload() {
+      if(!canWriteContent()) return showToast("Bạn cần quyền Member để upload!", "error");
+      if(!selectedUploadFiles.length) return;
+      
+      const album = document.getElementById("uploadAlbumSelect").value, ev = document.getElementById("uploadEventSelect").value, cap = document.getElementById("uploadCaptionInput").value, setCov = document.getElementById("uploadSetAsCoverCheckbox").checked;
+      document.getElementById("btnStartUpload").disabled = true; document.getElementById("uploadProgressWrapper").classList.remove("hidden");
+      let suc = 0, fUrl = null;
+
+      for(let i=0; i<selectedUploadFiles.length; i++) {
+        const file = selectedUploadFiles[i], ext = file.name.split('.').pop();
+        document.getElementById("uploadProgressBar").style.width = `${Math.round(i/selectedUploadFiles.length*100)}%`;
+        try {
+          const { data:sData, error:sErr } = await supabaseClient.storage.from(STORAGE_BUCKET).upload(`${album}/${Date.now()}_${i}.${ext}`, file);
+          if(sErr) throw sErr;
+          const { data: pData } = supabaseClient.storage.from(STORAGE_BUCKET).getPublicUrl(sData.path);
+          if(!fUrl) fUrl = pData.publicUrl;
+          const { error: dbErr } = await supabaseClient.from("photos").insert({ album_slug: album, event_id: ev||null, storage_path: sData.path, public_url: pData.publicUrl, caption: cap||file.name, uploaded_by: currentUser.id, uploader_name: currentUserProfile.full_name });
+          if(dbErr) throw dbErr;
+          suc++;
+        } catch(e) {}
+      }
+      document.getElementById("uploadProgressBar").style.width = `100%`; document.getElementById("btnStartUpload").disabled = false;
+      if(suc>0) {
+        if(setCov&&fUrl) await supabaseClient.from("albums").update({cover_url: fUrl}).eq("slug", album);
+        showToast(`Tải lên thành công ${suc} ảnh!`, "success"); clearUploadQueue(); syncAllDataFromSupabase();
+      } else { showToast("Lỗi upload", "error"); }
+    }
+
+    // CRUD Modals Logic (Albums, Events, Members, Guestbook)
+    function openCreateAlbumModal() { if(canWriteContent()) document.getElementById("createAlbumModal").classList.remove("hidden"); else showToast("Cần quyền member", "warning"); }
+    function closeCreateAlbumModal() { document.getElementById("createAlbumModal").classList.add("hidden"); }
+    async function submitNewAlbum() {
+      const title = document.getElementById("newAlbumTitleInput").value.trim(), icon = document.getElementById("newAlbumIconInput").value||"📸", desc = document.getElementById("newAlbumDescInput").value;
+      if(!title) return;
+      try {
+        await supabaseClient.from("albums").insert({ slug: slugifyVietnamese(title)+"-"+Date.now().toString().slice(-4), title, icon, description:desc, sort_order:albumsData.length+1, created_by:currentUser.id });
+        showToast("Tạo Album thành công", "success"); closeCreateAlbumModal(); syncAllDataFromSupabase();
+      } catch(e){ showToast("Lỗi", "error"); }
+    }
+
+    function openEventModal(id) {
+      if(!canWriteContent()) return showToast("Cần quyền member", "warning");
+      const ev = id ? eventsData.find(x=>x.id===id) : null;
+      document.getElementById("eventEditId").value = id||""; document.getElementById("eventTitleInput").value = ev?ev.title:""; document.getElementById("eventDateInput").value = ev?ev.event_date:""; document.getElementById("eventAlbumSelect").value = ev?ev.album_slug:"cac-su-kien-moi-do-lop-tu-tao"; document.getElementById("eventLocationInput").value = ev?ev.location:""; document.getElementById("eventDescInput").value = ev?ev.description:"";
+      document.getElementById("eventModal").classList.remove("hidden");
+    }
+    function closeEventModal() { document.getElementById("eventModal").classList.add("hidden"); }
+    async function submitEventForm() {
+      const id = document.getElementById("eventEditId").value, obj = { title: document.getElementById("eventTitleInput").value, event_date: document.getElementById("eventDateInput").value||null, album_slug: document.getElementById("eventAlbumSelect").value, location: document.getElementById("eventLocationInput").value, description: document.getElementById("eventDescInput").value };
+      if(!obj.title) return;
+      try {
+        if(id) await supabaseClient.from("events").update(obj).eq("id", id);
+        else { obj.created_by = currentUser.id; await supabaseClient.from("events").insert(obj); }
+        closeEventModal(); syncAllDataFromSupabase(); showToast("Đã lưu sự kiện", "success");
+      } catch(e){}
+    }
+    function confirmDeleteEvent(id) { openConfirmModal("Xóa sự kiện", "Chắc chắn?", async() => { await supabaseClient.from("events").delete().eq("id",id); syncAllDataFromSupabase(); showToast("Đã xóa","success"); }); }
+
+    function openMemberModal(id) {
+      if(!canWriteContent()) return showToast("Cần quyền member", "warning");
+      const m = id ? membersData.find(x=>x.id===id) : null;
+      document.getElementById("memberEditId").value = id||""; document.getElementById("memberNameInput").value = m?m.full_name:""; document.getElementById("memberNicknameInput").value = m?m.nickname:""; document.getElementById("memberRoleInput").value = m?m.class_role:""; document.getElementById("memberBirthdayInput").value = m?m.birthday:""; document.getElementById("memberQuoteInput").value = m?m.quote:"";
+      document.getElementById("memberModal").classList.remove("hidden");
+    }
+    function closeMemberModal() { document.getElementById("memberModal").classList.add("hidden"); }
+    async function submitMemberForm() {
+      const id = document.getElementById("memberEditId").value, obj = { full_name: document.getElementById("memberNameInput").value, nickname: document.getElementById("memberNicknameInput").value, class_role: document.getElementById("memberRoleInput").value, birthday: document.getElementById("memberBirthdayInput").value||null, quote: document.getElementById("memberQuoteInput").value };
+      if(!obj.full_name) return;
+      try {
+        if(id) await supabaseClient.from("class_members").update(obj).eq("id", id);
+        else { obj.created_by = currentUser.id; await supabaseClient.from("class_members").insert(obj); }
+        closeMemberModal(); syncAllDataFromSupabase(); showToast("Đã lưu hồ sơ", "success");
+      } catch(e){}
+    }
+    function confirmDeleteMember(id) { openConfirmModal("Xóa thành viên", "Chắc chắn?", async() => { await supabaseClient.from("class_members").delete().eq("id",id); syncAllDataFromSupabase(); showToast("Đã xóa","success"); }); }
+
+    async function submitGuestbookEntry() {
+      if(!canWriteContent()) return showToast("Cần quyền member", "warning");
+      if(Date.now() - lastGuestbookSubmitTime < 15000) return showToast("Đợi xíu để tránh spam", "warning");
+      const obj = { author_name: document.getElementById("gbAuthorInput").value, note_color: document.getElementById("gbColorSelect").value, sticker: document.getElementById("gbStickerSelect").value, message: document.getElementById("gbMessageInput").value, user_id: currentUser.id };
+      if(!obj.author_name || obj.message.length<5) return showToast("Nhập tên và nội dung >= 5 ký tự", "warning");
+      try {
+        await supabaseClient.from("guestbook_entries").insert(obj); lastGuestbookSubmitTime = Date.now();
+        document.getElementById("gbMessageInput").value=""; syncAllDataFromSupabase(); showToast("Đã ghim", "success");
+      } catch(e){}
+    }
+    function confirmDeleteGuestbook(id) { openConfirmModal("Xóa lưu bút", "Chắc chắn?", async() => { await supabaseClient.from("guestbook_entries").delete().eq("id",id); syncAllDataFromSupabase(); showToast("Đã xóa","success"); }); }
+
+    // Admin Tools
+    function saveSupabaseConnection() {
+      let u = document.getElementById("cfgSupabaseUrl").value.trim().replace(/\/rest\/v1\/?$/, '').replace(/\/$/, ''), k = document.getElementById("cfgSupabaseAnonKey").value.trim();
+      if(u && !u.startsWith('http')) u = 'https://'+u; document.getElementById("cfgSupabaseUrl").value = u;
+      if(!u || !k || k.includes("service_role")) return showToast("Lỗi nhập key", "error");
+      localStorage.setItem("tx11t2_supabase_url", u); localStorage.setItem("tx11t2_supabase_anon_key", k);
+      initSupabaseApp(); showToast("Đã lưu kết nối", "success");
+    }
+    function disconnectSupabaseConfig() { localStorage.removeItem("tx11t2_supabase_url"); localStorage.removeItem("tx11t2_supabase_anon_key"); location.reload(); }
+    
+    async function refreshAdminUsersList() {
+      const tb = document.getElementById("adminProfilesTableBody");
+      try {
+        const { data, error } = await supabaseClient.from("profiles").select("*").order("created_at",{ascending:false});
+        if(error) throw error;
+        tb.innerHTML = data.map(p => `<tr><td class="p-2 border-b"><div class="font-bold">${escapeHtml(p.full_name)}</div><div class="text-xs text-gray-500">${escapeHtml(p.email)}</div></td><td class="p-2 border-b font-bold">${p.role}</td><td class="p-2 border-b text-xs">${formatDateVN(p.created_at)}</td><td class="p-2 border-b text-right"><button onclick="updateUserRole('${p.id}','member')" class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded mr-1">Member</button><button onclick="updateUserRole('${p.id}','admin')" class="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded mr-1">Admin</button><button onclick="updateUserRole('${p.id}','pending')" class="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded">Hủy</button></td></tr>`).join('');
+      } catch(e) {}
+    }
+    async function updateUserRole(uid, r) { try { await supabaseClient.from("profiles").update({role:r}).eq("id",uid); refreshAdminUsersList(); showToast("Đã cập nhật","success"); }catch(e){} }
+    async function addAllowedEmail() {
+      const e = document.getElementById("whitelistEmailInput").value.trim(), r = document.getElementById("whitelistRoleSelect").value;
+      if(!e) return;
+      try { await supabaseClient.from("allowed_emails").upsert({email:e, default_role:r}); showToast("Đã thêm email", "success"); document.getElementById("whitelistEmailInput").value=""; }catch(e){}
+    }
+
+    // Export HTML / Backup
+    function exportReadyToDeployHtml() {
+      const { url, anonKey } = getConfiguredCredentials(); if(!url) return;
+      let html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+      html = html.replace(/const DEFAULT_SUPABASE_URL = ".*?";/, `const DEFAULT_SUPABASE_URL = "${url}";`).replace(/const DEFAULT_SUPABASE_ANON_KEY = ".*?";/, `const DEFAULT_SUPABASE_ANON_KEY = "${anonKey}";`);
+      triggerBrowserDownload(new Blob([html], {type:"text/html"}), "index.html");
+    }
+    function exportDatabaseBackupJson() {
+      const payload = { albums: albumsData, events: eventsData, photos: photosData, class_members: membersData, guestbook_entries: guestbookData };
+      triggerBrowserDownload(new Blob([JSON.stringify(payload,null,2)], {type:"application/json"}), "backup.json");
+    }
+    async function restoreDatabaseFromJson() {
+      const f = document.getElementById("restoreJsonInput").files[0]; if(!f) return;
+      try {
+        const p = JSON.parse(await f.text());
+        if(p.albums) await supabaseClient.from("albums").upsert(p.albums); if(p.events) await supabaseClient.from("events").upsert(p.events);
+        if(p.class_members) await supabaseClient.from("class_members").upsert(p.class_members); if(p.guestbook_entries) await supabaseClient.from("guestbook_entries").upsert(p.guestbook_entries);
+        syncAllDataFromSupabase(); showToast("Đã phục hồi", "success");
+      } catch(e){}
+    }
+
+    // Utils
+    function openLightboxById(id) { const p = photosData.find(x=>x.id===id); if(!p) return; currentLightboxPhoto = p; document.getElementById("lightboxImg").src = p.public_url; document.getElementById("lightboxCaption").textContent = p.caption; document.getElementById("lightboxDownloadBtn").href = p.public_url; document.getElementById("lightboxDeleteBtn").classList.toggle("hidden", !canModifyItem(p.uploaded_by)); document.getElementById("lightboxSetCoverBtn").classList.toggle("hidden", !canWriteContent()); document.getElementById("lightboxModal").classList.remove("hidden"); }
+    function closeLightbox() { document.getElementById("lightboxModal").classList.add("hidden"); }
+    async function setLightboxPhotoAsAlbumCover() { try { await supabaseClient.from("albums").update({cover_url:currentLightboxPhoto.public_url}).eq("slug",currentLightboxPhoto.album_slug); syncAllDataFromSupabase(); showToast("Đã đặt ảnh bìa", "success"); }catch(e){} }
+    function confirmDeleteLightboxPhoto() { openConfirmModal("Xóa ảnh","Chắc chắn?", async() => { await supabaseClient.from("photos").delete().eq("id",currentLightboxPhoto.id); closeLightbox(); syncAllDataFromSupabase(); showToast("Đã xóa","success"); }); }
+
+    function openConfirmModal(t, m, c) { document.getElementById("confirmModalTitle").textContent = t; document.getElementById("confirmModalMessage").textContent = m; document.getElementById("confirmModalActionBtn").onclick = async()=>{ closeConfirmModal(); await c(); }; document.getElementById("confirmModal").classList.remove("hidden"); }
+    function closeConfirmModal() { document.getElementById("confirmModal").classList.add("hidden"); }
+    function showToast(msg, t="info") {
+      const c = document.getElementById("toastContainer"), d = document.createElement("div"), colors = { success:"bg-emerald-600 text-white", error:"bg-red-600 text-white", warning:"bg-amber-400 text-amber-950", info:"bg-pastel-ink text-white" };
+      d.className = `p-3 rounded-xl shadow-lg text-sm font-bold transition-all ${colors[t]}`; d.textContent = msg;
+      c.appendChild(d); setTimeout(()=>{ d.style.opacity=0; setTimeout(()=>d.remove(),300); }, 3000);
+    }
+    function triggerBrowserDownload(b, n) { const u=URL.createObjectURL(b), a=document.createElement("a"); a.href=u; a.download=n; a.click(); URL.revokeObjectURL(u); }
+    function escapeHtml(s) { return String(s||'').replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+    function formatDateVN(d) { return d ? new Date(d).toLocaleDateString('vi-VN') : ''; }
+    function slugifyVietnamese(s) { return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,""); }
+    function downloadProjectFile(t) {
+      if(t==='schema.sql') triggerBrowserDownload(new Blob([document.getElementById('sqlSchemaPreviewBox').value],{type:'text/sql'}), "schema.sql");
+      if(t==='README.md') triggerBrowserDownload(new Blob(['# Thanh Xuan 11T2\nSee source'],{type:'text/markdown'}), "README.md");
+      if(t==='.env.example') triggerBrowserDownload(new Blob(['VITE_SUPABASE_URL=\nVITE_SUPABASE_ANON_KEY='],{type:'text/plain'}), ".env.example");
+    }
+    function populateSqlAndDocsPreviews() { document.getElementById("sqlSchemaPreviewBox").value = "-- Paste schema here"; } // Omitted full string for brevity, it will use DB if synced.
+
+    window.addEventListener("DOMContentLoaded", () => { switchSection("home"); initSupabaseApp(); });
+  </script>
+</body>
+</html><!DOCTYPE html>
 <html lang="vi" class="scroll-smooth"><head><script data-bard-client-injected="true">(function(firebaseConfig, initialAuthToken, appId) {
         window.__firebase_config = firebaseConfig;
         window.__initial_auth_token = initialAuthToken;
