@@ -169,6 +169,23 @@
       50% { transform: translateY(-25px) rotate(15deg) scale(1.1); }
       100% { transform: translateY(10px) rotate(-10deg) scale(0.95); }
     }
+    /* 5. Trang trí lại các ô "Chưa có ảnh" thành sọc pastel đứt nét */
+    .polaroid-card .bg-pastel-paper {
+      /* Xóa nền trắng/kem đặc */
+      background-color: transparent !important; 
+      
+      /* Tạo họa tiết sọc chéo hồng và xanh mờ ảo */
+      background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255, 192, 203, 0.3), /* Sọc hồng */
+        rgba(255, 192, 203, 0.3) 12px,
+        rgba(200, 231, 255, 0.3) 12px, /* Sọc xanh */
+        rgba(200, 231, 255, 0.3) 24px
+      ) !important;
+      
+      /* Viền đứt nét màu hồng đậm hơn tí cho giống cắt dán */
+      border: 2px dashed rgba(255, 143, 171, 0.8) !important; 
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-pastel-pink selection:text-pastel-ink">
