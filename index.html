@@ -208,6 +208,22 @@ body {
     .polaroid-card .aspect-\[4\/3\] span.text-4xl { 
       font-size: 2.5rem !important; 
     }
+    /* 4. Hiệu ứng kính mờ (Glassmorphism) cho các ô thông số và thẻ ảnh */
+    .polaroid-card, 
+    .bg-white\/90, 
+    .bg-white\/95, 
+    .bg-pastel-cream {
+      /* Màu trắng trong suốt 45% để nhìn xuyên thấu xuống nền */
+      background-color: rgba(255, 255, 255, 0.45) !important; 
+      
+      /* Hiệu ứng làm mờ phần nền phía sau */
+      backdrop-filter: blur(10px) !important; 
+      -webkit-backdrop-filter: blur(10px) !important; /* Hỗ trợ cho trình duyệt Safari */
+      
+      /* Viền trắng mỏng và bóng đổ nhạt giúp các ô kính nổi bật, không bị chìm vào nền */
+      border: 1px solid rgba(255, 255, 255, 0.7) !important; 
+      box-shadow: 0 8px 24px 0 rgba(233, 30, 99, 0.15) !important; 
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-pastel-pink selection:text-pastel-ink">
