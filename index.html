@@ -177,6 +177,37 @@ body {
     /* Đĩa than quay chậm */
     @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     .animate-spin-slow { animation: spinSlow 4s linear infinite; }
+    /* --- BẢN CHỐT: NỀN ĐẬM HƠN & Ô VUÔNG NHỎ GỌN --- */
+    
+    /* 1. Nền ngoài đậm và rực rỡ hơn */
+    body {
+      background-color: #F8BBD0 !important; 
+      background-image: 
+        linear-gradient(to right, rgba(233, 30, 99, 0.2) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(233, 30, 99, 0.2) 1px, transparent 1px),
+        radial-gradient(circle at 10% 10%, rgba(255, 128, 171, 1) 0%, transparent 45%),
+        radial-gradient(circle at 90% 15%, rgba(129, 212, 250, 1) 0%, transparent 45%),
+        radial-gradient(circle at 85% 90%, rgba(255, 224, 130, 1) 0%, transparent 45%),
+        radial-gradient(circle at 15% 85%, rgba(206, 147, 216, 1) 0%, transparent 45%) !important;
+    }
+
+    /* 2. Ô vuông nhỏ lại và giữ màu kem sáng bên trong */
+    .polaroid-card {
+      background-color: #FFFDF7 !important; /* Giữ màu kem sữa */
+      padding: 10px 10px 18px 10px !important; /* Bóp viền nhỏ lại để ô vuông gọn hơn */
+      border-radius: 12px !important;
+    }
+
+    /* 3. Cân đối lại chữ và icon bên trong cho vừa với ô vuông mới */
+    .polaroid-card h3 { 
+      font-size: 1.1rem !important; 
+    }
+    .polaroid-card p.text-xs { 
+      font-size: 0.7rem !important; 
+    }
+    .polaroid-card .aspect-\[4\/3\] span.text-4xl { 
+      font-size: 2.5rem !important; 
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-pastel-pink selection:text-pastel-ink">
