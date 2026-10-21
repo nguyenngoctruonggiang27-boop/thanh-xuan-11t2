@@ -48,117 +48,14 @@
   </script>
 
   <style>
-   :root {
-  /* Chuyển nền kem sang tone ấm, hơi hồng nhạt/be */
-  --bg-cream: #FFF5F7; 
-  --grid-color: rgba(255, 182, 193, 0.4); /* Màu lưới hồng pastel */
-  --dot-color: rgba(255, 105, 180, 0.15); /* Chấm bi đậm hơn một chút */
-}
+  <style>
+    :root {
+      --bg-cream: #FFF5F7; 
+      --grid-color: rgba(255, 182, 193, 0.4); 
+      --dot-color: rgba(255, 105, 180, 0.15); 
+    }
 
-/* 1. MÀU NỀN BÊN NGOÀI: Đậm hơn, lưới rõ hơn và loang màu rực rỡ */
-body {
-  background-color: #FCE4EC; /* Nền tảng màu hồng phấn */
-  background-image: 
-    linear-gradient(to right, rgba(255, 143, 171, 0.35) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 143, 171, 0.35) 1px, transparent 1px),
-    radial-gradient(circle at 10% 10%, rgba(255, 179, 198, 0.9) 0%, transparent 45%),
-    radial-gradient(circle at 90% 15%, rgba(186, 225, 255, 0.9) 0%, transparent 45%),
-    radial-gradient(circle at 85% 90%, rgba(255, 235, 153, 0.8) 0%, transparent 45%),
-    radial-gradient(circle at 15% 85%, rgba(229, 212, 255, 0.9) 0%, transparent 45%);
-  background-size: 30px 30px, 30px 30px, 100vw 100vh, 100vw 100vh, 100vw 100vh, 100vw 100vh;
-  background-attachment: fixed; /* Cố định nền khi cuộn trang */
-  color: #3D314A;
-  overflow-x: hidden;
-  position: relative;
-}
-
-/* 2. CÁC Ô VUÔNG BÊN TRONG: Đổi từ trắng sang Kem Sữa Ấm (khác biệt với nền ngoài) */
-.bg-white\/90, .bg-white\/95, .bg-pastel-cream {
-  background-color: rgba(255, 252, 248, 0.92) !important; /* Trắng kem sữa */
-  border-color: #FFC0CB !important; /* Đổi viền các ô thành hồng pastel */
-}
-.polaroid-card {
-  background-color: #FFF9F4 !important; /* Nền ảnh polaroid hơi ngả cam sữa cực nhạt */
-}
-    /* Hiệu ứng viền sổ tay cuốn vở ở mép trái màn hình */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 12px;
-      width: 14px;
-      height: 100vh;
-      background: repeating-linear-gradient(
-        to bottom,
-        #D1C4E9,
-        #D1C4E9 12px,
-        #FFFBF5 12px,
-        #FFFBF5 24px
-      );
-      opacity: 0.6;
-      z-index: 35;
-      pointer-events: none;
-    }
-    <!-- Bố cục trang trí Chibi dễ thương -->
-  <div class="floating-doodle doodle-1">🎀</div> <!-- Kẹp nơ -->
-  <div class="floating-doodle doodle-2">🥕</div> <!-- Củ cà rốt -->
-  <div class="floating-doodle doodle-3">🧸</div> <!-- Gấu bông -->
-  <div class="floating-doodle doodle-4">🍓</div> <!-- Trái dâu -->
-  <div class="floating-doodle doodle-5">🌷</div> <!-- Hoa tulip -->
-    .washi-tape {
-      position: absolute; top: -11px; left: 50%; transform: translateX(-50%) rotate(-2deg);
-      width: 96px; height: 24px; background: rgba(255, 214, 224, 0.78);
-      border-left: 2px dashed rgba(255, 255, 255, 0.7); border-right: 2px dashed rgba(255, 255, 255, 0.7);
-      box-shadow: 0 2px 4px rgba(61, 49, 74, 0.08); z-index: 10; pointer-events: none;
-    }/* Washi tape sáng lên khi hover */
-    [class^="washi-"] { transition: filter 0.3s ease; }
-    [class^="washi-"]:hover { filter: brightness(1.15) drop-shadow(2px 4px 6px rgba(0,0,0,0.1)); }
-
-    /* Animation cho các icon trang trí bay lơ lửng */
-    .floating-doodle {
-      position: absolute; z-index: -1; opacity: 0.7; pointer-events: none;
-      animation: floatUp 6s ease-in-out infinite;
-    }
-    .doodle-1 { top: 15%; left: 5%; font-size: 2rem; animation-delay: 0s; }
-    .doodle-2 { top: 40%; right: 8%; font-size: 2.5rem; animation-delay: 1.5s; }
-    .doodle-3 { bottom: 20%; left: 10%; font-size: 1.8rem; animation-delay: 3s; }
-    .doodle-4 { top: 10%; right: 20%; font-size: 2.2rem; animation-delay: 4.5s; }
-    @keyframes floatUp {
-      0% { transform: translateY(0px) rotate(0deg) scale(1); }
-      50% { transform: translateY(-20px) rotate(10deg) scale(1.1); }
-      100% { transform: translateY(0px) rotate(0deg) scale(1); }
-    }
-    .washi-blue { background: rgba(200, 231, 255, 0.82); transform: translateX(-50%) rotate(1.8deg); }
-    .washi-lavender { background: rgba(229, 212, 255, 0.82); transform: translateX(-50%) rotate(-1.5deg); }
-    .washi-butter { background: rgba(255, 243, 176, 0.86); transform: translateX(-50%) rotate(2.2deg); }
-    .polaroid-card {
-      background: #FFFFFF; padding: 12px 12px 26px 12px; border-radius: 14px;
-      border: 1.5px solid #F3EAF8; box-shadow: 0 10px 25px -5px rgba(61, 49, 74, 0.12), 0 4px 10px -2px rgba(61, 49, 74, 0.06);
-      transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative;
-    }
-    .polaroid-card:hover {
-      transform: translateY(-6px) rotate(0deg) scale(1.015) !important;
-      box-shadow: 0 20px 35px -5px rgba(224, 87, 128, 0.22), 0 8px 16px -4px rgba(61, 49, 74, 0.1); z-index: 20;
-    }
-    .tilt-left { transform: rotate(-1.4deg); } .tilt-right { transform: rotate(1.4deg); } .tilt-slight { transform: rotate(-0.7deg); }
-    .lined-paper {
-      background-color: #FFFDF9;
-      background-image: repeating-linear-gradient(transparent, transparent 27px, rgba(157, 117, 223, 0.18) 28px);
-      line-height: 28px;
-    }
-    .scrapbook-border { border: 2px dashed #E5C1D8; }
-    @keyframes floatSlow { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-6px) rotate(4deg); } }
-    .animate-float { animation: floatSlow 4.5s ease-in-out infinite; }
-    ::-webkit-scrollbar { width: 10px; height: 10px; }
-    ::-webkit-scrollbar-track { background: #FFFDF7; }
-    ::-webkit-scrollbar-thumb { background: #F4B8CE; border-radius: 9999px; border: 2px solid #FFFDF7; }
-    ::-webkit-scrollbar-thumb:hover { background: #E05780; }
-    /* Đĩa than quay chậm */
-    @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    .animate-spin-slow { animation: spinSlow 4s linear infinite; }
-    /* --- BẢN CHỐT: NỀN ĐẬM HƠN & Ô VUÔNG NHỎ GỌN --- */
-    
-    /* 1. Nền ngoài đậm và rực rỡ hơn */
+    /* 1. MÀU NỀN BÊN NGOÀI: Đậm hơn, lưới rõ hơn và loang màu rực rỡ */
     body {
       background-color: #F8BBD0 !important; 
       background-image: 
@@ -168,49 +65,127 @@ body {
         radial-gradient(circle at 90% 15%, rgba(129, 212, 250, 1) 0%, transparent 45%),
         radial-gradient(circle at 85% 90%, rgba(255, 224, 130, 1) 0%, transparent 45%),
         radial-gradient(circle at 15% 85%, rgba(206, 147, 216, 1) 0%, transparent 45%) !important;
+      background-size: 30px 30px, 30px 30px, 100vw 100vh, 100vw 100vh, 100vw 100vh, 100vw 100vh;
+      background-attachment: fixed;
+      color: #3D314A;
+      overflow-x: hidden;
+      position: relative;
     }
 
-    /* 2. Ô vuông nhỏ lại và giữ màu kem sáng bên trong */
+    /* Hiệu ứng viền sổ tay cuốn vở ở mép trái màn hình */
+    body::before {
+      content: ""; position: fixed; top: 0; left: 12px; width: 14px; height: 100vh;
+      background: repeating-linear-gradient(to bottom, #D1C4E9, #D1C4E9 12px, #FFFBF5 12px, #FFFBF5 24px);
+      opacity: 0.6; z-index: 35; pointer-events: none;
+    }
+
+    /* 2. Ô vuông nhỏ lại và bo góc gọn gàng */
     .polaroid-card {
-      background-color: #FFFDF7 !important; /* Giữ màu kem sữa */
-      padding: 10px 10px 18px 10px !important; /* Bóp viền nhỏ lại để ô vuông gọn hơn */
+      padding: 10px 10px 18px 10px !important; 
       border-radius: 12px !important;
+      transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1); 
+      position: relative;
     }
 
-    /* 3. Cân đối lại chữ và icon bên trong cho vừa với ô vuông mới */
-    .polaroid-card h3 { 
-      font-size: 1.1rem !important; 
-    }
-    .polaroid-card p.text-xs { 
-      font-size: 0.7rem !important; 
-    }
-    .polaroid-card .aspect-\[4\/3\] span.text-4xl { 
-      font-size: 2.5rem !important; 
-    }
-    /* 4. Hiệu ứng kính mờ (Glassmorphism) cho các ô thông số và thẻ ảnh */
+    /* 3. Hiệu ứng kính mờ (Glassmorphism) siêu thực */
     .polaroid-card, 
     .bg-white\/90, 
     .bg-white\/95, 
     .bg-pastel-cream {
-      /* Màu trắng trong suốt 45% để nhìn xuyên thấu xuống nền */
-      background-color: rgba(255, 255, 255, 0.25) !important; 
-      
-      /* Hiệu ứng làm mờ phần nền phía sau */
-      backdrop-filter: blur(10px) !important; 
-      -webkit-backdrop-filter: blur(5px) !important; /* Hỗ trợ cho trình duyệt Safari */
-      
-      /* Viền trắng mỏng và bóng đổ nhạt giúp các ô kính nổi bật, không bị chìm vào nền */
+      background-color: rgba(255, 255, 255, 0.55) !important; 
+      backdrop-filter: blur(24px) !important; 
+      -webkit-backdrop-filter: blur(24px) !important; 
       border: 1px solid rgba(255, 255, 255, 0.7) !important; 
       box-shadow: 0 8px 24px 0 rgba(233, 30, 99, 0.15) !important; 
+    }
+
+    /* Cân đối lại chữ và icon bên trong cho vừa với ô vuông */
+    .polaroid-card h3 { font-size: 1.1rem !important; }
+    .polaroid-card p.text-xs { font-size: 0.7rem !important; }
+    .polaroid-card .aspect-\[4\/3\] span.text-4xl { font-size: 2.5rem !important; }
+
+    .polaroid-card:hover {
+      transform: translateY(-6px) rotate(0deg) scale(1.015) !important;
+      box-shadow: 0 20px 35px -5px rgba(224, 87, 128, 0.3), 0 8px 16px -4px rgba(61, 49, 74, 0.1) !important; 
+      z-index: 20;
+    }
+
+    /* Băng dính Washi Tape */
+    .washi-tape {
+      position: absolute; top: -11px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+      width: 96px; height: 24px; background: rgba(255, 214, 224, 0.78);
+      border-left: 2px dashed rgba(255, 255, 255, 0.7); border-right: 2px dashed rgba(255, 255, 255, 0.7);
+      box-shadow: 0 2px 4px rgba(61, 49, 74, 0.08); z-index: 10; pointer-events: none;
+    }
+    .washi-blue { background: rgba(200, 231, 255, 0.82); transform: translateX(-50%) rotate(1.8deg); }
+    .washi-lavender { background: rgba(229, 212, 255, 0.82); transform: translateX(-50%) rotate(-1.5deg); }
+    .washi-butter { background: rgba(255, 243, 176, 0.86); transform: translateX(-50%) rotate(2.2deg); }
+    [class^="washi-"] { transition: filter 0.3s ease; }
+    [class^="washi-"]:hover { filter: brightness(1.15) drop-shadow(2px 4px 6px rgba(0,0,0,0.1)); }
+
+    .tilt-left { transform: rotate(-1.4deg); } .tilt-right { transform: rotate(1.4deg); } .tilt-slight { transform: rotate(-0.7deg); }
+    
+    .lined-paper {
+      background-color: #FFFDF9;
+      background-image: repeating-linear-gradient(transparent, transparent 27px, rgba(157, 117, 223, 0.18) 28px);
+      line-height: 28px;
+    }
+    .scrapbook-border { border: 2px dashed #E5C1D8; }
+    
+    @keyframes floatSlow { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-6px) rotate(4deg); } }
+    .animate-float { animation: floatSlow 4.5s ease-in-out infinite; }
+    
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: #FFFDF7; }
+    ::-webkit-scrollbar-thumb { background: #F4B8CE; border-radius: 9999px; border: 2px solid #FFFDF7; }
+    ::-webkit-scrollbar-thumb:hover { background: #E05780; }
+    
+    @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .animate-spin-slow { animation: spinSlow 4s linear infinite; }
+
+    /* 4. Animation cho 12 icon trang trí Chibi bay lơ lửng */
+    .floating-doodle {
+      position: fixed; 
+      z-index: -1; 
+      opacity: 0.9; 
+      pointer-events: none;
+      animation: floatAround 8s ease-in-out infinite alternate;
+    }
+    .doodle-1 { top: 12%; left: 4%; font-size: 3.5rem; animation-delay: 0s; }
+    .doodle-2 { top: 40%; right: 3%; font-size: 3rem; animation-delay: 1.5s; }
+    .doodle-3 { bottom: 15%; left: 6%; font-size: 4rem; animation-delay: 3s; }
+    .doodle-4 { top: 18%; right: 18%; font-size: 2.8rem; animation-delay: 4.5s; }
+    .doodle-5 { bottom: 25%; right: 12%; font-size: 3.2rem; animation-delay: 2s; }
+    .doodle-6 { top: 60%; left: 15%; font-size: 3rem; animation-delay: 2.5s; }
+    .doodle-7 { bottom: 35%; right: 25%; font-size: 2.5rem; animation-delay: 0.5s; }
+    .doodle-8 { top: 25%; left: 35%; font-size: 2.8rem; animation-delay: 3.5s; }
+    .doodle-9 { bottom: 8%; right: 40%; font-size: 3.5rem; animation-delay: 1s; }
+    .doodle-10 { top: 75%; right: 40%; font-size: 2.8rem; animation-delay: 4s; }
+    .doodle-11 { top: 5%; left: 45%; font-size: 3.2rem; animation-delay: 1.2s; }
+    .doodle-12 { top: 50%; left: 5%; font-size: 2.2rem; animation-delay: 3.8s; }
+
+    @keyframes floatAround {
+      0% { transform: translateY(0px) rotate(0deg) scale(1); }
+      50% { transform: translateY(-25px) rotate(15deg) scale(1.1); }
+      100% { transform: translateY(10px) rotate(-10deg) scale(0.95); }
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-pastel-pink selection:text-pastel-ink">
-  <!-- Bố cục trang trí cute thêm vào nền -->
-  <div class="floating-doodle doodle-1">✨</div>
-  <div class="floating-doodle doodle-2">💖</div>
-  <div class="floating-doodle doodle-3">🌸</div>
-  <div class="floating-doodle doodle-4">⭐</div>
+
+  <!-- Bố cục trang trí Chibi dễ thương (12 cái) -->
+  <div class="floating-doodle doodle-1">🎀</div>
+  <div class="floating-doodle doodle-2">🥕</div>
+  <div class="floating-doodle doodle-3">🧸</div>
+  <div class="floating-doodle doodle-4">🍓</div>
+  <div class="floating-doodle doodle-5">🌷</div>
+  <div class="floating-doodle doodle-6">☁️</div>
+  <div class="floating-doodle doodle-7">🎨</div>
+  <div class="floating-doodle doodle-8">🌻</div>
+  <div class="floating-doodle doodle-9">🎈</div>
+  <div class="floating-doodle doodle-10">🦋</div>
+  <div class="floating-doodle doodle-11">🍀</div>
+  <div class="floating-doodle doodle-12">✨</div>
 
   <!-- ============================================================================
        TOP STATUS BANNER
