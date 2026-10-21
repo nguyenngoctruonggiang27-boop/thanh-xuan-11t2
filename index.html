@@ -48,24 +48,27 @@
   </script>
 
   <style>
-    :root {
-      --bg-cream: #FFFBF5;
-    }
+   :root {
+  /* Chuyển nền kem sang tone ấm, hơi hồng nhạt/be */
+  --bg-cream: #FFF5F7; 
+  --grid-color: rgba(255, 182, 193, 0.4); /* Màu lưới hồng pastel */
+  --dot-color: rgba(255, 105, 180, 0.15); /* Chấm bi đậm hơn một chút */
+}
 
-    body {
-      background-color: var(--bg-cream);
-      /* Kết hợp hoa văn lưới tập học sinh (grid), chấm bi nhẹ nhàng (radial) và hiệu ứng giấy sần vintage */
-      background-image: 
-        radial-gradient(rgba(255, 143, 171, 0.25) 1.5px, transparent 1.5px),
-        radial-gradient(rgba(114, 181, 242, 0.2) 1.5px, transparent 1.5px),
-        linear-gradient(to right, rgba(229, 212, 255, 0.25) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 243, 176, 0.25) 1px, transparent 1px);
-      background-size: 32px 32px, 32px 32px, 64px 64px, 64px 64px;
-      background-position: 0 0, 16px 16px, 0 0, 0 0;
-      color: #3D314A;
-      overflow-x: hidden;
-      position: relative;
-    }
+body {
+  background-color: var(--bg-cream);
+  /* Lưới học sinh mix với gradient pastel loang nhẹ */
+  background-image: 
+    radial-gradient(var(--dot-color) 2px, transparent 2px),
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%); /* Lớp phủ mờ */
+  background-size: 30px 30px, 30px 30px, 30px 30px, 100% 100%;
+  background-position: 0 0, 15px 15px, 0 0, 0 0;
+  color: #3D314A;
+  overflow-x: hidden;
+  position: relative;
+}
 
     /* Hiệu ứng viền sổ tay cuốn vở ở mép trái màn hình */
     body::before {
@@ -91,6 +94,23 @@
       width: 96px; height: 24px; background: rgba(255, 214, 224, 0.78);
       border-left: 2px dashed rgba(255, 255, 255, 0.7); border-right: 2px dashed rgba(255, 255, 255, 0.7);
       box-shadow: 0 2px 4px rgba(61, 49, 74, 0.08); z-index: 10; pointer-events: none;
+    }/* Washi tape sáng lên khi hover */
+    [class^="washi-"] { transition: filter 0.3s ease; }
+    [class^="washi-"]:hover { filter: brightness(1.15) drop-shadow(2px 4px 6px rgba(0,0,0,0.1)); }
+
+    /* Animation cho các icon trang trí bay lơ lửng */
+    .floating-doodle {
+      position: absolute; z-index: -1; opacity: 0.7; pointer-events: none;
+      animation: floatUp 6s ease-in-out infinite;
+    }
+    .doodle-1 { top: 15%; left: 5%; font-size: 2rem; animation-delay: 0s; }
+    .doodle-2 { top: 40%; right: 8%; font-size: 2.5rem; animation-delay: 1.5s; }
+    .doodle-3 { bottom: 20%; left: 10%; font-size: 1.8rem; animation-delay: 3s; }
+    .doodle-4 { top: 10%; right: 20%; font-size: 2.2rem; animation-delay: 4.5s; }
+    @keyframes floatUp {
+      0% { transform: translateY(0px) rotate(0deg) scale(1); }
+      50% { transform: translateY(-20px) rotate(10deg) scale(1.1); }
+      100% { transform: translateY(0px) rotate(0deg) scale(1); }
     }
     .washi-blue { background: rgba(200, 231, 255, 0.82); transform: translateX(-50%) rotate(1.8deg); }
     .washi-lavender { background: rgba(229, 212, 255, 0.82); transform: translateX(-50%) rotate(-1.5deg); }
@@ -123,6 +143,11 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-pastel-pink selection:text-pastel-ink">
+  <!-- Bố cục trang trí cute thêm vào nền -->
+  <div class="floating-doodle doodle-1">✨</div>
+  <div class="floating-doodle doodle-2">💖</div>
+  <div class="floating-doodle doodle-3">🌸</div>
+  <div class="floating-doodle doodle-4">⭐</div>
 
   <!-- ============================================================================
        TOP STATUS BANNER
