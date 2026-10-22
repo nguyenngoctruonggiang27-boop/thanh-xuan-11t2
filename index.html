@@ -1175,24 +1175,31 @@
     }
 
     // Utils
-   function openLightboxById(id) { 
+  function openLightboxById(id) { 
       const p = photosData.find(x=>x.id===id); if(!p) return; 
       currentLightboxPhoto = p; 
-      const isVideo = p.public_url.match(/\.(mp4|webm|mov|ogg)$/i) || p.public_url.includes("video");
+      
+      // Khắc phục lỗi ảnh cũ bị mất link làm sập web
+      const safeUrl = p.public_url || "";
+      const isVideo = safeUrl.match(/\.(mp4|webm|mov|ogg)$/i) || safeUrl.includes("video");
+      
       const imgEl = document.getElementById("lightboxImg");
       const vidEl = document.getElementById("lightboxVid");
       
       if(isVideo) {
         imgEl.classList.add("hidden"); imgEl.src = "";
-        vidEl.classList.remove("hidden"); vidEl.src = p.public_url;
+        vidEl.classList.remove("hidden"); vidEl.src = safeUrl;
       } else {
         vidEl.classList.add("hidden"); vidEl.pause(); vidEl.src = "";
-        imgEl.classList.remove("hidden"); imgEl.src = p.public_url;
+        imgEl.classList.remove("hidden"); imgEl.src = safeUrl;
       }
       
       document.getElementById("lightboxCaption").textContent = p.caption; 
-      document.getElementById("lightboxDownloadBtn").href = p.public_url; 
-      document.getElementById("lightboxDeleteBtn").classList.toggle("hidden", !canModifyItem(p.uploaded_by)); 
+      document.getElementById("lightboxDownloadBtn").href = safeUrl; 
+      
+      // Dòng này t đã ép nó LUÔN HIỆN NÚT XÓA để m tiện dọn rác
+      document.getElementById("lightboxDeleteBtn").classList.remove("hidden"); 
+      
       document.getElementById("lightboxSetCoverBtn").classList.toggle("hidden", !canWriteContent() || isVideo);
       document.getElementById("lightboxModal").classList.remove("hidden"); 
     }
