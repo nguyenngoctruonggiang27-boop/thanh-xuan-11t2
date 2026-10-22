@@ -1201,58 +1201,45 @@ function openLightboxById(id) {
       document.getElementById("lightboxCaption").textContent = p.caption || "Kỷ niệm lớp"; 
       document.getElementById("lightboxDownloadBtn").href = safeUrl; 
       
-      // 1. BỌC THÉP NÚT ĐẶT LÀM ẢNH BÌA: Bấm là đổi bìa ngay lập tức
+      // 1. NÚT ĐẶT LÀM BÌA (CHỐNG KẸT NÚT)
       const coverBtn = document.getElementById("lightboxSetCoverBtn");
-      coverBtn.classList.toggle("hidden", isVideo); // Chỉ ẩn nếu là video
+      coverBtn.classList.toggle("hidden", isVideo);
       coverBtn.onclick = async function() {
         coverBtn.textContent = "⏳ Đang lưu...";
         try {
-          // Cập nhật ngay trên giao diện hiện tại
+          const { error } = await supabaseClient.from("albums").update({ cover_url: safeUrl }).eq("slug", p.album_slug);
+          if (error) throw error; // Ép văng lỗi nếu Supabase từ chối
+          
           const currentAlb = albumsData.find(x => x.slug === p.album_slug);
           if (currentAlb) currentAlb.cover_url = safeUrl;
-
-          // Thử cập nhật lên bảng albums của Supabase
-          const { data: updatedRows, error: upErr } = await supabaseClient
-            .from("albums")
-            .update({ cover_url: safeUrl })
-            .eq("slug", p.album_slug)
-            .select();
-
-          // Nếu album mới chưa có trên Supabase thì tự động tạo mới kèm ảnh bìa luôn
-          if (!upErr && (!updatedRows || updatedRows.length === 0) && currentAlb) {
-            await supabaseClient.from("albums").insert({
-              slug: currentAlb.slug,
-              title: currentAlb.title,
-              icon: currentAlb.icon,
-              description: currentAlb.description,
-              sort_order: currentAlb.sort_order || 1,
-              cover_url: safeUrl
-            });
-          }
-
+          
           renderAllSections();
-          showToast("⭐ Đã đặt làm ảnh bìa Album thành công!", "success");
+          showToast("⭐ Đã đặt làm ảnh bìa!", "success");
         } catch(e) {
-          showToast("Có lỗi khi đặt ảnh bìa!", "error");
+          showToast("Lỗi: Không lưu được (Album bị lỗi hoặc không có quyền)!", "error");
+        } finally {
+          coverBtn.textContent = "⭐ Đặt làm bìa"; // Bọc thép: Luôn reset nút
         }
-        coverBtn.textContent = "⭐ Đặt làm bìa";
       };
 
-      // 2. BỌC THÉP NÚT XÓA: Bấm là diệt ngay lập tức
+      // 2. NÚT XÓA ẢNH (CHỐNG KẸT NÚT)
       const deleteBtn = document.getElementById("lightboxDeleteBtn");
       deleteBtn.classList.remove("hidden"); 
       deleteBtn.onclick = async function() {
         deleteBtn.textContent = "⏳ Đang xóa...";
         try {
-          await supabaseClient.from("photos").delete().eq("id", p.id);
+          const { error } = await supabaseClient.from("photos").delete().eq("id", p.id);
+          if (error) throw error; // Ép văng lỗi nếu Supabase từ chối
+          
           photosData = photosData.filter(photo => photo.id !== p.id);
           closeLightbox();
           renderAllSections();
-          showToast("Đã tiêu diệt ảnh thành công!", "success");
+          showToast("Đã tiêu diệt ảnh!", "success");
         } catch(e) {
-          showToast("Có lỗi xảy ra, thử lại sau!", "error");
+          showToast("Lỗi: Supabase chặn (Chỉ người up mới được xóa)!", "error");
+        } finally {
+          deleteBtn.textContent = "🗑️ Xóa ảnh này"; // Bọc thép: Luôn reset nút
         }
-        deleteBtn.textContent = "🗑️ Xóa ảnh này";
       };
       
       document.getElementById("lightboxModal").classList.remove("hidden"); 
