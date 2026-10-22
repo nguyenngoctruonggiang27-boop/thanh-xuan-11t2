@@ -1180,31 +1180,30 @@
     }
 
     // Utils
-  function openLightboxById(id) { 
+ function openLightboxById(id) { 
       const p = photosData.find(x=>x.id===id); if(!p) return; 
       currentLightboxPhoto = p; 
       
-      // Khắc phục lỗi ảnh cũ bị mất link làm sập web
       const safeUrl = p.public_url || "";
       const isVideo = safeUrl.match(/\.(mp4|webm|mov|ogg)$/i) || safeUrl.includes("video");
       
       const imgEl = document.getElementById("lightboxImg");
       const vidEl = document.getElementById("lightboxVid");
       
+      // Khúc này bắt lỗi an toàn, tránh đơ web
       if(isVideo) {
-        imgEl.classList.add("hidden"); imgEl.src = "";
-        vidEl.classList.remove("hidden"); vidEl.src = safeUrl;
+        if(imgEl) { imgEl.classList.add("hidden"); imgEl.src = ""; }
+        if(vidEl) { vidEl.classList.remove("hidden"); vidEl.src = safeUrl; }
       } else {
-        vidEl.classList.add("hidden"); vidEl.pause(); vidEl.src = "";
-        imgEl.classList.remove("hidden"); imgEl.src = safeUrl;
+        if(vidEl) { vidEl.classList.add("hidden"); vidEl.pause(); vidEl.src = ""; }
+        if(imgEl) { imgEl.classList.remove("hidden"); imgEl.src = safeUrl; }
       }
       
-      document.getElementById("lightboxCaption").textContent = p.caption; 
+      document.getElementById("lightboxCaption").textContent = p.caption || "Kỷ niệm lớp"; 
       document.getElementById("lightboxDownloadBtn").href = safeUrl; 
       
-      // Dòng này t đã ép nó LUÔN HIỆN NÚT XÓA để m tiện dọn rác
+      // Vẫn giữ nút xóa luôn hiện để m dọn dẹp web
       document.getElementById("lightboxDeleteBtn").classList.remove("hidden"); 
-      
       document.getElementById("lightboxSetCoverBtn").classList.toggle("hidden", !canWriteContent() || isVideo);
       document.getElementById("lightboxModal").classList.remove("hidden"); 
     }
