@@ -1050,28 +1050,63 @@
       if(!canWriteContent()) return showToast("Bạn cần quyền Member để upload!", "error");
       if(!selectedUploadFiles.length) return;
       
-      const album = document.getElementById("uploadAlbumSelect").value, ev = document.getElementById("uploadEventSelect").value, cap = document.getElementById("uploadCaptionInput").value, setCov = document.getElementById("uploadSetAsCoverCheckbox").checked;
-      document.getElementById("btnStartUpload").disabled = true; document.getElementById("uploadProgressWrapper").classList.remove("hidden");
+      const album = document.getElementById("uploadAlbumSelect").value;
+      const ev = document.getElementById("uploadEventSelect").value;
+      const cap = document.getElementById("uploadCaptionInput").value;
+      const setCov = document.getElementById("uploadSetAsCoverCheckbox").checked;
+      
+      // Chặn ngay từ đầu nếu chưa có danh mục Album
+      if (!album) {
+        return showToast("Lỗi: Vui lòng chọn danh mục Album trước khi tải lên!", "warning");
+      }
+
+      const btnStart = document.getElementById("btnStartUpload");
+      btnStart.disabled = true; 
+      btnStart.textContent = "⏳ Đang tải...";
+      document.getElementById("uploadProgressWrapper").classList.remove("hidden");
+      
       let suc = 0, fUrl = null;
 
-      for(let i=0; i<selectedUploadFiles.length; i++) {
-        const file = selectedUploadFiles[i], ext = file.name.split('.').pop();
-        document.getElementById("uploadProgressBar").style.width = `${Math.round(i/selectedUploadFiles.length*100)}%`;
-        try {
+      try {
+        for(let i=0; i<selectedUploadFiles.length; i++) {
+          const file = selectedUploadFiles[i], ext = file.name.split('.').pop();
+          
+          // Cập nhật thanh %
+          const percent = Math.round((i / selectedUploadFiles.length) * 100);
+          document.getElementById("uploadProgressBar").style.width = `${percent}%`;
+          document.getElementById("uploadProgressPercent").textContent = `${percent}%`;
+          
           const { data:sData, error:sErr } = await supabaseClient.storage.from(STORAGE_BUCKET).upload(`${album}/${Date.now()}_${i}.${ext}`, file);
           if(sErr) throw sErr;
+          
           const { data: pData } = supabaseClient.storage.from(STORAGE_BUCKET).getPublicUrl(sData.path);
           if(!fUrl) fUrl = pData.publicUrl;
-          const { error: dbErr } = await supabaseClient.from("photos").insert({ album_slug: album, event_id: ev||null, storage_path: sData.path, public_url: pData.publicUrl, caption: cap||file.name, uploaded_by: currentUser.id, uploader_name: currentUserProfile.full_name });
+          
+          const { error: dbErr } = await supabaseClient.from("photos").insert({ 
+            album_slug: album, event_id: ev||null, storage_path: sData.path, public_url: pData.publicUrl, 
+            caption: cap||file.name, uploaded_by: currentUser.id, uploader_name: currentUserProfile.full_name 
+          });
           if(dbErr) throw dbErr;
           suc++;
-        } catch(e) {}
+        }
+        
+        document.getElementById("uploadProgressBar").style.width = `100%`; 
+        document.getElementById("uploadProgressPercent").textContent = `100%`;
+        
+        if(suc > 0) {
+          if(setCov && fUrl) await supabaseClient.from("albums").update({cover_url: fUrl}).eq("slug", album);
+          showToast(`Tải lên thành công ${suc} file!`, "success"); 
+          clearUploadQueue(); 
+          syncAllDataFromSupabase();
+        }
+      } catch(e) {
+        console.error("Lỗi upload:", e);
+        showToast("Có lỗi xảy ra khi tải lên. Vui lòng thử lại!", "error");
+      } finally {
+        // LUÔN LUÔN NHẢ NÚT RA DÙ THÀNH CÔNG HAY THẤT BẠI
+        btnStart.disabled = false;
+        btnStart.innerHTML = "🚀 Tải lên";
       }
-      document.getElementById("uploadProgressBar").style.width = `100%`; document.getElementById("btnStartUpload").disabled = false;
-      if(suc>0) {
-        if(setCov&&fUrl) await supabaseClient.from("albums").update({cover_url: fUrl}).eq("slug", album);
-        showToast(`Tải lên thành công ${suc} ảnh!`, "success"); clearUploadQueue(); syncAllDataFromSupabase();
-      } else { showToast("Lỗi upload", "error"); }
     }
 
     // CRUD Modals Logic (Albums, Events, Members, Guestbook)
