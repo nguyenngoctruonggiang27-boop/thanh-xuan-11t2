@@ -754,7 +754,12 @@
         if (dbAlbums && dbAlbums.length > 0) {
           const mapBySlug = new Map(dbAlbums.map(a => [a.slug, a]));
           const merged = INITIAL_13_ALBUMS.map(i => mapBySlug.get(i.slug) || i);
-          dbAlbums.forEach(d => { if (!INITIAL_13_ALBUMS.some(i => i.slug === d.slug)) merged.push(d); });
+         // Lọc bỏ các album thừa (sinh nhật cũ, bóng chuyền nữ cũ) không cho hiện lên web
+              dbAlbums.forEach(d => { 
+                if (!INITIAL_13_ALBUMS.some(i => i.slug === d.slug) && d.slug !== "sinh-nhat" && d.slug !== "giai-bong-chuyen-nu") {
+                  merged.push(d); 
+                } 
+              });
           albumsData = merged;
         } else { albumsData = [...INITIAL_13_ALBUMS]; }
 
