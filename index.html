@@ -949,15 +949,18 @@
 
     function buildPhotoPolaroidHtml(p, i) {
       const a = albumsData.find(x => x.slug === p.album_slug), wc = ["", "washi-blue", "washi-lavender", "washi-butter"], tc = ["tilt-left", "tilt-right", "tilt-slight", ""];
+      const isVideo = p.public_url.match(/\.(mp4|webm|mov|ogg)$/i) || p.public_url.includes("video");
+      const mediaTag = isVideo 
+        ? `<video src="${escapeHtml(p.public_url)}" class="w-full h-full object-cover transition hover:scale-105" muted></video><div class="absolute inset-0 flex items-center justify-center pointer-events-none"><div class="w-10 h-10 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white text-xl">▶</div></div>` 
+        : `<img src="${escapeHtml(p.public_url)}" loading="lazy" class="w-full h-full object-cover transition hover:scale-105"/>`;
       return `
         <div onclick="openLightboxById('${escapeHtml(p.id)}')" class="polaroid-card ${tc[i%4]} cursor-pointer flex flex-col justify-between">
           <div class="washi-tape ${wc[i%4]}"></div>
-          <div><div class="aspect-square rounded-xl overflow-hidden"><img src="${escapeHtml(p.public_url)}" loading="lazy" class="w-full h-full object-cover transition hover:scale-105"/></div>
+          <div><div class="aspect-square rounded-xl overflow-hidden relative">${mediaTag}</div>
           <div class="pt-3 px-1"><p class="font-hand text-base font-bold line-clamp-2">${escapeHtml(p.caption||'')}</p></div></div>
           <div class="pt-2 mt-2 border-t border-pink-100 flex justify-between text-[11px] text-pastel-muted"><span class="truncate max-w-[60%]">${a?a.icon:''} ${formatDateVN(p.created_at)}</span></div>
         </div>`;
     }
-
     function renderTimelineSection() {
       const q = (document.getElementById("eventSearchInput")?.value||"").trim().toLowerCase(), a = document.getElementById("eventFilterAlbum")?.value||"all", t = document.getElementById("eventFilterTime")?.value||"all", o = document.getElementById("eventSortOrder")?.value||"newest", today = new Date().toISOString().slice(0, 10);
       let list = eventsData.filter(e => (!q || (e.title||'').toLowerCase().includes(q) || (e.location||'').toLowerCase().includes(q)) && (a==='all' || e.album_slug===a) && (t==='all' || (t==='upcoming' && e.event_date>=today) || (t==='past' && e.event_date<today) || (t==='unscheduled' && !e.event_date)));
@@ -1168,17 +1171,32 @@
     }
 
     // Utils
-    function openLightboxById(id) { const p = photosData.find(x=>x.id===id); if(!p) return; currentLightboxPhoto = p; document.getElementById("lightboxImg").src = p.public_url; document.getElementById("lightboxCaption").textContent = p.caption; document.getElementById("lightboxDownloadBtn").href = p.public_url; document.getElementById("lightboxDeleteBtn").classList.toggle("hidden", !canModifyItem(p.uploaded_by)); document.getElementById("lightboxSetCoverBtn").classList.toggle("hidden", !canWriteContent()); document.getElementById("lightboxModal").classList.remove("hidden"); }
-    function closeLightbox() { document.getElementById("lightboxModal").classList.add("hidden"); }
-    async function setLightboxPhotoAsAlbumCover() { try { await supabaseClient.from("albums").update({cover_url:currentLightboxPhoto.public_url}).eq("slug",currentLightboxPhoto.album_slug); syncAllDataFromSupabase(); showToast("Đã đặt ảnh bìa", "success"); }catch(e){} }
-    function confirmDeleteLightboxPhoto() { openConfirmModal("Xóa ảnh","Chắc chắn?", async() => { await supabaseClient.from("photos").delete().eq("id",currentLightboxPhoto.id); closeLightbox(); syncAllDataFromSupabase(); showToast("Đã xóa","success"); }); }
-
-    function openConfirmModal(t, m, c) { document.getElementById("confirmModalTitle").textContent = t; document.getElementById("confirmModalMessage").textContent = m; document.getElementById("confirmModalActionBtn").onclick = async()=>{ closeConfirmModal(); await c(); }; document.getElementById("confirmModal").classList.remove("hidden"); }
-    function closeConfirmModal() { document.getElementById("confirmModal").classList.add("hidden"); }
-    function showToast(msg, t="info") {
-      const c = document.getElementById("toastContainer"), d = document.createElement("div"), colors = { success:"bg-emerald-600 text-white", error:"bg-red-600 text-white", warning:"bg-amber-400 text-amber-950", info:"bg-pastel-ink text-white" };
-      d.className = `p-3 rounded-xl shadow-lg text-sm font-bold transition-all ${colors[t]}`; d.textContent = msg;
-      c.appendChild(d); setTimeout(()=>{ d.style.opacity=0; setTimeout(()=>d.remove(),300); }, 3000);
+   function openLightboxById(id) { 
+      const p = photosData.find(x=>x.id===id); if(!p) return; 
+      currentLightboxPhoto = p; 
+      const isVideo = p.public_url.match(/\.(mp4|webm|mov|ogg)$/i) || p.public_url.includes("video");
+      const imgEl = document.getElementById("lightboxImg");
+      const vidEl = document.getElementById("lightboxVid");
+      
+      if(isVideo) {
+        imgEl.classList.add("hidden"); imgEl.src = "";
+        vidEl.classList.remove("hidden"); vidEl.src = p.public_url;
+      } else {
+        vidEl.classList.add("hidden"); vidEl.pause(); vidEl.src = "";
+        imgEl.classList.remove("hidden"); imgEl.src = p.public_url;
+      }
+      
+      document.getElementById("lightboxCaption").textContent = p.caption; 
+      document.getElementById("lightboxDownloadBtn").href = p.public_url; 
+      document.getElementById("lightboxDeleteBtn").classList.toggle("hidden", !canModifyItem(p.uploaded_by)); 
+      document.getElementById("lightboxSetCoverBtn").classList.toggle("hidden", !canWriteContent() || isVideo);
+      document.getElementById("lightboxModal").classList.remove("hidden"); 
+    }
+    
+    function closeLightbox() { 
+      document.getElementById("lightboxModal").classList.add("hidden"); 
+      const vidEl = document.getElementById("lightboxVid");
+      if(vidEl) vidEl.pause(); // Tự động tắt tiếng video khi đóng khung ảnh
     }
     function triggerBrowserDownload(b, n) { const u=URL.createObjectURL(b), a=document.createElement("a"); a.href=u; a.download=n; a.click(); URL.revokeObjectURL(u); }
     function escapeHtml(s) { return String(s||'').replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
