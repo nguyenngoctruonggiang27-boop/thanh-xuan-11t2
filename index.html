@@ -406,15 +406,12 @@
       <div id="timelineContainer" class="relative"></div>
     </section>
 
-    <!-- GALLERY & UPLOAD -->
-    <section id="section-gallery" class="page-section hidden space-y-8">
-    <div id="uploadPanelCard" class="bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-dashed border-pastel-pinkDark shadow-polaroid space-y-6">
+   <div id="uploadPanelCard" class="bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-dashed border-pastel-pinkDark shadow-polaroid space-y-6">
         <div>
           <h2 class="font-hand text-3xl font-bold text-pastel-ink">📸 Đóng Góp Kỷ Niệm</h2>
           <p class="text-xs sm:text-sm text-pastel-muted">Hỗ trợ Ảnh (JPG, PNG, GIF) và Video (MP4, WEBM) - Tối đa 50MB/file.</p>
         </div>
         
-        <!-- ĐÂY LÀ 3 Ô CHỌN ALBUM BỊ MẤT MÀ T ĐÃ KHÔI PHỤC LẠI -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div><label class="block text-xs font-bold text-pastel-ink mb-1.5">1. Chọn Album *</label><select id="uploadAlbumSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-pink-200 text-sm font-semibold"></select></div>
           <div><label class="block text-xs font-bold text-pastel-ink mb-1.5">2. Thuộc sự kiện</label><select id="uploadEventSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-pink-200 text-sm font-semibold"></select></div>
@@ -426,6 +423,10 @@
           <div class="text-4xl mb-3">📤</div>
           <p class="font-bold text-pastel-ink">Bấm hoặc kéo thả ảnh (hoặc video) vào đây</p>
         </div>
+        
+        <!-- ĐÂY CHÍNH LÀ ĐOẠN KHUNG HIỂN THỊ ẢNH BỊ MẤT -->
+        <div id="uploadQueueContainer" class="hidden space-y-4 bg-pastel-cream p-4 rounded-2xl border border-pink-200">
+          <div class="flex justify-between"><span id="uploadQueueSummary" class="text-sm font-bold text-pastel-ink">Đã chọn 0 ảnh</span><label class="text-xs font-bold text-pastel-pinkDeep"><input id="uploadSetAsCoverCheckbox" type="checkbox" class="mr-1"> Đặt làm ảnh bìa</label></div>
           <div id="uploadFilesPreviewList" class="grid grid-cols-2 md:grid-cols-5 gap-3"></div>
           <div id="uploadProgressWrapper" class="hidden space-y-1.5">
             <div class="flex justify-between text-xs font-bold"><span id="uploadProgressLabel">Đang tải...</span><span id="uploadProgressPercent">0%</span></div>
@@ -437,13 +438,6 @@
           </div>
         </div>
       </div>
-      <div class="bg-white/90 rounded-2xl p-4 sm:p-5 border border-pink-100 flex gap-3"><input id="gallerySearchInput" oninput="resetAndRenderGallery()" type="text" placeholder="🔍 Tìm ảnh..." class="px-3.5 py-2 rounded-xl bg-pastel-cream border border-pink-200 text-sm flex-1"><select id="galleryAlbumFilter" onchange="resetAndRenderGallery()" class="px-3.5 py-2 rounded-xl bg-pastel-cream border border-pink-200 text-sm font-semibold"></select><span id="galleryCountLabel" class="text-xs font-bold text-pastel-muted whitespace-nowrap pt-2">0 ảnh</span></div>
-      <div id="galleryPhotosGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-7"></div>
-      <div id="galleryLoadMoreWrapper" class="hidden text-center pt-4"><button onclick="loadMoreGalleryPhotos()" class="px-6 py-3 rounded-2xl bg-white border-2 border-pink-200 font-bold text-sm text-pastel-ink">👇 Tải thêm ảnh</button></div>
-    </section>
-
-    <!-- MEMBERS -->
-    <section id="section-members" class="page-section hidden space-y-8">
       <div class="bg-white/90 rounded-3xl p-6 sm:p-8 border-2 border-amber-100 shadow-soft space-y-5">
         <div class="flex justify-between"><h2 class="font-hand text-3xl font-bold text-pastel-ink">🧑‍🎓 Danh Bạ Lớp</h2><button onclick="openMemberModal()" class="px-5 py-3 rounded-2xl bg-pastel-pinkDeep text-white font-bold text-sm shadow-sticker">➕ Thêm hồ sơ</button></div>
         <input id="memberSearchInput" oninput="renderMembersSection()" type="text" placeholder="🔍 Tìm thành viên..." class="w-full md:max-w-md px-4 py-2.5 rounded-xl bg-pastel-cream border border-amber-200 text-sm">
