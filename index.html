@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thanh Xuân T2 2025-2028 — Sổ Lưu Niệm Trực Tuyến</title>
-  <link rel="icon" href="./logo.jpg" type="image/jpg">
+  <link rel="icon" href="./logo.jpg?v=2" type="image/jpeg">
   <meta name="description" content="Sổ lưu niệm trực tuyến Thanh Xuân T2 2025-2028 - Lưu giữ trọn vẹn khoảnh khắc học đường, album ảnh kỷ niệm, sự kiện và lưu bút.">
 
   <!-- Google Fonts -->
@@ -47,7 +47,6 @@
     };
   </script>
 
-  <style>
   <style>
     :root {
       --bg-cream: #FFF5F7; 
@@ -169,21 +168,17 @@
       50% { transform: translateY(-25px) rotate(15deg) scale(1.1); }
       100% { transform: translateY(10px) rotate(-10deg) scale(0.95); }
     }
+
     /* 5. Trang trí lại các ô "Chưa có ảnh" thành sọc pastel đứt nét */
     .polaroid-card .bg-pastel-paper {
-      /* Xóa nền trắng/kem đặc */
       background-color: transparent !important; 
-      
-      /* Tạo họa tiết sọc chéo hồng và xanh mờ ảo */
       background-image: repeating-linear-gradient(
         45deg,
-        rgba(255, 192, 203, 0.3), /* Sọc hồng */
+        rgba(255, 192, 203, 0.3),
         rgba(255, 192, 203, 0.3) 12px,
-        rgba(200, 231, 255, 0.3) 12px, /* Sọc xanh */
+        rgba(200, 231, 255, 0.3) 12px,
         rgba(200, 231, 255, 0.3) 24px
       ) !important;
-      
-      /* Viền đứt nét màu hồng đậm hơn tí cho giống cắt dán */
       border: 2px dashed rgba(255, 143, 171, 0.8) !important; 
     }
   </style>
@@ -282,7 +277,7 @@
        ============================================================================ -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
 
-    <!-- TRANG CHỦ -->
+    <!-- 1. TRANG CHỦ -->
     <section id="section-home" class="page-section space-y-10 hidden">
       <div class="relative rounded-3xl bg-gradient-to-br from-pastel-pink/60 via-pastel-cream to-pastel-blue/60 p-6 sm:p-10 lg:p-12 border-2 border-white shadow-polaroid overflow-hidden">
         <div class="grid lg:grid-cols-12 gap-8 items-center">
@@ -337,7 +332,8 @@
           <div class="text-2xl mb-1">💌</div><div id="statGuestbookCount" class="font-hand text-3xl font-bold text-pastel-pinkDeep">0</div><div class="text-xs font-bold text-pastel-muted mt-1">Lời lưu bút</div>
         </div>
       </div>
-<!-- ĐỒNG HỒ ĐẾM NGƯỢC THPT QUỐC GIA 2028 -->
+
+      <!-- ĐỒNG HỒ ĐẾM NGƯỢC THPT QUỐC GIA 2028 -->
       <div class="bg-white/90 rounded-3xl p-6 border-2 border-dashed border-pastel-blueDark shadow-soft flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden mb-8">
         <div class="washi-tape washi-blue"></div>
         <div>
@@ -351,6 +347,7 @@
           <div class="bg-pastel-lavender/40 rounded-xl p-3 w-16 sm:w-20 border border-purple-100"><span id="cdSecs" class="block font-hand text-2xl sm:text-3xl font-bold text-purple-700">00</span><span class="text-[10px] font-bold uppercase text-purple-800">Giây</span></div>
         </div>
       </div>
+
       <div class="space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <h2 class="font-hand text-2xl sm:text-3xl font-bold text-pastel-ink">✨ Góc Kỷ Niệm Của Lớp</h2>
@@ -360,7 +357,7 @@
       </div>
     </section>
 
-    <!-- ALBUMS -->
+    <!-- 2. ALBUMS -->
     <section id="section-albums" class="page-section hidden space-y-8">
       <div class="bg-white/90 rounded-3xl p-6 sm:p-8 border-2 border-pink-100 shadow-soft space-y-5">
         <div class="flex flex-wrap items-center justify-between gap-4">
@@ -389,7 +386,7 @@
       <div id="albumsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7"></div>
     </section>
 
-    <!-- TIMELINE -->
+    <!-- 3. TIMELINE -->
     <section id="section-timeline" class="page-section hidden space-y-8">
       <div class="bg-white/90 rounded-3xl p-6 sm:p-8 border-2 border-blue-100 shadow-soft space-y-5">
         <div class="flex justify-between">
@@ -406,7 +403,9 @@
       <div id="timelineContainer" class="relative"></div>
     </section>
 
-   <div id="uploadPanelCard" class="bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-dashed border-pastel-pinkDark shadow-polaroid space-y-6">
+    <!-- 4. GALLERY & UPLOAD (ĐÃ KHÔI PHỤC ĐẦY ĐỦ THẺ SECTION VÀ LƯỚI ẢNH) -->
+    <section id="section-gallery" class="page-section hidden space-y-8">
+      <div id="uploadPanelCard" class="bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-dashed border-pastel-pinkDark shadow-polaroid space-y-6">
         <div>
           <h2 class="font-hand text-3xl font-bold text-pastel-ink">📸 Đóng Góp Kỷ Niệm</h2>
           <p class="text-xs sm:text-sm text-pastel-muted">Hỗ trợ Ảnh (JPG, PNG, GIF) và Video (MP4, WEBM) - Tối đa 50MB/file.</p>
@@ -424,7 +423,6 @@
           <p class="font-bold text-pastel-ink">Bấm hoặc kéo thả ảnh (hoặc video) vào đây</p>
         </div>
         
-        <!-- ĐÂY CHÍNH LÀ ĐOẠN KHUNG HIỂN THỊ ẢNH BỊ MẤT -->
         <div id="uploadQueueContainer" class="hidden space-y-4 bg-pastel-cream p-4 rounded-2xl border border-pink-200">
           <div class="flex justify-between"><span id="uploadQueueSummary" class="text-sm font-bold text-pastel-ink">Đã chọn 0 ảnh</span><label class="text-xs font-bold text-pastel-pinkDeep"><input id="uploadSetAsCoverCheckbox" type="checkbox" class="mr-1"> Đặt làm ảnh bìa</label></div>
           <div id="uploadFilesPreviewList" class="grid grid-cols-2 md:grid-cols-5 gap-3"></div>
@@ -438,6 +436,27 @@
           </div>
         </div>
       </div>
+
+      <!-- Khung lọc và lưới hiển thị Thư Viện Ảnh -->
+      <div class="bg-white/90 rounded-3xl p-6 sm:p-8 border-2 border-pink-100 shadow-soft space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h3 class="font-hand text-2xl sm:text-3xl font-bold text-pastel-ink">🖼️ Toàn Bộ Khoảnh Khắc</h3>
+          <span id="galleryCountLabel" class="text-xs font-bold px-3 py-1 rounded-full bg-pastel-pink text-pastel-ink">0 ảnh</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <input id="gallerySearchInput" oninput="resetAndRenderGallery()" type="text" placeholder="🔍 Tìm theo chú thích hoặc người đăng..." class="sm:col-span-2 px-4 py-2.5 rounded-xl bg-pastel-cream border border-pink-200 text-sm">
+          <select id="galleryAlbumFilter" onchange="resetAndRenderGallery()" class="px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-pink-200 text-sm font-semibold"></select>
+        </div>
+      </div>
+
+      <div id="galleryPhotosGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+      <div id="galleryLoadMoreWrapper" class="hidden text-center pt-4">
+        <button onclick="loadMoreGalleryPhotos()" class="px-6 py-3 rounded-2xl bg-white border-2 border-pink-200 font-bold text-sm text-pastel-pinkDeep hover:bg-pastel-pink/30 shadow-soft transition">Xem thêm ảnh ↓</button>
+      </div>
+    </section>
+
+    <!-- 5. MEMBERS (ĐÃ KHÔI PHỤC THẺ MỞ SECTION) -->
+    <section id="section-members" class="page-section hidden space-y-8">
       <div class="bg-white/90 rounded-3xl p-6 sm:p-8 border-2 border-amber-100 shadow-soft space-y-5">
         <div class="flex justify-between"><h2 class="font-hand text-3xl font-bold text-pastel-ink">🧑‍🎓 Danh Bạ Lớp</h2><button onclick="openMemberModal()" class="px-5 py-3 rounded-2xl bg-pastel-pinkDeep text-white font-bold text-sm shadow-sticker">➕ Thêm hồ sơ</button></div>
         <input id="memberSearchInput" oninput="renderMembersSection()" type="text" placeholder="🔍 Tìm thành viên..." class="w-full md:max-w-md px-4 py-2.5 rounded-xl bg-pastel-cream border border-amber-200 text-sm">
@@ -445,7 +464,7 @@
       <div id="membersGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
     </section>
 
-    <!-- GUESTBOOK -->
+    <!-- 6. GUESTBOOK -->
     <section id="section-guestbook" class="page-section hidden space-y-8">
       <div class="bg-white/90 rounded-3xl p-6 sm:p-8 border-2 border-purple-100 shadow-soft space-y-6">
         <h2 class="font-hand text-3xl font-bold text-pastel-ink">💌 Góc Lưu Bút</h2>
@@ -462,9 +481,7 @@
       <div id="guestbookWallGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
     </section>
 
-    <!-- ==========================================================================
-         ADMIN DASHBOARD SECTION (CHỈ DÀNH CHO ADMIN)
-         ========================================================================== -->
+    <!-- 7. ADMIN DASHBOARD SECTION (CHỈ DÀNH CHO ADMIN) -->
     <section id="section-admin" class="page-section hidden space-y-8">
       <div class="bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-pink-200 shadow-soft space-y-6">
         <div class="border-b border-pink-100 pb-4 mb-4">
@@ -561,7 +578,8 @@
       🌸 <strong>Thanh Xuân T2 2025-2028</strong> — Sổ lưu niệm học đường trực tuyến
     </div>
   </footer>
- <!-- TRẠM RADIO THANH XUÂN -->
+
+  <!-- TRẠM RADIO THANH XUÂN -->
   <div id="lofiRadio" class="fixed bottom-6 left-6 z-40 flex items-center gap-3 bg-white/90 backdrop-blur-md px-4 py-3 rounded-full border-2 border-pink-200 shadow-polaroid hover:scale-105 transition cursor-pointer" onclick="toggleMusic()">
     <div id="diskIcon" class="w-10 h-10 rounded-full bg-pastel-ink flex items-center justify-center animate-spin-slow" style="animation-play-state: paused;">
       <div class="w-3 h-3 rounded-full bg-pastel-pink"></div>
@@ -599,12 +617,11 @@
     </div>
   </div>
 
- <!-- LIGHTBOX MODAL -->
+  <!-- LIGHTBOX MODAL -->
   <div id="lightboxModal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm flex items-center justify-center p-3">
     <div class="relative w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[92vh]">
       <button onclick="closeLightbox()" class="absolute top-3 right-3 z-20 w-10 h-10 rounded-full bg-white/90 font-bold">✕</button>
       
-      <!-- ĐÂY LÀ CHỖ CHỨA ẢNH VÀ VIDEO M BỊ THIẾU NÈ -->
       <div class="md:w-2/3 bg-gray-950 flex items-center justify-center p-2 min-h-[280px]">
         <img id="lightboxImg" src="" class="max-h-[84vh] object-contain rounded-lg">
         <video id="lightboxVid" src="" controls class="max-h-[84vh] w-full object-contain rounded-lg hidden"></video>
@@ -617,12 +634,13 @@
           <div class="text-xs text-pastel-muted pt-2 border-t border-pink-100"><p id="lightboxUploader"></p><p id="lightboxDate"></p></div>
         </div>
         <div class="space-y-2 border-t border-pink-200 pt-4">
-          <div class="flex gap-2"><a id="lightboxDownloadBtn" href="#" target="_blank" download class="flex-1 py-2.5 rounded-xl bg-pastel-blue font-bold text-xs text-center">⬇️ Tải ảnh</a><button id="lightboxSetCoverBtn" onclick="setLightboxPhotoAsAlbumCover()" class="flex-1 py-2.5 rounded-xl bg-pastel-butter font-bold text-xs">⭐ Đặt làm bìa</button></div>
-          <button id="lightboxDeleteBtn" onclick="confirmDeleteLightboxPhoto()" class="w-full py-2.5 rounded-xl bg-red-50 text-red-600 border border-red-200 font-bold text-xs">🗑️ Xóa ảnh này</button>
+          <div class="flex gap-2"><a id="lightboxDownloadBtn" href="#" target="_blank" download class="flex-1 py-2.5 rounded-xl bg-pastel-blue font-bold text-xs text-center">⬇️ Tải ảnh</a><button id="lightboxSetCoverBtn" class="flex-1 py-2.5 rounded-xl bg-pastel-butter font-bold text-xs">⭐ Đặt làm bìa</button></div>
+          <button id="lightboxDeleteBtn" class="w-full py-2.5 rounded-xl bg-red-50 text-red-600 border border-red-200 font-bold text-xs">🗑️ Xóa ảnh này</button>
         </div>
       </div>
     </div>
   </div>
+
   <!-- OTHER MODALS (CREATE ALBUM, EVENT, MEMBER, CONFIRM) -->
   <div id="createAlbumModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-pastel-cream w-full max-w-md rounded-3xl p-6 border-2 border-pink-200 shadow-2xl space-y-4">
@@ -672,10 +690,10 @@
     const DEFAULT_SUPABASE_ANON_KEY = "sb_publishable_ak-6SDMZZbuyO9c3PLFhqA_mYssiFOO"; 
     const STORAGE_BUCKET = "class-memories";
 
-   const INITIAL_13_ALBUMS = [
+    const INITIAL_13_ALBUMS = [
       { slug: "ngay-nhan-ao-lop", title: "Ngày nhận áo lớp", icon: "👕", description: "Khoảnh khắc cả lớp T2 2025-2028 khoác lên mình màu áo chung.", sort_order: 1 },
       { slug: "20-10", title: "20/10", icon: "💐", description: "Ngày Phụ nữ Việt Nam.", sort_order: 2 },
-     { slug: "19-11", title: "19/11", icon: "😎", description: "Ngày Quốc tế Nam giới, dịp để các bạn nữ 11T2 đáp lễ và tôn vinh các 'soái ca' của lớp.", sort_order: 16 },
+      { slug: "19-11", title: "19/11", icon: "😎", description: "Ngày Quốc tế Nam giới, dịp để các bạn nữ 11T2 đáp lễ và tôn vinh các 'soái ca' của lớp.", sort_order: 16 },
       { slug: "20-11", title: "20/11", icon: "🏫", description: "Tri ân thầy cô giáo.", sort_order: 3 },
       { slug: "giai-bong-chuyen", title: "Giải bóng chuyền", icon: "🏐", description: "Những pha đập bóng và tinh thần cổ vũ cháy hết mình của đại gia đình 11T2.", sort_order: 4 },
       { slug: "8-3", title: "8/3", icon: "🌷", description: "Ngày Quốc tế Phụ nữ.", sort_order: 5 },
@@ -686,6 +704,7 @@
       { slug: "tinh-nguyen-doan-vien", title: "Tình nguyện Đoàn viên", icon: "💙", description: "Hoạt động Đoàn thanh niên, chiến dịch tình nguyện và công tác xã hội.", sort_order: 13 },
       { slug: "tong-ket-nam-hoc-va-ky-yeu", title: "Tổng kết năm học và kỷ yếu", icon: "🎓", description: "Tạm biệt và lưu giữ kỷ niệm.", sort_order: 14 },
     ];
+
     let supabaseClient = null;
     let isDbConnected = false;
     let currentUser = null;
@@ -754,19 +773,18 @@
         if (dbAlbums && dbAlbums.length > 0) {
           const mapBySlug = new Map(dbAlbums.map(a => [a.slug, a]));
           const merged = INITIAL_13_ALBUMS.map(i => mapBySlug.get(i.slug) || i);
-        // Lọc bỏ các album thừa khỏi database không cho hiện lên web
-              const excludedSlugs = [
-                "sinh-nhat", 
-                "giai-bong-chuyen-nu", 
-                "di-choi-cung-lop", 
-                "cac-su-kien-moi-do-lop-tu-tao",
-                "nhung-ngay-hoc-binh-thuong"
-              ];
-              dbAlbums.forEach(d => { 
-                if (!INITIAL_13_ALBUMS.some(i => i.slug === d.slug) && !excludedSlugs.includes(d.slug)) {
-                  merged.push(d); 
-                } 
-              });
+          const excludedSlugs = [
+            "sinh-nhat", 
+            "giai-bong-chuyen-nu", 
+            "di-choi-cung-lop", 
+            "cac-su-kien-moi-do-lop-tu-tao",
+            "nhung-ngay-hoc-binh-thuong"
+          ];
+          dbAlbums.forEach(d => { 
+            if (!INITIAL_13_ALBUMS.some(i => i.slug === d.slug) && !excludedSlugs.includes(d.slug)) {
+              merged.push(d); 
+            } 
+          });
           albumsData = merged;
         } else { albumsData = [...INITIAL_13_ALBUMS]; }
 
@@ -857,7 +875,6 @@
 
     // Navigation Logic
     function switchSection(sectionId) {
-      // Bảo mật Admin Dashboard
       if (sectionId === 'admin') {
         if (isDbConnected && (!currentUser || !isAdminUser())) {
           showToast("Khu vực Quản trị chỉ dành riêng cho Admin!", "error");
@@ -961,6 +978,7 @@
           <div class="pt-2 mt-2 border-t border-pink-100 flex justify-between text-[11px] text-pastel-muted"><span class="truncate max-w-[60%]">${a?a.icon:''} ${formatDateVN(p.created_at)}</span></div>
         </div>`;
     }
+
     function renderTimelineSection() {
       const q = (document.getElementById("eventSearchInput")?.value||"").trim().toLowerCase(), a = document.getElementById("eventFilterAlbum")?.value||"all", t = document.getElementById("eventFilterTime")?.value||"all", o = document.getElementById("eventSortOrder")?.value||"newest", today = new Date().toISOString().slice(0, 10);
       let list = eventsData.filter(e => (!q || (e.title||'').toLowerCase().includes(q) || (e.location||'').toLowerCase().includes(q)) && (a==='all' || e.album_slug===a) && (t==='all' || (t==='upcoming' && e.event_date>=today) || (t==='past' && e.event_date<today) || (t==='unscheduled' && !e.event_date)));
@@ -988,8 +1006,10 @@
     function renderGallerySection() {
       const q = (document.getElementById("gallerySearchInput")?.value||"").trim().toLowerCase(), a = document.getElementById("galleryAlbumFilter")?.value||"all";
       const f = photosData.filter(p => (a==='all' || p.album_slug===a) && (!q || (p.caption||'').toLowerCase().includes(q) || (p.uploader_name||'').toLowerCase().includes(q)));
-      document.getElementById("galleryCountLabel").textContent = `${Math.min(f.length, galleryVisibleLimit)}/${f.length} ảnh`;
+      const countEl = document.getElementById("galleryCountLabel");
+      if(countEl) countEl.textContent = `${Math.min(f.length, galleryVisibleLimit)}/${f.length} ảnh`;
       const grid = document.getElementById("galleryPhotosGrid"), wrap = document.getElementById("galleryLoadMoreWrapper");
+      if(!grid || !wrap) return;
       if(!f.length) { grid.innerHTML = '<div class="col-span-full p-10 text-center">Chưa có bức ảnh nào.</div>'; wrap.classList.add("hidden"); return; }
       grid.innerHTML = f.slice(0, galleryVisibleLimit).map((p, i) => buildPhotoPolaroidHtml(p, i)).join("");
       if(f.length > galleryVisibleLimit) wrap.classList.remove("hidden"); else wrap.classList.add("hidden");
@@ -999,6 +1019,7 @@
       const q = (document.getElementById("memberSearchInput")?.value||"").trim().toLowerCase();
       const f = membersData.filter(m => !q || (m.full_name||'').toLowerCase().includes(q) || (m.nickname||'').toLowerCase().includes(q));
       const g = document.getElementById("membersGrid");
+      if(!g) return;
       if(!f.length) { g.innerHTML = '<div class="col-span-full p-10 text-center">Chưa có thành viên nào.</div>'; return; }
       g.innerHTML = f.map((m,i) => {
         const bg = ["bg-pastel-pink", "bg-pastel-blue", "bg-pastel-lavender", "bg-pastel-butter"][i%4], ini = (m.full_name||'').split(' ').slice(-2).map(w=>w[0]?.toUpperCase()).join('');
@@ -1014,6 +1035,7 @@
 
     function renderGuestbookSection() {
       const w = document.getElementById("guestbookWallGrid");
+      if(!w) return;
       if(!guestbookData.length) { w.innerHTML = '<div class="col-span-full p-10 text-center">Chưa có lời lưu bút nào.</div>'; return; }
       const colors = { pink: "bg-pastel-pink/80 border-pink-300", butter: "bg-pastel-butter/85 border-amber-300", blue: "bg-pastel-blue/80 border-sky-300", lavender: "bg-pastel-lavender/80 border-purple-300" };
       w.innerHTML = guestbookData.map((g,i) => `
@@ -1024,7 +1046,7 @@
     }
 
     // CRUD Upload
-   function handleFilesSelected(files) {
+    function handleFilesSelected(files) {
       if(!files.length) return;
       const valid = Array.from(files).filter(f => (['image/jpeg','image/png','image/webp','image/gif'].includes(f.type) && f.size <= 10*1024*1024) || (f.type.startsWith('video/') && f.size <= 50*1024*1024));
       if(valid.length > 10) return showToast("Chọn tối đa 10 file!", "warning");
@@ -1049,7 +1071,6 @@
       const cap = document.getElementById("uploadCaptionInput").value;
       const setCov = document.getElementById("uploadSetAsCoverCheckbox").checked;
       
-      // Chặn ngay từ đầu nếu chưa có danh mục Album
       if (!album) {
         return showToast("Lỗi: Vui lòng chọn danh mục Album trước khi tải lên!", "warning");
       }
@@ -1065,7 +1086,6 @@
         for(let i=0; i<selectedUploadFiles.length; i++) {
           const file = selectedUploadFiles[i], ext = file.name.split('.').pop();
           
-          // Cập nhật thanh %
           const percent = Math.round((i / selectedUploadFiles.length) * 100);
           document.getElementById("uploadProgressBar").style.width = `${percent}%`;
           document.getElementById("uploadProgressPercent").textContent = `${percent}%`;
@@ -1097,7 +1117,6 @@
         console.error("Lỗi upload:", e);
         showToast("Có lỗi xảy ra khi tải lên. Vui lòng thử lại!", "error");
       } finally {
-        // LUÔN LUÔN NHẢ NÚT RA DÙ THÀNH CÔNG HAY THẤT BẠI
         btnStart.disabled = false;
         btnStart.innerHTML = "🚀 Tải lên";
       }
@@ -1112,13 +1131,13 @@
       try {
         await supabaseClient.from("albums").insert({ slug: slugifyVietnamese(title)+"-"+Date.now().toString().slice(-4), title, icon, description:desc, sort_order:albumsData.length+1, created_by:currentUser.id });
         showToast("Tạo Album thành công", "success"); closeCreateAlbumModal(); syncAllDataFromSupabase();
-      } catch(e){ showToast("Lỗi", "error"); }
+      } catch(e){ showToast("Lỗi tạo Album", "error"); }
     }
 
     function openEventModal(id) {
       if(!canWriteContent()) return showToast("Cần quyền member", "warning");
       const ev = id ? eventsData.find(x=>x.id===id) : null;
-      document.getElementById("eventEditId").value = id||""; document.getElementById("eventTitleInput").value = ev?ev.title:""; document.getElementById("eventDateInput").value = ev?ev.event_date:""; document.getElementById("eventAlbumSelect").value = ev?ev.album_slug:"cac-su-kien-moi-do-lop-tu-tao"; document.getElementById("eventLocationInput").value = ev?ev.location:""; document.getElementById("eventDescInput").value = ev?ev.description:"";
+      document.getElementById("eventEditId").value = id||""; document.getElementById("eventTitleInput").value = ev?ev.title:""; document.getElementById("eventDateInput").value = ev?ev.event_date:""; document.getElementById("eventAlbumSelect").value = ev?ev.album_slug:(albumsData[0]?.slug||""); document.getElementById("eventLocationInput").value = ev?ev.location:""; document.getElementById("eventDescInput").value = ev?ev.description:"";
       document.getElementById("eventModal").classList.remove("hidden");
     }
     function closeEventModal() { document.getElementById("eventModal").classList.add("hidden"); }
@@ -1129,9 +1148,9 @@
         if(id) await supabaseClient.from("events").update(obj).eq("id", id);
         else { obj.created_by = currentUser.id; await supabaseClient.from("events").insert(obj); }
         closeEventModal(); syncAllDataFromSupabase(); showToast("Đã lưu sự kiện", "success");
-      } catch(e){}
+      } catch(e){ showToast("Lỗi lưu sự kiện", "error"); }
     }
-    function confirmDeleteEvent(id) { openConfirmModal("Xóa sự kiện", "Chắc chắn?", async() => { await supabaseClient.from("events").delete().eq("id",id); syncAllDataFromSupabase(); showToast("Đã xóa","success"); }); }
+    function confirmDeleteEvent(id) { openConfirmModal("Xóa sự kiện", "Bạn có chắc chắn muốn xóa sự kiện này?", async() => { await supabaseClient.from("events").delete().eq("id",id); syncAllDataFromSupabase(); showToast("Đã xóa sự kiện","success"); }); }
 
     function openMemberModal(id) {
       if(!canWriteContent()) return showToast("Cần quyền member", "warning");
@@ -1147,21 +1166,21 @@
         if(id) await supabaseClient.from("class_members").update(obj).eq("id", id);
         else { obj.created_by = currentUser.id; await supabaseClient.from("class_members").insert(obj); }
         closeMemberModal(); syncAllDataFromSupabase(); showToast("Đã lưu hồ sơ", "success");
-      } catch(e){}
+      } catch(e){ showToast("Lỗi lưu hồ sơ", "error"); }
     }
-    function confirmDeleteMember(id) { openConfirmModal("Xóa thành viên", "Chắc chắn?", async() => { await supabaseClient.from("class_members").delete().eq("id",id); syncAllDataFromSupabase(); showToast("Đã xóa","success"); }); }
+    function confirmDeleteMember(id) { openConfirmModal("Xóa thành viên", "Bạn có chắc chắn muốn xóa hồ sơ này?", async() => { await supabaseClient.from("class_members").delete().eq("id",id); syncAllDataFromSupabase(); showToast("Đã xóa thành viên","success"); }); }
 
     async function submitGuestbookEntry() {
-      if(!canWriteContent()) return showToast("Cần quyền member", "warning");
-      if(Date.now() - lastGuestbookSubmitTime < 15000) return showToast("Đợi xíu để tránh spam", "warning");
+      if(!canWriteContent()) return showToast("Cần quyền member để viết lưu bút!", "warning");
+      if(Date.now() - lastGuestbookSubmitTime < 15000) return showToast("Đợi xíu để tránh spam nhé!", "warning");
       const obj = { author_name: document.getElementById("gbAuthorInput").value, note_color: document.getElementById("gbColorSelect").value, sticker: document.getElementById("gbStickerSelect").value, message: document.getElementById("gbMessageInput").value, user_id: currentUser.id };
       if(!obj.author_name || obj.message.length<5) return showToast("Nhập tên và nội dung >= 5 ký tự", "warning");
       try {
         await supabaseClient.from("guestbook_entries").insert(obj); lastGuestbookSubmitTime = Date.now();
-        document.getElementById("gbMessageInput").value=""; syncAllDataFromSupabase(); showToast("Đã ghim", "success");
-      } catch(e){}
+        document.getElementById("gbMessageInput").value=""; syncAllDataFromSupabase(); showToast("Đã ghim lưu bút lên bảng!", "success");
+      } catch(e){ showToast("Lỗi gửi lưu bút", "error"); }
     }
-    function confirmDeleteGuestbook(id) { openConfirmModal("Xóa lưu bút", "Chắc chắn?", async() => { await supabaseClient.from("guestbook_entries").delete().eq("id",id); syncAllDataFromSupabase(); showToast("Đã xóa","success"); }); }
+    function confirmDeleteGuestbook(id) { openConfirmModal("Xóa lưu bút", "Bạn có chắc chắn muốn xóa lưu bút này?", async() => { await supabaseClient.from("guestbook_entries").delete().eq("id",id); syncAllDataFromSupabase(); showToast("Đã xóa lưu bút","success"); }); }
 
     // Admin Tools
     function saveSupabaseConnection() {
@@ -1181,7 +1200,7 @@
         tb.innerHTML = data.map(p => `<tr><td class="p-2 border-b"><div class="font-bold">${escapeHtml(p.full_name)}</div><div class="text-xs text-gray-500">${escapeHtml(p.email)}</div></td><td class="p-2 border-b font-bold">${p.role}</td><td class="p-2 border-b text-xs">${formatDateVN(p.created_at)}</td><td class="p-2 border-b text-right"><button onclick="updateUserRole('${p.id}','member')" class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded mr-1">Member</button><button onclick="updateUserRole('${p.id}','admin')" class="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded mr-1">Admin</button><button onclick="updateUserRole('${p.id}','pending')" class="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded">Hủy</button></td></tr>`).join('');
       } catch(e) {}
     }
-    async function updateUserRole(uid, r) { try { await supabaseClient.from("profiles").update({role:r}).eq("id",uid); refreshAdminUsersList(); showToast("Đã cập nhật","success"); }catch(e){} }
+    async function updateUserRole(uid, r) { try { await supabaseClient.from("profiles").update({role:r}).eq("id",uid); refreshAdminUsersList(); showToast("Đã cập nhật quyền","success"); }catch(e){} }
     async function addAllowedEmail() {
       const e = document.getElementById("whitelistEmailInput").value.trim(), r = document.getElementById("whitelistRoleSelect").value;
       if(!e) return;
@@ -1205,12 +1224,12 @@
         const p = JSON.parse(await f.text());
         if(p.albums) await supabaseClient.from("albums").upsert(p.albums); if(p.events) await supabaseClient.from("events").upsert(p.events);
         if(p.class_members) await supabaseClient.from("class_members").upsert(p.class_members); if(p.guestbook_entries) await supabaseClient.from("guestbook_entries").upsert(p.guestbook_entries);
-        syncAllDataFromSupabase(); showToast("Đã phục hồi", "success");
+        syncAllDataFromSupabase(); showToast("Đã phục hồi dữ liệu", "success");
       } catch(e){}
     }
 
-    // Utils
-function openLightboxById(id) { 
+    // Lightbox & Utils
+    function openLightboxById(id) { 
       const p = photosData.find(x=>x.id===id); if(!p) return; 
       currentLightboxPhoto = p; 
       
@@ -1228,17 +1247,21 @@ function openLightboxById(id) {
         if(imgEl) { imgEl.classList.remove("hidden"); imgEl.src = safeUrl; }
       }
       
+      const alb = albumsData.find(a => a.slug === p.album_slug);
+      document.getElementById("lightboxAlbumBadge").textContent = alb ? `${alb.icon} ${alb.title}` : "Album";
       document.getElementById("lightboxCaption").textContent = p.caption || "Kỷ niệm lớp"; 
+      document.getElementById("lightboxUploader").textContent = `Người đăng: ${p.uploader_name || "Ẩn danh"}`;
+      document.getElementById("lightboxDate").textContent = `Ngày đăng: ${formatDateVN(p.created_at)}`;
       document.getElementById("lightboxDownloadBtn").href = safeUrl; 
       
-      // 1. NÚT ĐẶT LÀM BÌA (CHỐNG KẸT NÚT)
+      // 1. NÚT ĐẶT LÀM BÌA
       const coverBtn = document.getElementById("lightboxSetCoverBtn");
       coverBtn.classList.toggle("hidden", isVideo);
       coverBtn.onclick = async function() {
         coverBtn.textContent = "⏳ Đang lưu...";
         try {
           const { error } = await supabaseClient.from("albums").update({ cover_url: safeUrl }).eq("slug", p.album_slug);
-          if (error) throw error; // Ép văng lỗi nếu Supabase từ chối
+          if (error) throw error;
           
           const currentAlb = albumsData.find(x => x.slug === p.album_slug);
           if (currentAlb) currentAlb.cover_url = safeUrl;
@@ -1246,29 +1269,29 @@ function openLightboxById(id) {
           renderAllSections();
           showToast("⭐ Đã đặt làm ảnh bìa!", "success");
         } catch(e) {
-          showToast("Lỗi: Không lưu được (Album bị lỗi hoặc không có quyền)!", "error");
+          showToast("Lỗi: Không lưu được (Album chưa tạo trong DB hoặc không có quyền)!", "error");
         } finally {
-          coverBtn.textContent = "⭐ Đặt làm bìa"; // Bọc thép: Luôn reset nút
+          coverBtn.textContent = "⭐ Đặt làm bìa";
         }
       };
 
-      // 2. NÚT XÓA ẢNH (CHỐNG KẸT NÚT)
+      // 2. NÚT XÓA ẢNH
       const deleteBtn = document.getElementById("lightboxDeleteBtn");
       deleteBtn.classList.remove("hidden"); 
       deleteBtn.onclick = async function() {
         deleteBtn.textContent = "⏳ Đang xóa...";
         try {
           const { error } = await supabaseClient.from("photos").delete().eq("id", p.id);
-          if (error) throw error; // Ép văng lỗi nếu Supabase từ chối
+          if (error) throw error;
           
           photosData = photosData.filter(photo => photo.id !== p.id);
           closeLightbox();
           renderAllSections();
-          showToast("Đã tiêu diệt ảnh!", "success");
+          showToast("Đã xóa ảnh thành công!", "success");
         } catch(e) {
-          showToast("Lỗi: Supabase chặn (Chỉ người up mới được xóa)!", "error");
+          showToast("Lỗi: Chỉ người đăng hoặc Admin mới được xóa!", "error");
         } finally {
-          deleteBtn.textContent = "🗑️ Xóa ảnh này"; // Bọc thép: Luôn reset nút
+          deleteBtn.textContent = "🗑️ Xóa ảnh này";
         }
       };
       
@@ -1278,8 +1301,44 @@ function openLightboxById(id) {
     function closeLightbox() { 
       document.getElementById("lightboxModal").classList.add("hidden"); 
       const vidEl = document.getElementById("lightboxVid");
-      if(vidEl) vidEl.pause(); // Tự động tắt tiếng video khi đóng khung ảnh
+      if(vidEl) vidEl.pause();
     }
+
+    // KHÔI PHỤC HÀM TOAST & CONFIRM MODAL BỊ MẤT
+    function showToast(message, type = "info") {
+      const container = document.getElementById("toastContainer");
+      if (!container) return;
+      const colors = {
+        success: "bg-emerald-500 text-white border-emerald-600",
+        error: "bg-red-500 text-white border-red-600",
+        warning: "bg-amber-400 text-amber-950 border-amber-500",
+        info: "bg-pastel-ink text-white border-gray-700"
+      };
+      const toast = document.createElement("div");
+      toast.className = `pointer-events-auto px-4 py-3 rounded-2xl border-2 shadow-polaroid font-bold text-xs sm:text-sm transition transform duration-300 ${colors[type] || colors.info}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    function openConfirmModal(title, message, onConfirm) {
+      document.getElementById("confirmModalTitle").textContent = title;
+      document.getElementById("confirmModalMessage").textContent = message;
+      const btn = document.getElementById("confirmModalActionBtn");
+      btn.onclick = async () => {
+        closeConfirmModal();
+        if (typeof onConfirm === "function") await onConfirm();
+      };
+      document.getElementById("confirmModal").classList.remove("hidden");
+    }
+
+    function closeConfirmModal() {
+      document.getElementById("confirmModal").classList.add("hidden");
+    }
+
     function triggerBrowserDownload(b, n) { const u=URL.createObjectURL(b), a=document.createElement("a"); a.href=u; a.download=n; a.click(); URL.revokeObjectURL(u); }
     function escapeHtml(s) { return String(s||'').replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
     function formatDateVN(d) { return d ? new Date(d).toLocaleDateString('vi-VN') : ''; }
@@ -1289,8 +1348,9 @@ function openLightboxById(id) {
       if(t==='README.md') triggerBrowserDownload(new Blob(['# Thanh Xuan T2 2025-2028\nSee source'],{type:'text/markdown'}), "README.md");
       if(t==='.env.example') triggerBrowserDownload(new Blob(['VITE_SUPABASE_URL=\nVITE_SUPABASE_ANON_KEY='],{type:'text/plain'}), ".env.example");
     }
-    function populateSqlAndDocsPreviews() { document.getElementById("sqlSchemaPreviewBox").value = "-- Paste schema here"; } // Omitted full string for brevity, it will use DB if synced.
-// --- XỬ LÝ ĐỒNG HỒ ĐẾM NGƯỢC ---
+    function populateSqlAndDocsPreviews() { document.getElementById("sqlSchemaPreviewBox").value = "-- Paste schema here"; }
+
+    // --- XỬ LÝ ĐỒNG HỒ ĐẾM NGƯỢC ---
     const targetDate = new Date("2028-06-25T00:00:00").getTime();
     setInterval(() => {
       const now = new Date().getTime();
@@ -1312,13 +1372,13 @@ function openLightboxById(id) {
 
       if (isMusicPlaying) {
         bgMusic.pause();
-        diskIcon.style.animationPlayState = 'paused';
-        musicStatus.textContent = "Đang tạm dừng (Bấm để phát)";
+        if (diskIcon) diskIcon.style.animationPlayState = 'paused';
+        if (musicStatus) musicStatus.textContent = "Đang tạm dừng (Bấm để phát)";
       } else {
         bgMusic.volume = 0.5;
         bgMusic.play().then(() => {
-          diskIcon.style.animationPlayState = 'running';
-          musicStatus.textContent = "Đang phát Lofi Chill 🎵";
+          if (diskIcon) diskIcon.style.animationPlayState = 'running';
+          if (musicStatus) musicStatus.textContent = "Đang phát Lofi Chill 🎵";
         }).catch(e => console.log("Trình duyệt chặn autoplay"));
       }
       isMusicPlaying = !isMusicPlaying;
@@ -1329,6 +1389,7 @@ function openLightboxById(id) {
       if (!isMusicPlaying) toggleMusic();
       document.body.removeEventListener('click', autoPlayMusicOnce);
     }, { once: true });
+
     window.addEventListener("DOMContentLoaded", () => { switchSection("home"); initSupabaseApp(); });
   </script>
 </body>
