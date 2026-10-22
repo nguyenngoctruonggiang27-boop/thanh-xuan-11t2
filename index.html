@@ -1180,7 +1180,7 @@
     }
 
     // Utils
- function openLightboxById(id) { 
+function openLightboxById(id) { 
       const p = photosData.find(x=>x.id===id); if(!p) return; 
       currentLightboxPhoto = p; 
       
@@ -1190,7 +1190,6 @@
       const imgEl = document.getElementById("lightboxImg");
       const vidEl = document.getElementById("lightboxVid");
       
-      // Khúc này bắt lỗi an toàn, tránh đơ web
       if(isVideo) {
         if(imgEl) { imgEl.classList.add("hidden"); imgEl.src = ""; }
         if(vidEl) { vidEl.classList.remove("hidden"); vidEl.src = safeUrl; }
@@ -1202,8 +1201,25 @@
       document.getElementById("lightboxCaption").textContent = p.caption || "Kỷ niệm lớp"; 
       document.getElementById("lightboxDownloadBtn").href = safeUrl; 
       
-      // Vẫn giữ nút xóa luôn hiện để m dọn dẹp web
-      document.getElementById("lightboxDeleteBtn").classList.remove("hidden"); 
+      // BỌC THÉP NÚT XÓA: Bấm là diệt ngay lập tức không cần hỏi
+      const deleteBtn = document.getElementById("lightboxDeleteBtn");
+      deleteBtn.classList.remove("hidden"); 
+      deleteBtn.onclick = async function() {
+        deleteBtn.textContent = "⏳ Đang xóa...";
+        try {
+          // Bắn lệnh xóa lên máy chủ Supabase
+          await supabaseClient.from("photos").delete().eq("id", p.id);
+          // Ép xóa vĩnh viễn trên giao diện web hiện tại
+          photosData = photosData.filter(photo => photo.id !== p.id);
+          closeLightbox();
+          renderAllSections();
+          showToast("Đã tiêu diệt ảnh thành công!", "success");
+        } catch(e) {
+          showToast("Có lỗi xảy ra, thử lại sau!", "error");
+        }
+        deleteBtn.textContent = "🗑️ Xóa ảnh này"; // Reset lại chữ
+      };
+      
       document.getElementById("lightboxSetCoverBtn").classList.toggle("hidden", !canWriteContent() || isVideo);
       document.getElementById("lightboxModal").classList.remove("hidden"); 
     }
