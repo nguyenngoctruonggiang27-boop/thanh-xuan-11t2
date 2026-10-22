@@ -408,22 +408,21 @@
 
     <!-- GALLERY & UPLOAD -->
     <section id="section-gallery" class="page-section hidden space-y-8">
-      <div id="uploadPanelCard" class="bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-dashed border-pastel-pinkDark shadow-polaroid space-y-6">
-        <div>
-          <h2 class="font-hand text-3xl font-bold text-pastel-ink">📸 Đóng Góp Ảnh Kỷ Niệm</h2>
-          <p class="text-xs sm:text-sm text-pastel-muted">Hỗ trợ JPG, PNG, WEBP, GIF (Tối đa 5MB/ảnh).</p>
-        <div>
-          <h2 class="font-hand text-3xl font-bold text-pastel-ink">📸 Đóng Góp Kỷ Niệm</h2>
-          <p class="text-xs sm:text-sm text-pastel-muted">Hỗ trợ Ảnh (JPG, PNG, GIF) và Video (MP4, WEBM) - Tối đa 50MB/file.</p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Bỏ qua 3 dòng label giữ nguyên, tìm tới dòng <input> bên dưới -->
-        </div>
-        <div id="photoDropzone" class="rounded-2xl bg-gradient-to-br from-pastel-pink/25 via-pastel-cream to-pastel-blue/25 border-2 border-dashed border-pastel-pinkDark p-6 sm:p-8 text-center cursor-pointer hover:bg-pastel-pink/35" onclick="document.getElementById('photoFileInput').click()">
-          <input id="photoFileInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple class="hidden" onchange="handleFilesSelected(this.files)">
-          <div class="text-4xl mb-3">📤</div>
-          <p class="font-bold text-pastel-ink">Bấm hoặc kéo thả ảnh vào đây</p>
-        </div>
+     <div id="uploadPanelCard" class="bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-dashed border-pastel-pinkDark shadow-polaroid space-y-6">
+      <div>
+        <h2 class="font-hand text-3xl font-bold text-pastel-ink">📸 Đóng Góp Kỷ Niệm</h2>
+        <p class="text-xs sm:text-sm text-pastel-muted">Hỗ trợ Ảnh (JPG, PNG, GIF) và Video (MP4, WEBM) - Tối đa 50MB/file.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div><label class="block text-xs font-bold text-pastel-ink mb-1.5">1. Chọn Album *</label><select id="uploadAlbumSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-pink-200 text-sm font-semibold"></select></div>
+        <div><label class="block text-xs font-bold text-pastel-ink mb-1.5">2. Thuộc sự kiện</label><select id="uploadEventSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-pink-200 text-sm font-semibold"></select></div>
+        <div><label class="block text-xs font-bold text-pastel-ink mb-1.5">3. Chú thích chung</label><input id="uploadCaptionInput" type="text" placeholder="Viết chú thích..." class="w-full px-3.5 py-2.5 rounded-xl bg-pastel-cream border border-pink-200 text-sm"></div>
+      </div>
+      <div id="photoDropzone" class="rounded-2xl bg-gradient-to-br from-pastel-pink/25 via-pastel-cream to-pastel-blue/25 border-2 border-dashed border-pastel-pinkDark p-6 sm:p-8 text-center cursor-pointer hover:bg-pastel-pink/35" onclick="document.getElementById('photoFileInput').click()">
+        <input id="photoFileInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" multiple class="hidden" onchange="handleFilesSelected(this.files)">
+        <div class="text-4xl mb-3">📤</div>
+        <p class="font-bold text-pastel-ink">Bấm hoặc kéo thả ảnh (hoặc video) vào đây</p>
+      </div>
         <div id="uploadQueueContainer" class="hidden space-y-4 bg-pastel-cream p-4 rounded-2xl border border-pink-200">
           <div class="flex justify-between"><span id="uploadQueueSummary" class="text-sm font-bold text-pastel-ink">Đã chọn 0 ảnh</span><label class="text-xs font-bold text-pastel-pinkDeep"><input id="uploadSetAsCoverCheckbox" type="checkbox" class="mr-1"> Đặt làm ảnh bìa</label></div>
           <div id="uploadFilesPreviewList" class="grid grid-cols-2 md:grid-cols-5 gap-3"></div>
