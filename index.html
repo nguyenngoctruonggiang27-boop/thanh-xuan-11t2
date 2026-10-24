@@ -54,7 +54,7 @@
       --dot-color: rgba(255, 105, 180, 0.15); 
     }
 
-    /* 1. MÀU NỀN BÊN NGOÀI: Đậm hơn, lưới rõ hơn và loang màu rực rỡ */
+    /* 1. MÀU NỀN BÊN NGOÀI */
     body {
       background-color: #F8BBD0 !important; 
       background-image: 
@@ -349,9 +349,9 @@
       </div>
 
       <div class="space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
           <h2 class="font-hand text-2xl sm:text-3xl font-bold text-pastel-ink">✨ Góc Kỷ Niệm Của Lớp</h2>
-          <button onclick="switchSection('albums')" class="px-4 py-2 rounded-xl bg-white border border-pink-200 text-sm font-bold text-pastel-pinkDeep hover:bg-pastel-pink/40 transition">Xem tất cả →</button>
+          <!-- Nút "Xem tất cả" đã được xóa thành công khỏi đây -->
         </div>
         <div id="homeAlbumsPreviewGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-2"></div>
       </div>
@@ -403,7 +403,7 @@
       <div id="timelineContainer" class="relative"></div>
     </section>
 
-    <!-- 4. GALLERY & UPLOAD (ĐÃ KHÔI PHỤC ĐẦY ĐỦ THẺ SECTION VÀ LƯỚI ẢNH) -->
+    <!-- 4. GALLERY & UPLOAD -->
     <section id="section-gallery" class="page-section hidden space-y-8">
       <div id="uploadPanelCard" class="bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-dashed border-pastel-pinkDark shadow-polaroid space-y-6">
         <div>
@@ -455,7 +455,7 @@
       </div>
     </section>
 
-    <!-- 5. MEMBERS (ĐÃ KHÔI PHỤC THẺ MỞ SECTION) -->
+    <!-- 5. MEMBERS -->
     <section id="section-members" class="page-section hidden space-y-8">
       <div class="bg-white/90 rounded-3xl p-6 sm:p-8 border-2 border-amber-100 shadow-soft space-y-5">
         <div class="flex justify-between"><h2 class="font-hand text-3xl font-bold text-pastel-ink">🧑‍🎓 Danh Bạ Lớp</h2><button onclick="openMemberModal()" class="px-5 py-3 rounded-2xl bg-pastel-pinkDeep text-white font-bold text-sm shadow-sticker">➕ Thêm hồ sơ</button></div>
@@ -481,7 +481,7 @@
       <div id="guestbookWallGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
     </section>
 
-    <!-- 7. ADMIN DASHBOARD SECTION (CHỈ DÀNH CHO ADMIN) -->
+    <!-- 7. ADMIN DASHBOARD SECTION -->
     <section id="section-admin" class="page-section hidden space-y-8">
       <div class="bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-pink-200 shadow-soft space-y-6">
         <div class="border-b border-pink-100 pb-4 mb-4">
@@ -579,18 +579,43 @@
     </div>
   </footer>
 
-  <!-- TRẠM RADIO THANH XUÂN -->
-  <div id="lofiRadio" class="fixed bottom-6 left-6 z-40 flex items-center gap-3 bg-white/90 backdrop-blur-md px-4 py-3 rounded-full border-2 border-pink-200 shadow-polaroid hover:scale-105 transition cursor-pointer" onclick="toggleMusic()">
-    <div id="diskIcon" class="w-10 h-10 rounded-full bg-pastel-ink flex items-center justify-center animate-spin-slow" style="animation-play-state: paused;">
-      <div class="w-3 h-3 rounded-full bg-pastel-pink"></div>
+  <!-- TRẠM RADIO THANH XUÂN (ĐÃ ĐƯỢC NÂNG CẤP TÍNH NĂNG DANH SÁCH BÀI HÁT) -->
+  <div id="radioWrapper" class="fixed bottom-6 left-6 z-40 flex flex-col gap-2 items-start pointer-events-none">
+    
+    <!-- Danh sách bài hát (Ẩn mặc định) -->
+    <div id="playlistPopup" class="hidden bg-white/95 backdrop-blur-md border-2 border-pink-200 rounded-2xl p-2 shadow-polaroid w-64 max-h-48 overflow-y-auto pointer-events-auto transition-all">
+      <div class="text-xs font-bold text-pastel-ink mb-2 px-2 pb-1 border-b border-pink-100 flex justify-between">
+        <span>🎵 Danh sách phát</span>
+        <button onclick="togglePlaylist()" class="hover:text-pink-600 transition">✕</button>
+      </div>
+      <ul id="playlistItems" class="space-y-1">
+        <!-- Javascript sẽ tự động thêm bài hát vào đây -->
+      </ul>
     </div>
-    <div class="pr-2">
-      <p class="font-hand text-sm font-bold text-pastel-ink">Trạm Radio T2</p>
-      <p id="musicStatus" class="text-[10px] font-bold text-pastel-muted">Đang tạm dừng (Bấm để phát)</p>
+
+    <!-- Player chính -->
+    <div id="lofiRadio" class="flex items-center gap-2 sm:gap-3 bg-white/90 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-3 rounded-full border-2 border-pink-200 shadow-polaroid transition pointer-events-auto hover:scale-105">
+      <!-- Đĩa than xoay -->
+      <div id="diskIcon" onclick="toggleMusic()" class="cursor-pointer w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-full bg-pastel-ink flex items-center justify-center animate-spin-slow transition" style="animation-play-state: paused;">
+        <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-pastel-pink"></div>
+      </div>
+      
+      <!-- Thông tin bài hát -->
+      <div class="flex flex-col justify-center w-28 sm:w-32 cursor-pointer" onclick="togglePlaylist()">
+        <p id="trackNameDisplay" class="font-hand text-[13px] sm:text-sm font-bold text-pastel-ink truncate">Trạm Radio T2</p>
+        <p id="musicStatus" class="text-[9px] sm:text-[10px] font-bold text-pastel-muted truncate">Đang tạm dừng</p>
+      </div>
+
+      <!-- Các nút điều khiển -->
+      <div class="flex items-center gap-0.5 sm:gap-1 border-l border-pink-200 pl-1 sm:pl-2">
+        <button onclick="prevTrack()" class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full hover:bg-pastel-pink/50 text-pastel-ink transition text-xs sm:text-sm" title="Bài trước">⏮</button>
+        <button onclick="toggleMusic()" id="playPauseBtn" class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full hover:bg-pastel-pink/50 text-pastel-ink transition text-xs sm:text-sm" title="Phát/Tạm dừng">▶️</button>
+        <button onclick="nextTrack()" class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full hover:bg-pastel-pink/50 text-pastel-ink transition text-xs sm:text-sm" title="Bài tiếp">⏭</button>
+        <button onclick="togglePlaylist()" class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-pastel-cream border border-pink-200 hover:bg-pastel-pink/50 text-pastel-ink transition ml-1 text-xs sm:text-sm" title="Danh sách bài hát">📜</button>
+      </div>
+      
+      <audio id="bgMusicAudio"></audio>
     </div>
-    <audio id="bgMusicAudio" loop>
-      <source src="./hoanchinh.mp3?v=2" type="audio/mpeg">
-    </audio>
   </div>
 
   <!-- ============================================================================
@@ -1122,7 +1147,7 @@
       }
     }
 
-    // CRUD Modals Logic (Albums, Events, Members, Guestbook)
+    // CRUD Modals Logic
     function openCreateAlbumModal() { if(canWriteContent()) document.getElementById("createAlbumModal").classList.remove("hidden"); else showToast("Cần quyền member", "warning"); }
     function closeCreateAlbumModal() { document.getElementById("createAlbumModal").classList.add("hidden"); }
     async function submitNewAlbum() {
@@ -1254,7 +1279,6 @@
       document.getElementById("lightboxDate").textContent = `Ngày đăng: ${formatDateVN(p.created_at)}`;
       document.getElementById("lightboxDownloadBtn").href = safeUrl; 
       
-      // 1. NÚT ĐẶT LÀM BÌA
       const coverBtn = document.getElementById("lightboxSetCoverBtn");
       coverBtn.classList.toggle("hidden", isVideo);
       coverBtn.onclick = async function() {
@@ -1275,7 +1299,6 @@
         }
       };
 
-      // 2. NÚT XÓA ẢNH
       const deleteBtn = document.getElementById("lightboxDeleteBtn");
       deleteBtn.classList.remove("hidden"); 
       deleteBtn.onclick = async function() {
@@ -1304,7 +1327,6 @@
       if(vidEl) vidEl.pause();
     }
 
-    // KHÔI PHỤC HÀM TOAST & CONFIRM MODAL BỊ MẤT
     function showToast(message, type = "info") {
       const container = document.getElementById("toastContainer");
       if (!container) return;
@@ -1362,35 +1384,132 @@
       document.getElementById("cdSecs").textContent = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
     }, 1000);
 
-    // --- XỬ LÝ TRẠM RADIO TỰ ĐỘNG ---
+    // --- XỬ LÝ TRẠM RADIO T2 (BẢN NÂNG CẤP DANH SÁCH BÀI HÁT) ---
+    // Cấu hình danh sách bài hát tại đây
+    const playlist = [
+      { title: "Hoàn Chỉnh - Lofi", src: "./hoanchinh.mp3?v=2" },
+      { title: "Thanh Xuân - Da LAB", src: "" }, 
+      { title: "Tháng Năm - Soobin", src: "" }, 
+      { title: "Đừng làm trái tim anh đau X Muộn rồi mà sao còn", src: "" },
+      { title: "100 Year Love", src: "" },
+      { title: "Đường tôi chở em về", src: "" }
+    ];
+    
+    let currentTrackIndex = 0;
     let isMusicPlaying = false;
-    function toggleMusic() {
-      const bgMusic = document.getElementById("bgMusicAudio");
-      const diskIcon = document.getElementById("diskIcon");
-      const musicStatus = document.getElementById("musicStatus");
-      if (!bgMusic) return;
-
-      if (isMusicPlaying) {
-        bgMusic.pause();
-        if (diskIcon) diskIcon.style.animationPlayState = 'paused';
-        if (musicStatus) musicStatus.textContent = "Đang tạm dừng (Bấm để phát)";
-      } else {
-        bgMusic.volume = 0.5;
-        bgMusic.play().then(() => {
-          if (diskIcon) diskIcon.style.animationPlayState = 'running';
-          if (musicStatus) musicStatus.textContent = "Đang phát Lofi Chill 🎵";
-        }).catch(e => console.log("Trình duyệt chặn autoplay"));
-      }
-      isMusicPlaying = !isMusicPlaying;
+    const bgMusic = document.getElementById("bgMusicAudio");
+    
+    function initRadio() {
+      renderPlaylist();
+      loadTrack(currentTrackIndex, false);
+      
+      // Tự động chuyển bài khi hết nhạc
+      bgMusic.addEventListener('ended', () => {
+        nextTrack();
+      });
     }
 
-    // Tự động bật nhạc khi người dùng click lần đầu tiên vào web
-    document.body.addEventListener('click', function autoPlayMusicOnce() {
-      if (!isMusicPlaying) toggleMusic();
+    function renderPlaylist() {
+      const listEl = document.getElementById("playlistItems");
+      if(!listEl) return;
+      listEl.innerHTML = playlist.map((track, i) => `
+        <li onclick="playSpecificTrack(${i})" class="cursor-pointer text-xs px-2 py-2 rounded-xl border border-transparent hover:border-pink-200 hover:bg-pastel-pink/30 flex justify-between items-center transition ${i === currentTrackIndex ? 'bg-pastel-pink/50 font-bold text-pastel-pinkDeep' : 'text-pastel-ink'}">
+          <span class="truncate pr-2">${i+1}. ${escapeHtml(track.title)}</span>
+          ${i === currentTrackIndex ? '<span class="text-[10px] animate-pulse">🔊</span>' : ''}
+        </li>
+      `).join('');
+    }
+
+    function loadTrack(index, autoPlay = true) {
+      if(index < 0 || index >= playlist.length) return;
+      currentTrackIndex = index;
+      const track = playlist[currentTrackIndex];
+      
+      document.getElementById("trackNameDisplay").textContent = track.title;
+      
+      if(track.src) {
+        bgMusic.src = track.src;
+        bgMusic.load();
+        if(autoPlay) playMusic();
+      } else {
+        // Xử lý khi bài hát bị bỏ trống file nhạc
+        bgMusic.src = "";
+        pauseMusic();
+        document.getElementById("musicStatus").textContent = "Cần thêm file MP3";
+        showToast(`Vui lòng cập nhật link MP3 cho bài: ${track.title}`, "warning");
+      }
+      renderPlaylist();
+    }
+
+    function playSpecificTrack(index) {
+      if(index === currentTrackIndex) {
+         toggleMusic(); // Nếu click đúng bài đang chọn thì Play/Pause
+      } else {
+         loadTrack(index, true); // Nếu bài mới thì load và auto phát
+      }
+    }
+
+    function nextTrack() {
+      let nextIdx = currentTrackIndex + 1;
+      if (nextIdx >= playlist.length) nextIdx = 0;
+      loadTrack(nextIdx, true);
+    }
+
+    function prevTrack() {
+      let prevIdx = currentTrackIndex - 1;
+      if (prevIdx < 0) prevIdx = playlist.length - 1;
+      loadTrack(prevIdx, true);
+    }
+
+    function playMusic() {
+      if(!bgMusic.src || bgMusic.src.endsWith(window.location.host + "/")) return; // Chặn lỗi nếu không có source
+      bgMusic.volume = 0.5;
+      bgMusic.play().then(() => {
+        isMusicPlaying = true;
+        document.getElementById("diskIcon").style.animationPlayState = 'running';
+        document.getElementById("musicStatus").textContent = "Đang phát 🎵";
+        document.getElementById("playPauseBtn").textContent = "⏸️";
+      }).catch(e => {
+        console.log("Trình duyệt chặn autoplay", e);
+        isMusicPlaying = false;
+      });
+    }
+
+    function pauseMusic() {
+      bgMusic.pause();
+      isMusicPlaying = false;
+      document.getElementById("diskIcon").style.animationPlayState = 'paused';
+      document.getElementById("musicStatus").textContent = "Đang tạm dừng";
+      document.getElementById("playPauseBtn").textContent = "▶️";
+    }
+
+    function toggleMusic() {
+      if (isMusicPlaying) pauseMusic();
+      else playMusic();
+    }
+
+    function togglePlaylist() {
+      const popup = document.getElementById("playlistPopup");
+      popup.classList.toggle("hidden");
+    }
+
+    // Tự động bật nhạc khi click lần đầu trên trang (Tránh bị trình duyệt block)
+    document.body.addEventListener('click', function autoPlayMusicOnce(e) {
+      // Bỏ qua nếu click trực tiếp vào nút trên Radio để không bị trùng lặp lệnh Play/Pause
+      if(e.target.closest('#radioWrapper')) return; 
+      
+      if (!isMusicPlaying && bgMusic.src && !bgMusic.src.endsWith(window.location.host + "/")) {
+         playMusic();
+      }
       document.body.removeEventListener('click', autoPlayMusicOnce);
     }, { once: true });
 
-    window.addEventListener("DOMContentLoaded", () => { switchSection("home"); initSupabaseApp(); });
+    // Khởi tạo trang web
+    window.addEventListener("DOMContentLoaded", () => { 
+      switchSection("home"); 
+      initSupabaseApp(); 
+      initRadio(); // Kích hoạt máy nghe nhạc
+    });
   </script>
 </body>
 </html>
