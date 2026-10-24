@@ -1413,15 +1413,14 @@
       document.getElementById("cdMins").textContent = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
       document.getElementById("cdSecs").textContent = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
     }, 1000);
-
-    // ============================================================================
-    // TRẠM RADIO T2: PLAYLIST NHIỀU BÀI + AUTOPLAY + SÓNG NHẠC THEO NHỊP THẬT
+// ============================================================================
+    // TRẠM RADIO T2: PLAYLIST + SÓNG NHẠC REAL-TIME + CHỐNG NGẮT GIỮA CHỪNG
     // ============================================================================
     const RADIO_PLAYLIST = [
-      { title: "Hoàn Chỉnh - Lofi", src: "./hoanchinh.mp3?v=2" },
+      { title: "Hoàn Chỉnh - Lofi", src: "./hoanchinh.mp3?v=3" },
       { title: "Đừng làm trái tim anh đau X Muộn rồi mà sao còn", src: "./mashup.mp3" },
-      { title: "100 Year Love", src: "/100yealove.mp3" },
-      { title: "Đường tôi chở em về", src: "./duongtchoeve.mp3" }
+      { title: "100 Year Love", src: "./100yealove.mp3" },
+      { title: "Đường tôi chở em về", src: "./duongtchoevee.mp3" }
     ];
 
     let currentTrackIndex = 0;
