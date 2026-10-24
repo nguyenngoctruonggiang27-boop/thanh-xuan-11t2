@@ -142,23 +142,15 @@
     @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     .animate-spin-slow { animation: spinSlow 4s linear infinite; }
     
-    @keyframes audioVisualizer {
-      0%, 100% { height: 10%; }
-      50% { height: 100%; }
-    }
+    /* Thanh sóng nhạc nhảy theo tần số âm thanh thật (Web Audio API) */
     .audio-bar {
-      width: 4px;
-      background-color: #E05780;
-      border-radius: 2px;
-      margin: 0 2px;
-      animation: audioVisualizer 1.5s ease-in-out infinite;
-      animation-play-state: paused;
+      width: 3.5px;
+      height: 18%;
+      background: linear-gradient(to top, #E05780, #FF8FAB);
+      border-radius: 9999px;
+      transition: height 0.05s ease-out;
+      will-change: height;
     }
-    .audio-bar:nth-child(1) { animation-delay: 0s; height: 30%; }
-    .audio-bar:nth-child(2) { animation-delay: 0.2s; height: 60%; }
-    .audio-bar:nth-child(3) { animation-delay: 0.4s; height: 100%; }
-    .audio-bar:nth-child(4) { animation-delay: 0.1s; height: 50%; }
-    .audio-bar:nth-child(5) { animation-delay: 0.3s; height: 70%; }
 
     /* 4. Animation cho 12 icon trang trí Chibi bay lơ lửng */
     .floating-doodle {
@@ -367,11 +359,9 @@
       </div>
 
       <div class="space-y-4">
-        <!-- ĐÃ YÊU CẦU 2: BỎ NÚT "XEM TẤT CẢ" -->
         <div class="flex flex-wrap items-center justify-between gap-3 mb-6 border-b-2 border-dashed border-pink-200 pb-2">
           <h2 class="font-hand text-2xl sm:text-3xl font-bold text-pastel-ink">✨ Góc Kỷ Niệm Của Lớp</h2>
         </div>
-        <!-- ĐÃ YÊU CẦU 3: ĐỔ RA TOÀN BỘ ALBUMS -->
         <div id="homeAlbumsPreviewGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-2 pb-10"></div>
       </div>
     </section>
@@ -597,30 +587,56 @@
     </div>
   </footer>
 
-  <!-- ĐÃ YÊU CẦU 4: ĐỘ LẠI TRẠM RADIO THANH XUÂN CHO XỊN XÒ -->
-  <div id="lofiRadio" class="fixed bottom-6 left-6 z-40 flex items-center gap-4 bg-white/95 backdrop-blur-xl px-5 py-3.5 rounded-full border-2 border-pink-200 shadow-polaroid hover:scale-105 hover:shadow-polaroidHover transition-all cursor-pointer group" onclick="toggleMusic()">
-    <div class="relative w-12 h-12 flex items-center justify-center">
-      <!-- Vòng xoay đĩa than -->
-      <div id="diskIcon" class="absolute inset-0 rounded-full bg-gradient-to-tr from-gray-800 to-gray-950 flex items-center justify-center border-4 border-gray-100 shadow-sm animate-spin-slow" style="animation-play-state: paused;">
-        <div class="w-3 h-3 rounded-full bg-pastel-pinkDeep border border-white"></div>
+  <!-- ============================================================================
+       TRẠM RADIO T2 NÂNG CẤP (PLAYLIST 6 BÀI + SÓNG NHẠC REAL-TIME THEO NHẠC)
+       ============================================================================ -->
+  <div id="lofiRadioWrapper" class="fixed bottom-6 left-6 z-40">
+    <!-- Bảng chọn bài hát (Playlist Menu) -->
+    <div id="radioPlaylistMenu" class="hidden mb-3 w-72 sm:w-80 bg-white/95 backdrop-blur-xl rounded-3xl p-4 border-2 border-pink-200 shadow-polaroid space-y-2.5">
+      <div class="flex items-center justify-between border-b border-dashed border-pink-200 pb-2">
+        <span class="font-hand text-base font-bold text-pastel-ink flex items-center gap-1.5">🎶 Danh sách nhạc T2</span>
+        <button onclick="toggleRadioPlaylist(event)" class="w-6 h-6 rounded-full bg-pastel-pink/50 hover:bg-pastel-pink text-pastel-ink text-xs font-bold flex items-center justify-center transition">✕</button>
       </div>
-      <!-- Nút Play/Pause chồng lên -->
-      <div id="musicPlayIcon" class="absolute inset-0 flex items-center justify-center text-white text-lg drop-shadow-md z-10 transition opacity-80 group-hover:opacity-100">▶</div>
+      <div id="radioPlaylistItems" class="space-y-1.5 max-h-60 overflow-y-auto pr-1"></div>
     </div>
-    
-    <div class="pr-2 flex flex-col justify-center">
-      <div class="flex items-center gap-2">
-        <p class="font-hand text-base font-bold text-pastel-ink leading-none">Trạm Radio T2</p>
-        <!-- Cột sóng âm nhạc (chỉ nhảy khi phát) -->
-        <div id="audioVisualizer" class="hidden items-end h-3 gap-0.5 ml-1">
-          <div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div>
+
+    <!-- Thanh điều khiển Radio chính -->
+    <div id="lofiRadio" class="flex items-center gap-3 bg-white/95 backdrop-blur-xl px-4 py-3 rounded-full border-2 border-pink-200 shadow-polaroid hover:shadow-polaroidHover transition-all">
+      <!-- Đĩa than Play/Pause -->
+      <div class="relative w-12 h-12 flex items-center justify-center cursor-pointer group shrink-0" onclick="toggleMusic(event)" title="Phát / Tạm dừng">
+        <div id="diskIcon" class="absolute inset-0 rounded-full bg-gradient-to-tr from-gray-800 to-gray-950 flex items-center justify-center border-4 border-gray-100 shadow-sm animate-spin-slow" style="animation-play-state: paused;">
+          <div class="w-3 h-3 rounded-full bg-pastel-pinkDeep border border-white"></div>
         </div>
+        <div id="musicPlayIcon" class="absolute inset-0 flex items-center justify-center text-white text-base drop-shadow-md z-10 transition opacity-85 group-hover:scale-110">▶</div>
       </div>
-      <p id="musicStatus" class="text-[11px] font-bold text-pastel-muted mt-1 leading-none">Bấm để chill cùng lớp</p>
+      
+      <!-- Thông tin bài hát & Sóng nhạc nhảy theo tần số thật -->
+      <div class="flex flex-col justify-center min-w-[135px] max-w-[180px] cursor-pointer" onclick="toggleRadioPlaylist(event)" title="Bấm để chọn bài hát">
+        <div class="flex items-center gap-2">
+          <p class="font-hand text-base font-bold text-pastel-ink leading-none">Trạm Radio T2</p>
+          <!-- Cột sóng âm nhạc nhảy theo nhịp bài hát -->
+          <div id="audioVisualizer" class="flex items-end h-4 gap-0.5 ml-1">
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+          </div>
+        </div>
+        <p id="musicStatus" class="text-[11px] font-bold text-pastel-muted mt-1 leading-tight truncate">Bấm để chill cùng lớp</p>
+      </div>
+
+      <!-- Cụm nút Chuyển bài & Mở danh sách nhạc -->
+      <div class="flex items-center gap-1 pl-2 border-l border-pink-200">
+        <button onclick="prevTrack(event)" title="Bài trước" class="w-7 h-7 rounded-full hover:bg-pastel-pink/60 text-pastel-ink flex items-center justify-center text-xs font-bold transition">⏮</button>
+        <button onclick="nextTrack(event)" title="Bài tiếp theo" class="w-7 h-7 rounded-full hover:bg-pastel-pink/60 text-pastel-ink flex items-center justify-center text-xs font-bold transition">⏭</button>
+        <button onclick="toggleRadioPlaylist(event)" title="Chọn bài hát" class="w-8 h-8 rounded-full bg-pastel-pink/70 hover:bg-pastel-pinkDeep hover:text-white text-pastel-ink flex items-center justify-center text-xs font-bold transition shadow-xs">🎶</button>
+      </div>
+
+      <audio id="bgMusicAudio" preload="auto" crossorigin="anonymous">
+        <source src="./hoanchinh.mp3?v=2" type="audio/mpeg">
+      </audio>
     </div>
-    <audio id="bgMusicAudio" loop>
-      <source src="./hoanchinh.mp3?v=2" type="audio/mpeg">
-    </audio>
   </div>
 
   <!-- ============================================================================
@@ -962,7 +978,6 @@
         document.getElementById("heroPolaroidContent").className = "aspect-[4/3] rounded-xl overflow-hidden bg-gray-100";
         document.getElementById("heroPolaroidCaption").textContent = p.caption || "Khoảnh khắc T2 2025-2028"; document.getElementById("heroPolaroidSub").textContent = `${p.uploader_name||'Ẩn danh'} • ${formatDateVN(p.created_at)}`;
       }
-      // YÊU CẦU 3: Hiển thị TOÀN BỘ album ra trang chủ, không dùng .slice() nữa
       document.getElementById("homeAlbumsPreviewGrid").innerHTML = albumsData.map((a, i) => buildAlbumCardHtml(a, i)).join("");
     }
 
@@ -1399,48 +1414,253 @@
       document.getElementById("cdSecs").textContent = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
     }, 1000);
 
-    // --- XỬ LÝ TRẠM RADIO TỰ ĐỘNG ĐÃ NÂNG CẤP ---
+    // ============================================================================
+    // TRẠM RADIO T2: PLAYLIST NHIỀU BÀI + AUTOPLAY + SÓNG NHẠC THEO NHỊP THẬT
+    // ============================================================================
+    const RADIO_PLAYLIST = [
+      { title: "Hoàn Chỉnh - Lofi", src: "./hoanchinh.mp3?v=2" },
+      { title: "Thanh Xuân - Da LAB", src: "" }, 
+      { title: "Tháng Năm - Soobin", src: "" }, 
+      { title: "Đừng làm trái tim anh đau X Muộn rồi mà sao còn", src: "" },
+      { title: "100 Year Love", src: "" },
+      { title: "Đường tôi chở em về", src: "" }
+    ];
+
+    let currentTrackIndex = 0;
     let isMusicPlaying = false;
-    function toggleMusic() {
+    let audioCtx = null;
+    let analyserNode = null;
+    let mediaSourceNode = null;
+    let frequencyData = null;
+    let visualizerRafId = null;
+
+    function renderRadioPlaylist() {
+      const container = document.getElementById("radioPlaylistItems");
+      if (!container) return;
+      container.innerHTML = RADIO_PLAYLIST.map((track, idx) => {
+        const isCurrent = idx === currentTrackIndex;
+        const hasLink = Boolean(track.src && track.src.trim());
+        return `
+          <button onclick="selectTrack(${idx}, event)" class="w-full text-left px-3 py-2 rounded-2xl text-xs font-bold flex items-center justify-between gap-2 transition ${isCurrent ? 'bg-pastel-pink text-pastel-ink border border-pink-300 shadow-xs' : 'hover:bg-pastel-cream text-pastel-ink border border-transparent'}">
+            <div class="flex items-center gap-2 truncate">
+              <span class="text-sm">${isCurrent && isMusicPlaying ? '🔊' : '🎵'}</span>
+              <span class="truncate">${escapeHtml(track.title)}</span>
+            </div>
+            ${!hasLink ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 shrink-0">Chưa có link</span>' : (isCurrent ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-pastel-pinkDeep text-white shrink-0">Đang chọn</span>' : '')}
+          </button>
+        `;
+      }).join("");
+    }
+
+    function toggleRadioPlaylist(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById("radioPlaylistMenu");
+      if (!menu) return;
+      menu.classList.toggle("hidden");
+      renderRadioPlaylist();
+    }
+
+    // Đóng bảng chọn bài hát khi bấm ra ngoài
+    document.addEventListener("click", (e) => {
+      const wrapper = document.getElementById("lofiRadioWrapper");
+      const menu = document.getElementById("radioPlaylistMenu");
+      if (wrapper && menu && !wrapper.contains(e.target)) {
+        menu.classList.add("hidden");
+      }
+    });
+
+    // Khởi tạo bộ phân tích tần số âm thanh thật (Web Audio API)
+    function ensureAudioAnalyzer() {
       const bgMusic = document.getElementById("bgMusicAudio");
+      if (!bgMusic) return;
+
+      if (!audioCtx) {
+        try {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContextClass();
+          analyserNode = audioCtx.createAnalyser();
+          analyserNode.fftSize = 64; // 32 dải tần số mượt và nhẹ
+          analyserNode.smoothingTimeConstant = 0.72;
+          mediaSourceNode = audioCtx.createMediaElementSource(bgMusic);
+          mediaSourceNode.connect(analyserNode);
+          analyserNode.connect(audioCtx.destination);
+          frequencyData = new Uint8Array(analyserNode.frequencyBinCount);
+        } catch (err) {
+          console.warn("Không thể khởi tạo bộ phân tích sóng nhạc:", err);
+        }
+      }
+
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume().catch(() => {});
+      }
+    }
+
+    // Vòng lặp cập nhật chiều cao 5 cột sóng theo đúng nhịp Bass / Mid / Treble của nhạc
+    function updateVisualizerBars() {
+      const bars = document.querySelectorAll("#audioVisualizer .audio-bar");
+      if (!isMusicPlaying) {
+        bars.forEach(bar => { bar.style.height = "18%"; });
+        if (visualizerRafId) cancelAnimationFrame(visualizerRafId);
+        visualizerRafId = null;
+        return;
+      }
+
+      if (analyserNode && frequencyData) {
+        analyserNode.getByteFrequencyData(frequencyData);
+        // Lấy mẫu 5 dải tần số đại diện cho trống (Bass), lời (Mid) và nhạc cụ cao (Treble)
+        const sampleBins = [1, 3, 6, 10, 15];
+        bars.forEach((bar, i) => {
+          const rawValue = frequencyData[sampleBins[i]] || 0;
+          // Quy đổi giá trị (0 - 255) sang chiều cao phần trăm (15% - 100%)
+          const percent = Math.max(15, Math.min(100, Math.round((rawValue / 255) * 95) + 12));
+          bar.style.height = `${percent}%`;
+        });
+      }
+
+      visualizerRafId = requestAnimationFrame(updateVisualizerBars);
+    }
+
+    function updateRadioUI() {
       const diskIcon = document.getElementById("diskIcon");
       const musicStatus = document.getElementById("musicStatus");
-      const visualizer = document.getElementById("audioVisualizer");
       const playIcon = document.getElementById("musicPlayIcon");
+      const currentTrack = RADIO_PLAYLIST[currentTrackIndex] || RADIO_PLAYLIST[0];
+
+      if (isMusicPlaying) {
+        if (diskIcon) diskIcon.style.animationPlayState = "running";
+        if (musicStatus) musicStatus.textContent = `🎵 ${currentTrack.title}`;
+        if (playIcon) playIcon.textContent = "⏸";
+        if (!visualizerRafId) visualizerRafId = requestAnimationFrame(updateVisualizerBars);
+      } else {
+        if (diskIcon) diskIcon.style.animationPlayState = "paused";
+        if (musicStatus) musicStatus.textContent = currentTrack ? `Tạm dừng: ${currentTrack.title}` : "Bấm để chill cùng lớp";
+        if (playIcon) playIcon.textContent = "▶";
+        updateVisualizerBars();
+      }
+      renderRadioPlaylist();
+    }
+
+    async function playCurrentTrack() {
+      const bgMusic = document.getElementById("bgMusicAudio");
+      if (!bgMusic) return false;
+      const track = RADIO_PLAYLIST[currentTrackIndex];
+      if (!track || !track.src || !track.src.trim()) {
+        showToast(`Bài "${track?.title || ''}" chưa được điền link nhạc!`, "warning");
+        return false;
+      }
+
+      if (bgMusic.getAttribute("data-loaded-src") !== track.src) {
+        bgMusic.src = track.src;
+        bgMusic.setAttribute("data-loaded-src", track.src);
+      }
+
+      bgMusic.volume = 0.5;
+      ensureAudioAnalyzer();
+
+      try {
+        await bgMusic.play();
+        isMusicPlaying = true;
+        updateRadioUI();
+        return true;
+      } catch (err) {
+        isMusicPlaying = false;
+        updateRadioUI();
+        return false;
+      }
+    }
+
+    function toggleMusic(e) {
+      if (e) e.stopPropagation();
+      const bgMusic = document.getElementById("bgMusicAudio");
       if (!bgMusic) return;
 
       if (isMusicPlaying) {
         bgMusic.pause();
-        if (diskIcon) diskIcon.style.animationPlayState = 'paused';
-        if (musicStatus) musicStatus.textContent = "Bấm để chill cùng lớp";
-        if (visualizer) visualizer.classList.remove("flex"); visualizer.classList.add("hidden");
-        if (playIcon) playIcon.textContent = "▶";
+        isMusicPlaying = false;
+        updateRadioUI();
       } else {
-        bgMusic.volume = 0.5;
-        bgMusic.play().then(() => {
-          if (diskIcon) diskIcon.style.animationPlayState = 'running';
-          if (musicStatus) musicStatus.textContent = "Đang phát Lofi Chill 🎵";
-          if (visualizer) {
-            visualizer.classList.remove("hidden");
-            visualizer.classList.add("flex");
-            // Kích hoạt animation chạy sóng nhạc
-            const bars = visualizer.querySelectorAll('.audio-bar');
-            bars.forEach(bar => bar.style.animationPlayState = 'running');
-          }
-          if (playIcon) playIcon.textContent = "⏸";
-        }).catch(e => console.log("Trình duyệt chặn autoplay"));
+        playCurrentTrack();
       }
-      isMusicPlaying = !isMusicPlaying;
     }
 
-    // Tự động bật nhạc khi người dùng click lần đầu tiên vào web
-    document.body.addEventListener('click', function autoPlayMusicOnce(e) {
-      // Đừng tự bật nếu họ click thẳng vào nút lofi (vì nó sẽ tự toggle)
-      if (!isMusicPlaying && !e.target.closest('#lofiRadio')) toggleMusic();
-      document.body.removeEventListener('click', autoPlayMusicOnce);
-    }, { once: true });
+    function selectTrack(index, e) {
+      if (e) e.stopPropagation();
+      const track = RADIO_PLAYLIST[index];
+      if (!track) return;
+      if (!track.src || !track.src.trim()) {
+        showToast(`Bài "${track.title}" chưa được điền link nhạc!`, "warning");
+        return;
+      }
+      currentTrackIndex = index;
+      playCurrentTrack();
+    }
 
-    window.addEventListener("DOMContentLoaded", () => { switchSection("home"); initSupabaseApp(); });
+    function nextTrack(e) {
+      if (e) e.stopPropagation();
+      // Tìm bài tiếp theo đã có link nhạc
+      for (let step = 1; step <= RADIO_PLAYLIST.length; step++) {
+        const candidateIdx = (currentTrackIndex + step) % RADIO_PLAYLIST.length;
+        if (RADIO_PLAYLIST[candidateIdx].src && RADIO_PLAYLIST[candidateIdx].src.trim()) {
+          currentTrackIndex = candidateIdx;
+          playCurrentTrack();
+          return;
+        }
+      }
+      showToast("Chưa có bài hát nào khác được điền link!", "info");
+    }
+
+    function prevTrack(e) {
+      if (e) e.stopPropagation();
+      // Tìm bài trước đó đã có link nhạc
+      for (let step = 1; step <= RADIO_PLAYLIST.length; step++) {
+        const candidateIdx = (currentTrackIndex - step + RADIO_PLAYLIST.length) % RADIO_PLAYLIST.length;
+        if (RADIO_PLAYLIST[candidateIdx].src && RADIO_PLAYLIST[candidateIdx].src.trim()) {
+          currentTrackIndex = candidateIdx;
+          playCurrentTrack();
+          return;
+        }
+      }
+    }
+
+    // Khởi tạo sự kiện tự động chuyển bài khi hết nhạc & tự động phát khi truy cập web
+    function initRadioStation() {
+      const bgMusic = document.getElementById("bgMusicAudio");
+      if (!bgMusic) return;
+
+      // Đặt sẵn nguồn bài đầu tiên
+      if (RADIO_PLAYLIST[0] && RADIO_PLAYLIST[0].src) {
+        bgMusic.src = RADIO_PLAYLIST[0].src;
+        bgMusic.setAttribute("data-loaded-src", RADIO_PLAYLIST[0].src);
+      }
+      renderRadioPlaylist();
+
+      // Khi hết bài hiện tại -> Tự động chuyển sang bài tiếp theo có link (hoặc phát lặp lại nếu chỉ có 1 bài)
+      bgMusic.addEventListener("ended", () => {
+        nextTrack();
+      });
+
+      // 1. Thử tự động phát ngay khi vừa vào web
+      playCurrentTrack().then((started) => {
+        if (!started) {
+          // 2. Nếu trình duyệt chặn Autoplay khi chưa tương tác, tự động bật ngay ở cú click/chạm đầu tiên
+          const unlockAudioOnFirstInteraction = (e) => {
+            if (!isMusicPlaying && !e.target.closest("#lofiRadioWrapper")) {
+              playCurrentTrack();
+            }
+            document.removeEventListener("click", unlockAudioOnFirstInteraction);
+            document.removeEventListener("touchstart", unlockAudioOnFirstInteraction);
+          };
+          document.addEventListener("click", unlockAudioOnFirstInteraction, { once: true });
+          document.addEventListener("touchstart", unlockAudioOnFirstInteraction, { once: true });
+        }
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      switchSection("home");
+      initSupabaseApp();
+      initRadioStation();
+    });
   </script>
 </body>
 </html>
