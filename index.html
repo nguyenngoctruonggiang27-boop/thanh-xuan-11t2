@@ -193,437 +193,601 @@
     }
 
 /* ============================================================================
-       6. HỆ THỐNG MÔ HÌNH LỚP HỌC 3D TƯƠNG TÁC (GÓC NHÌN TỪ CUỐI LỚP NHÌN LÊN BẢNG)
+       6. HỆ THỐNG MÔ HÌNH PHÒNG HỌC 3D (PHỐI CẢNH TỪ CUỐI LỚP NHƯ ẢNH THẬT)
        ============================================================================ */
+    /* Gỡ bỏ backdrop-filter trên vỏ bọc sơ đồ để Chrome không bao giờ khóa chuột ở hàng dưới */
+    .map-shell-no-blur {
+      background-color: rgba(255, 253, 249, 0.94) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border: 2px solid #FBCFE8 !important;
+    }
+
     .classroom-viewport-3d {
-      perspective: 1200px;
-      perspective-origin: 50% 12%;
       position: relative;
       overflow: hidden;
-      min-height: 760px;
       border-radius: 28px;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(255, 251, 235, 0.95) 0%, transparent 55%),
-        linear-gradient(180deg, #F3E8FF 0%, #FCE7F3 38%, #E0F2FE 100%);
-      border: 3px solid rgba(255, 255, 255, 0.9);
-      box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.7), 0 20px 45px -12px rgba(61, 49, 74, 0.2);
+      background: #E2E8F0;
+      border: 4px solid #FFFFFF;
+      box-shadow: 0 22px 50px -12px rgba(61, 49, 74, 0.28);
       user-select: none;
-      padding: 18px 12px 36px 12px;
     }
 
-    /* Ánh nắng chiếu xiên từ cửa sổ bên trái */
-    .sunbeam-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none !important;
-      background: linear-gradient(108deg, rgba(255, 253, 220, 0.42) 0%, rgba(255, 253, 220, 0.14) 38%, transparent 65%);
-      z-index: 1;
-    }
-
-    /* Không gian căn phòng 3D nhìn từ cuối lớp lên đầu lớp */
-    .classroom-stage-3d {
+    /* Rig Camera 3D thực hiện hiệu ứng bay (Fly-in) tới đúng hộc bàn */
+    .classroom-camera-rig {
+      position: relative;
       width: 100%;
-      max-width: 1040px;
-      margin: 8px auto 20px auto;
-      padding: 24px 22px 38px 22px;
-      border-radius: 24px;
-      transform-style: preserve-3d;
-      transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-origin: 50% 50%;
+      transition: transform 0.78s cubic-bezier(0.22, 1, 0.36, 1);
       will-change: transform;
-      position: relative;
-      z-index: 5;
-      /* Sàn gạch lớp học có chiều sâu phối cảnh */
-      background-color: #FAF3E8;
+      /* Nền sàn gạch bông hoa văn hình thoi cổ điển của lớp học Việt Nam */
+      background-color: #EFECE6;
       background-image:
-        linear-gradient(to right, rgba(212, 163, 115, 0.22) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(212, 163, 115, 0.28) 2px, transparent 2px);
-      background-size: 64px 48px;
-      border: 4px solid #DFC3A5;
-      border-top: 8px solid #C89F78;
-      box-shadow:
-        0 20px 0 -2px #B0845C,
-        0 28px 0 -4px #8A623E,
-        0 38px 60px -10px rgba(61, 49, 74, 0.35),
-        inset 0 18px 35px rgba(188, 138, 95, 0.18);
+        radial-gradient(circle at 50% 25%, rgba(255, 253, 240, 0.75) 0%, transparent 65%),
+        repeating-linear-gradient(45deg, rgba(148, 163, 184, 0.18) 0px, rgba(148, 163, 184, 0.18) 2px, transparent 2px, transparent 28px),
+        repeating-linear-gradient(-45deg, rgba(148, 163, 184, 0.18) 0px, rgba(148, 163, 184, 0.18) 2px, transparent 2px, transparent 28px),
+        linear-gradient(to right, rgba(203, 213, 225, 0.4) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(203, 213, 225, 0.4) 1px, transparent 1px);
+      background-size: 100% 100%, 40px 40px, 40px 40px, 40px 40px, 40px 40px;
+      padding-bottom: 44px;
     }
 
-    /* Tường đầu lớp 3D dựng đứng (chứa TV 50 inch, Bảng, Cửa lớp đầu bàn) */
-    .front-wall-3d {
+    /* 1. TRẦN LỚP HỌC 3D (DẦM TRẦN, ĐÈN TUÝP & QUẠT TRẦN QUAY) */
+    .room-ceiling-3d {
       position: relative;
-      background: linear-gradient(180deg, #FFFDF9 0%, #FDF2F8 65%, #F5E6D3 100%);
-      border: 3px solid #E6CCB2;
-      border-bottom: 10px solid #C69C72;
-      border-radius: 22px 22px 14px 14px;
-      padding: 18px 16px 20px 16px;
-      margin-bottom: 28px;
-      box-shadow:
-        0 14px 28px -6px rgba(61, 49, 74, 0.18),
-        inset 0 4px 12px rgba(255, 255, 255, 0.9);
-      transform: translateZ(12px);
+      background: linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 65%, #E2E8F0 100%);
+      border-bottom: 6px solid #CBD5E1;
+      padding: 12px 24px 16px 24px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      z-index: 4;
+    }
+    .ceiling-beam {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 8px;
+      background: linear-gradient(180deg, #CBD5E1, #E2E8F0);
+      border-bottom: 2px solid #94A3B8;
+      pointer-events: none;
+    }
+    .tube-light-3d {
+      height: 7px;
+      border-radius: 999px;
+      background: #FFFFFF;
+      border: 1px solid #BAE6FD;
+      box-shadow: 0 0 14px 4px rgba(255, 255, 255, 0.95), 0 0 24px 6px rgba(186, 230, 253, 0.65);
+    }
+    @keyframes ceilingFanSpin {
+      from { transform: rotateX(55deg) rotateZ(0deg); }
+      to { transform: rotateX(55deg) rotateZ(360deg); }
+    }
+    .ceiling-fan-spin {
+      width: 58px;
+      height: 58px;
+      position: relative;
+      animation: ceilingFanSpin 1.8s linear infinite;
+      transform-style: preserve-3d;
     }
 
-    /* Cửa lớp bên trái nằm ngay khu vực bàn đầu */
-    .classroom-door-front-left {
-      position: relative;
-      background: linear-gradient(180deg, #B57B4C 0%, #8F5B32 100%);
-      border: 4px solid #FDF8F2;
-      border-bottom-width: 0;
-      border-radius: 14px 14px 4px 4px;
-      box-shadow:
-        6px 8px 16px rgba(61, 49, 74, 0.22),
-        inset 0 2px 6px rgba(255, 255, 255, 0.35);
-      padding: 8px;
+    /* 2. TƯỜNG TRÁI & TƯỜNG PHẢI PHỐI CẢNH (QUẠT TREO TƯỜNG CÁNH CAM, CỬA LỚP, RÈM & CỬA SỔ) */
+    .wall-side-strip-left {
+      position: absolute;
+      top: 56px;
+      bottom: 0;
+      left: 0;
+      width: 68px;
+      background: linear-gradient(90deg, #E2E8F0 0%, #F1F5F9 82%, #CBD5E1 100%);
+      border-right: 3px solid #CBD5E1;
+      z-index: 3;
+      pointer-events: none;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      min-height: 148px;
-      transform: perspective(400px) rotateY(14deg);
-      transform-origin: left center;
+      justify-content: flex-start;
+      padding-top: 12px;
+      gap: 28px;
     }
-    .door-glass-window {
-      height: 46px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #BAE6FD 0%, #E0F2FE 55%, #7DD3FC 100%);
-      border: 2.5px solid #6F4518;
-      box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.8);
+    .wall-side-strip-right {
+      position: absolute;
+      top: 56px;
+      bottom: 0;
+      right: 0;
+      width: 68px;
+      background: linear-gradient(-90deg, #E2E8F0 0%, #F1F5F9 82%, #CBD5E1 100%);
+      border-left: 3px solid #CBD5E1;
+      z-index: 3;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: 12px;
+      gap: 28px;
+    }
+    /* Len chân tường màu cam đất giống ảnh thật */
+    .wall-side-strip-left::after,
+    .wall-side-strip-right::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 18px;
+      background: #D9A066;
+      border-top: 2px solid #B87D4B;
+    }
+
+    /* Quạt treo tường cánh cam đặc trưng */
+    .wall-fan-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 2.5px solid #334155;
+      background: radial-gradient(circle, #1E293B 20%, rgba(255,255,255,0.7) 70%);
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-    .door-wood-panel {
-      height: 52px;
-      border-radius: 6px;
-      border: 2px solid #6F4518;
-      background: rgba(92, 52, 14, 0.25);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      margin: 0 auto;
       position: relative;
     }
-    .door-handle-knob {
-      position: absolute;
-      right: 10px;
-      top: -12px;
-      width: 14px;
-      height: 6px;
+    @keyframes spinOrangeBlades {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .orange-fan-blades {
+      width: 34px;
+      height: 34px;
       border-radius: 999px;
-      background: linear-gradient(to right, #FDE047, #CA8A04);
-      box-shadow: 0 2px 3px rgba(0,0,0,0.45);
+      background: conic-gradient(
+        #F97316 0deg 50deg, transparent 50deg 120deg,
+        #F97316 120deg 170deg, transparent 170deg 240deg,
+        #F97316 240deg 290deg, transparent 290deg 360deg
+      );
+      animation: spinOrangeBlades 0.55s linear infinite;
     }
 
-    /* Tivi 50 inch treo phía trên bảng */
+    /* Cửa sổ chớp kính & Rèm cửa lớp học */
+    .wall-curtain-drape {
+      margin: 0 6px;
+      height: 165px;
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, transparent 0%, rgba(30, 58, 138, 0.18) 35%, rgba(30, 58, 138, 0.25) 55%, transparent 60%),
+        repeating-linear-gradient(90deg, #FEF9C3 0px, #FEF9C3 7px, #FDE68A 7px, #FDE68A 14px);
+      border: 2px solid #D97706;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+    .wall-louver-window {
+      margin: 0 6px;
+      height: 140px;
+      border-radius: 6px;
+      border: 3px solid #0F766E;
+      background: repeating-linear-gradient(
+        180deg,
+        rgba(186, 230, 253, 0.85) 0px,
+        rgba(186, 230, 253, 0.85) 10px,
+        #0F766E 10px,
+        #0F766E 13px
+      );
+      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.9);
+    }
+
+    /* 3. BỨC TƯỜNG ĐẦU LỚP (TV 50", BẢNG XANH, CỬA LỚP ĐẦU BÀN TRÁI, BÀN GIÁO VIÊN) */
+    .front-classroom-wall {
+      position: relative;
+      margin: 0 auto 24px auto;
+      max-width: 960px;
+      background: linear-gradient(180deg, #F1F5F9 0%, #E2E8F0 88%, #D9A066 88%, #C68B59 100%);
+      border-left: 4px solid #CBD5E1;
+      border-right: 4px solid #CBD5E1;
+      border-bottom: 6px solid #A47148;
+      border-radius: 0 0 18px 18px;
+      padding: 18px 20px 22px 20px;
+      box-shadow: 0 16px 32px -8px rgba(15, 23, 42, 0.22);
+      z-index: 10;
+    }
+
+    /* Cửa chính bên trái nằm ngay đầu Bàn 1 (Mở ra hành lang nắng ấm như Ảnh 2) */
+    .doorway-front-left-3d {
+      position: relative;
+      background: linear-gradient(180deg, #FEF3C7 0%, #FDE68A 45%, #F59E0B 100%);
+      border: 4px solid #0F766E;
+      border-bottom-width: 0;
+      border-radius: 10px 10px 0 0;
+      height: 162px;
+      box-shadow:
+        inset 0 0 25px rgba(255, 255, 255, 0.85),
+        6px 6px 18px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 6px;
+    }
+    /* Cánh cửa sắt kính xanh mở hé vào trong */
+    .doorway-leaf-open {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 42%;
+      background: rgba(20, 184, 166, 0.28);
+      border-right: 3px solid #0F766E;
+      backdrop-filter: blur(1px);
+    }
+
+    /* Tivi 50 inch treo tường ngay trên bảng xanh */
     .tv-50inch-wrap {
       position: relative;
       width: 100%;
-      max-width: 280px;
-      margin: 0 auto 10px auto;
-      cursor: pointer;
+      max-width: 245px;
+      margin: 0 auto 8px auto;
+      cursor: pointer !important;
+      z-index: 25;
       transition: transform 0.3s ease;
     }
     .tv-50inch-wrap:hover {
-      transform: scale(1.03) translateY(-2px);
+      transform: scale(1.04) translateY(-2px);
     }
     .tv-50inch-frame {
-      background: linear-gradient(145deg, #0F172A 0%, #1E293B 45%, #334155 100%);
-      border: 5px solid #090D16;
-      border-bottom-width: 9px;
-      border-radius: 12px;
-      padding: 8px 12px;
-      box-shadow:
-        0 12px 22px -4px rgba(0, 0, 0, 0.45),
-        0 0 20px rgba(56, 189, 248, 0.25),
-        inset 0 1px 3px rgba(255, 255, 255, 0.25);
+      background: linear-gradient(145deg, #090D16 0%, #1E293B 55%, #0F172A 100%);
+      border: 5px solid #020617;
+      border-bottom-width: 8px;
+      border-radius: 8px;
+      padding: 7px 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45);
       position: relative;
-      overflow: hidden;
     }
-    /* Hiệu ứng mặt kính TV bóng */
-    .tv-50inch-frame::before {
-      content: "";
-      position: absolute;
-      top: -40%;
-      left: -20%;
-      width: 65%;
-      height: 180%;
-      background: linear-gradient(to right, rgba(255,255,255,0.08), rgba(255,255,255,0.01));
-      transform: rotate(25deg);
-      pointer-events: none;
-    }
-    .tv-mount-bracket {
-      width: 48px;
-      height: 8px;
+    .tv-mount-pole {
+      width: 34px;
+      height: 7px;
       background: #334155;
       margin: 0 auto;
-      border-radius: 0 0 6px 6px;
-      box-shadow: 0 3px 5px rgba(0,0,0,0.3);
-    }
-    .tv-power-led {
-      position: absolute;
-      bottom: -6px;
-      right: 14px;
-      width: 5px;
-      height: 5px;
-      border-radius: 999px;
-      background: #22C55E;
-      box-shadow: 0 0 6px #22C55E;
+      border-radius: 0 0 4px 4px;
     }
 
-    /* Bảng lớn lớp 11T2 dựng đứng */
-    .blackboard-3d {
-      background: linear-gradient(160deg, #163A32 0%, #112A24 65%, #0B1D19 100%);
-      border: 7px solid #8B5A2B;
-      border-bottom: 14px solid #6E4720;
-      border-radius: 14px;
+    /* Bảng xanh viết phấn chuẩn lớp học Việt Nam */
+    .green-chalkboard-3d {
+      background: linear-gradient(165deg, #1B4D3E 0%, #13382C 60%, #0D291E 100%);
+      border: 6px solid #CBD5E1;
+      outline: 3px solid #64748B;
+      border-bottom: 11px solid #94A3B8;
+      border-radius: 6px;
+      padding: 12px 16px 16px 16px;
       box-shadow:
-        0 12px 24px -5px rgba(0, 0, 0, 0.38),
-        inset 0 2px 15px rgba(255, 255, 255, 0.08);
+        0 12px 24px rgba(0, 0, 0, 0.32),
+        inset 0 2px 18px rgba(255, 255, 255, 0.08);
       position: relative;
-      padding: 12px 16px 18px 16px;
     }
 
-    /* Bục giảng gỗ 3D dưới chân bảng & bàn GV */
-    .podium-platform-3d {
-      margin-top: 12px;
-      background: linear-gradient(180deg, #EED7C1 0%, #D9B48F 100%);
-      border: 2px solid #FFF5E4;
-      border-bottom: 8px solid #A47148;
-      border-radius: 12px;
-      padding: 10px 14px;
-      box-shadow: 0 8px 16px rgba(61, 49, 74, 0.16);
+    /* Bàn Giáo Viên phủ khăn trải bàn hoa văn ở góc phải đầu lớp (Giống Ảnh 2) */
+    .teacher-desk-3d-box {
+      position: relative;
+      cursor: pointer !important;
+      z-index: 25;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .teacher-desk-3d-box:hover {
+      transform: translateY(-5px) scale(1.03);
+    }
+    /* Khăn trải bàn hoa văn kem-hồng rủ xuống cạnh bàn */
+    .teacher-tablecloth-top {
+      background:
+        radial-gradient(circle, rgba(244, 114, 182, 0.16) 2px, transparent 2px),
+        linear-gradient(180deg, #FFFDF9 0%, #FCE7F3 75%, #FBCFE8 100%);
+      background-size: 12px 12px, 100% 100%;
+      border: 2.5px solid #FFFFFF;
+      border-bottom: 6px wavy #F472B6;
+      border-radius: 14px 14px 6px 6px;
+      padding: 10px;
+      box-shadow: 0 8px 16px rgba(61, 49, 74, 0.22);
+    }
+    .teacher-desk-wood-body {
+      background: linear-gradient(180deg, #78350F 0%, #451A03 100%);
+      border-left: 5px solid #3B1402;
+      border-right: 5px solid #3B1402;
+      border-bottom: 5px solid #290D01;
+      border-radius: 0 0 8px 8px;
+      padding: 6px 10px;
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.35);
     }
 
     /* ============================================================================
-       THIẾT KẾ BÀN DÀI 4 NGƯỜI NGỒI & HỘC BÀN 3D NHÌN TỪ CUỐI LỚP
+       4. CẤU TRÚC BÀN GỖ DÀI 3D NHÔ CAO KHỎI SÀN GẠCH (GIỐNG ẢNH 2 & ẢNH 3)
        ============================================================================ */
+    .classroom-rows-corridor {
+      position: relative;
+      z-index: 15;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 12px;
+    }
+
+    /* Hàng bàn có hiệu ứng phối cảnh nở rộng dần từ Hàng 1 (xa) đến Hàng 6 (gần) */
+    .perspective-row-wrap {
+      margin-left: auto;
+      margin-right: auto;
+      transition: transform 0.32s ease, opacity 0.32s ease, filter 0.32s ease;
+      position: relative;
+    }
+
+    /* Tổ hợp 1 chiếc bàn gỗ dài 3D (Standee nhô cao + Mặt bàn + 4 Hộc bàn sâu + Chân bàn cao + Ghế băng dài) */
     .long-desk-3d-wrapper {
       position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.35s ease, opacity 0.35s ease;
-      z-index: 15;
-    }
-    .long-desk-3d-wrapper:hover {
-      transform: translateY(-4px);
-      z-index: 25;
-    }
-
-    /* Mặt bàn gỗ dài 3D (Nằm phía trên 4 hộc bàn) */
-    .long-desk-surface-3d {
-      position: relative;
-      background: linear-gradient(180deg, #F6DFC4 0%, #E7BA8C 65%, #D4A276 100%);
-      border: 2.5px solid #FFF8EE;
-      border-bottom: 7px solid #9C6639;
-      border-radius: 16px 16px 8px 8px;
-      padding: 8px 8px 10px 8px;
-      box-shadow:
-        0 8px 16px rgba(61, 49, 74, 0.15),
-        inset 0 2px 5px rgba(255, 255, 255, 0.8);
-    }
-
-    /* Khối thân dưới mặt bàn chứa 4 Hộc Bàn 3D nhìn thẳng từ cuối lớp */
-    .long-desk-cubbies-row-3d {
-      position: relative;
-      background: linear-gradient(180deg, #A47148 0%, #7F4F24 100%);
-      border-left: 6px solid #6F4518;
-      border-right: 6px solid #6F4518;
-      border-bottom: 6px solid #5C340E;
-      border-radius: 0 0 12px 12px;
-      padding: 6px;
-      box-shadow:
-        0 10px 0 -2px #4A280A,
-        0 16px 22px -4px rgba(61, 49, 74, 0.34);
-    }
-
-    /* Chân bàn gỗ 2 bên */
-    .long-desk-legs-3d {
-      display: flex;
-      justify-content: space-between;
-      padding: 0 14px;
-      margin-top: -2px;
-      pointer-events: none;
-    }
-    .long-desk-leg {
-      width: 12px;
-      height: 12px;
-      background: linear-gradient(to right, #5C340E, #8B5E34);
-      border-radius: 0 0 4px 4px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    }
-
-    /* Từng vị trí ngồi (1 trong 4 chỗ của bàn dài) */
-    .seat-slot-3d {
-      position: relative;
-      cursor: pointer !important;
-      pointer-events: auto !important;
-      border-radius: 12px;
-      transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+      padding-top: 26px; /* Dành không gian phía trên để 4 học sinh nhô cao khỏi mặt bàn */
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
       z-index: 20;
     }
-
-    /* Standee / Thẻ tên học sinh dựng trên mặt bàn để nhìn từ cuối lớp thấy rõ */
-    .seat-standee-card {
-      background: rgba(255, 253, 249, 0.94);
-      border: 2px solid #FFFFFF;
-      border-bottom: 3.5px solid #F4B8CE;
-      border-radius: 11px;
-      padding: 5px 4px;
-      box-shadow: 0 4px 10px rgba(61, 49, 74, 0.14);
-      transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      min-height: 74px;
-      justify-content: center;
-    }
-    .seat-slot-3d.is-empty .seat-standee-card {
-      background: rgba(250, 243, 232, 0.68);
-      border: 1.5px dashed #B59273;
-      box-shadow: none;
+    .long-desk-3d-wrapper:hover {
+      transform: translateY(-5px);
+      z-index: 35;
     }
 
-    /* Hộc bàn 3D sâu bên trong (Nhìn thấy rõ lòng hộc bàn từ cuối lớp) */
+    /* A. MẶT BÀN GỖ NẰM NGANG VÁT PHỐI CẢNH (Foreshortened Tabletop) */
+    .long-desk-tabletop-3d {
+      position: relative;
+      background: linear-gradient(180deg, #D99B66 0%, #B87333 55%, #8B4513 100%);
+      border-top: 3px solid #F3D5B5;
+      border-left: 4px solid #A0522D;
+      border-right: 4px solid #A0522D;
+      /* Cạnh gỗ mặt trước của mặt bàn dày 8px */
+      border-bottom: 8px solid #5C2C06;
+      border-radius: 12px 12px 4px 4px;
+      padding: 6px 8px 8px 8px;
+      box-shadow:
+        0 6px 14px rgba(0, 0, 0, 0.35),
+        inset 0 3px 8px rgba(255, 235, 205, 0.45);
+    }
+
+    /* B. KHỐI 4 HỘC BÀN GỖ RỖNG SÂU (Nhìn thẳng vào lòng hộc bàn từ cuối lớp) */
+    .long-desk-cubbies-box-3d {
+      position: relative;
+      background: #4A2508;
+      border-left: 7px solid #5C2E09;
+      border-right: 7px solid #5C2E09;
+      border-bottom: 7px solid #3A1C04;
+      padding: 4px 6px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.45);
+    }
+
+    /* Từng ô Hộc bàn 3D sâu hút vào trong (4 hộc ngăn cách bởi vách gỗ dọc) */
     .cubby-hole-3d {
       position: relative;
-      height: 36px;
-      border-radius: 6px;
-      background: linear-gradient(180deg, #2B1706 0%, #46270D 45%, #653B18 100%);
-      border: 1.5px solid #583111;
-      border-top: 3px solid #1E0F03;
+      height: 38px;
+      background: linear-gradient(180deg, #140902 0%, #291305 42%, #52290C 100%);
+      border-left: 3px solid #6E3811;
+      border-right: 3px solid #6E3811;
+      border-top: 4px solid #0D0501;
+      border-bottom: 2px solid #85461A;
+      border-radius: 3px;
       box-shadow:
-        inset 0 6px 10px rgba(0, 0, 0, 0.72),
-        inset 0 -2px 4px rgba(255, 214, 170, 0.18);
+        inset 0 8px 12px rgba(0, 0, 0, 0.88),
+        inset 0 -2px 5px rgba(255, 196, 140, 0.2);
       display: flex;
       align-items: flex-end;
       justify-content: center;
       padding-bottom: 3px;
-      overflow: visible;
       cursor: pointer !important;
-      pointer-events: auto !important;
-      transition: all 0.32s ease;
+      overflow: visible;
+      transition: all 0.3s ease;
     }
 
-    /* Ngăn kéo / Khay sách trong hộc bàn */
+    /* Sách vở / Khay kéo bên trong lòng hộc bàn */
     .cubby-tray-3d {
-      width: 86%;
-      height: 16px;
-      border-radius: 4px;
-      background: linear-gradient(180deg, #8B5E34 0%, #6F4518 100%);
-      border-top: 1.5px solid #D4A373;
+      width: 88%;
+      height: 17px;
+      border-radius: 3px;
+      background: linear-gradient(180deg, #8B5A2B 0%, #5C3A1B 100%);
+      border-top: 1.5px solid #DEB887;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 3px;
-      font-size: 10px;
+      font-size: 9.5px;
       color: #FFF8EE;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-      transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.65);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
     }
 
-    /* Ảnh Polaroid nhỏ nhô lên từ hộc bàn khi hover hoặc chọn */
+    /* C. CHÂN BÀN GỖ CAO, GẦM BÀN NHÌN XUYÊN SÀN GẠCH & GHẾ BĂNG DÀI PHÍA SAU (Giống Ảnh 2 & 3) */
+    .long-desk-underframe-3d {
+      position: relative;
+      height: 30px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 0 10px;
+      pointer-events: none;
+    }
+    /* Bóng đổ đậm dưới gầm bàn lên mặt sàn gạch bông */
+    .desk-floor-shadow {
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      bottom: -5px;
+      height: 18px;
+      background: radial-gradient(ellipse at center, rgba(15, 23, 42, 0.42) 0%, rgba(15, 23, 42, 0.15) 65%, transparent 100%);
+      border-radius: 50%;
+      z-index: 1;
+    }
+    /* Cột chân bàn gỗ 2 bên & chân giữa */
+    .wood-leg-pillar {
+      width: 11px;
+      height: 28px;
+      background: linear-gradient(90deg, #3A1C04 0%, #6E3811 55%, #2B1402 100%);
+      border-radius: 0 0 3px 3px;
+      box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.45);
+      z-index: 3;
+      position: relative;
+    }
+    /* Thanh giằng ngang dưới chân bàn */
+    .wood-leg-crossbar {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 8px;
+      height: 5px;
+      background: #3A1C04;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      z-index: 2;
+    }
+    /* Chiếc ghế băng gỗ dài (Bench) đặt phía sau bàn (nhìn từ cuối lớp thấy ngay trước gầm bàn) */
+    .wooden-bench-3d {
+      position: absolute;
+      left: 5%;
+      right: 5%;
+      top: 7px;
+      height: 14px;
+      background: linear-gradient(180deg, #C88A51 0%, #965A28 65%, #5C3412 100%);
+      border-top: 2px solid #F3D5B5;
+      border-bottom: 4px solid #3B1E06;
+      border-radius: 4px;
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+      z-index: 4;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+    }
+
+    /* D. 4 THẺ HỌC SINH 3D DỰNG ĐỨNG NHÔ HẲN LÊN TRÊN MẶT BÀN (Pop-up Standees) */
+    .seat-slot-3d {
+      position: relative;
+      cursor: pointer !important;
+      margin-top: -28px; /* Nhô vọt lên khỏi mặt bàn gỗ để tạo chiều cao 3D thật */
+      z-index: 30;
+      transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .seat-standee-card {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF9 100%);
+      border: 2px solid #FFFFFF;
+      border-bottom: 5px solid #E05780;
+      border-radius: 14px 14px 8px 8px;
+      padding: 5px 4px 6px 4px;
+      /* Bóng đổ 3D của Standee đổ xuống mặt bàn gỗ phía dưới */
+      box-shadow:
+        0 8px 0 -2px rgba(92, 44, 6, 0.45),
+        0 10px 16px -3px rgba(15, 23, 42, 0.35);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-height: 76px;
+      justify-content: center;
+      transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    /* Đế kẹp gỗ nhỏ dưới chân Standee gắn lên mặt bàn */
+    .seat-standee-card::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 26%;
+      right: 26%;
+      height: 5px;
+      border-radius: 999px;
+      background: #5C2C06;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    /* Khi chỗ ngồi đang trống: Hiển thị bia cọc chấm bi thấp hơn để dễ phân biệt */
+    .seat-slot-3d.is-empty {
+      margin-top: -14px;
+    }
+    .seat-slot-3d.is-empty .seat-standee-card {
+      background: rgba(255, 251, 245, 0.88);
+      border: 1.5px dashed #A47148;
+      border-bottom: 4px solid #8B5A2B;
+      min-height: 62px;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Tấm ảnh Polaroid bật lên từ lòng hộc bàn */
     .cubby-polaroid-pop {
       position: absolute;
-      bottom: 8px;
+      bottom: 10px;
       left: 50%;
-      width: 44px;
-      height: 50px;
+      width: 48px;
+      height: 54px;
       background: #FFFFFF;
-      padding: 3px 3px 8px 3px;
-      border-radius: 5px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.38);
-      transform: translateX(-50%) translateY(10px) scale(0.2) rotate(-6deg);
+      padding: 3px 3px 9px 3px;
+      border-radius: 6px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+      transform: translateX(-50%) translateY(12px) scale(0.15) rotate(-8deg);
       opacity: 0;
       transition: all 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
       pointer-events: none;
-      z-index: 35;
+      z-index: 45;
     }
 
-    /* Hiệu ứng Hover vào từng chỗ ngồi hoặc hộc bàn */
+    /* Hiệu ứng Hover vào từng bạn hoặc từng hộc bàn */
     .seat-slot-3d:hover .seat-standee-card,
     .seat-slot-3d.is-hovered .seat-standee-card {
-      transform: translateY(-5px) scale(1.04);
+      transform: translateY(-9px) scale(1.07);
       border-color: #FF8FAB;
-      box-shadow: 0 10px 18px rgba(224, 87, 128, 0.28);
+      border-bottom-color: #BE185D;
+      box-shadow:
+        0 14px 0 -3px rgba(92, 44, 6, 0.35),
+        0 18px 26px -4px rgba(224, 87, 128, 0.45);
       background: #FFFFFF;
     }
     .cubby-hole-3d:hover .cubby-tray-3d,
-    .seat-slot-3d.is-hovered .cubby-tray-3d {
-      transform: translateY(5px) scale(1.05);
-      background: linear-gradient(180deg, #BC8A5F 0%, #8B5E34 100%);
+    .cubby-hole-3d.is-hovered .cubby-tray-3d {
+      transform: translateY(6px) scale(1.06);
+      background: linear-gradient(180deg, #E05780 0%, #9D174D 100%);
+    }
+    .cubby-hole-3d:hover .cubby-polaroid-pop,
+    .cubby-hole-3d.is-hovered .cubby-polaroid-pop {
+      transform: translateX(-50%) translateY(-16px) scale(0.92) rotate(-4deg);
+      opacity: 1;
     }
 
-    /* Khi một chỗ ngồi đang được Camera Focus */
+    /* Khi một chỗ ngồi được bấm chọn (Camera bay tới & Mở ngăn bàn) */
     .seat-slot-3d.is-focused .seat-standee-card {
-      transform: translateY(-8px) scale(1.08) !important;
+      transform: translateY(-14px) scale(1.12) !important;
       border: 2.5px solid #E05780 !important;
-      box-shadow: 0 0 0 4px rgba(255, 143, 171, 0.55), 0 12px 24px rgba(224, 87, 128, 0.45) !important;
+      box-shadow:
+        0 0 0 4px rgba(255, 143, 171, 0.7),
+        0 18px 32px rgba(224, 87, 128, 0.55) !important;
       background: #FFFFFF !important;
     }
     .cubby-hole-3d.is-focused .cubby-tray-3d {
-      transform: translateY(9px) scale(1.08);
+      transform: translateY(10px) scale(1.1);
       background: linear-gradient(180deg, #E05780 0%, #BE185D 100%);
-      border-color: #FFD6E0;
     }
     .cubby-hole-3d.is-focused .cubby-polaroid-pop {
-      transform: translateX(-50%) translateY(-22px) scale(1) rotate(-4deg);
+      transform: translateX(-50%) translateY(-28px) scale(1.1) rotate(-3deg);
       opacity: 1;
     }
 
     /* Chế độ Đổi chỗ 2 bạn (Swap Mode) */
     .seat-slot-3d.is-swap-source .seat-standee-card {
       border: 2.5px solid #0284C7 !important;
-      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.7), 0 0 22px rgba(2, 132, 199, 0.6) !important;
-      animation: pulseSwapSeat 1s infinite alternate;
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.8), 0 0 24px rgba(2, 132, 199, 0.7) !important;
+      animation: pulseSwapSeat 0.9s infinite alternate;
     }
     @keyframes pulseSwapSeat {
-      0% { transform: translateY(-2px) scale(1); }
-      100% { transform: translateY(-7px) scale(1.05); }
+      0% { transform: translateY(-3px) scale(1); }
+      100% { transform: translateY(-10px) scale(1.07); }
     }
 
-    /* Bàn Giáo Viên 3D Đặc Biệt */
-    .teacher-desk-3d-box {
-      position: relative;
-      cursor: pointer !important;
-      pointer-events: auto !important;
-      transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
-      z-index: 25;
-    }
-    .teacher-desk-3d-box:hover {
-      transform: translateY(-4px) scale(1.02);
-    }
-    .teacher-desk-top {
-      background: linear-gradient(180deg, #FFE8B6 0%, #E8AC65 70%, #C8823B 100%);
-      border: 2.5px solid #FFF9EB;
-      border-bottom: 6px solid #8C5320;
-      border-radius: 14px 14px 6px 6px;
-      padding: 10px 12px;
-      box-shadow: 0 8px 18px rgba(140, 83, 32, 0.25);
-    }
-    .teacher-desk-front {
-      background: linear-gradient(180deg, #9C5B23 0%, #6E3D12 100%);
-      border-left: 5px solid #5C340E;
-      border-right: 5px solid #5C340E;
-      border-bottom: 6px solid #432307;
-      border-radius: 0 0 10px 10px;
-      padding: 6px 10px;
-      box-shadow: 0 8px 0 -2px #3A1E05, 0 12px 20px rgba(0,0,0,0.3);
-    }
-    .teacher-desk-3d-box.is-focused .teacher-desk-top {
-      box-shadow: 0 0 0 4px #FBBF24, 0 0 28px rgba(245, 158, 11, 0.7);
+    /* Làm mờ nhẹ các bàn xung quanh khi Camera đang bay vào 1 bàn */
+    .classroom-camera-rig.has-focused-desk .long-desk-3d-wrapper:not(.has-active-seat),
+    .classroom-camera-rig.has-focused-desk .teacher-desk-3d-box:not(.is-focused) {
+      opacity: 0.35;
+      filter: blur(0.5px) saturate(0.7);
     }
 
-    /* Làm mờ nhẹ các bàn khác khi đang zoom vào 1 bàn */
-    .classroom-stage-3d.has-focused-desk .long-desk-3d-wrapper:not(.has-active-seat),
-    .classroom-stage-3d.has-focused-desk .teacher-desk-3d-box:not(.is-focused) {
-      opacity: 0.42;
-      filter: saturate(0.75);
-    }
-
-    /* Thẻ Ký Ức Thành Viên 3D (Bật lên khi bấm vào hộc bàn) */
+    /* Thẻ Ký Ức Thành Viên 3D */
     .desk-memory-card-backdrop {
       position: fixed;
       inset: 0;
-      z-index: 60;
+      z-index: 65;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
-      background: radial-gradient(circle at center, rgba(61, 49, 74, 0.28) 0%, rgba(61, 49, 74, 0.68) 100%);
+      background: radial-gradient(circle at center, rgba(61, 49, 74, 0.25) 0%, rgba(61, 49, 74, 0.72) 100%);
       backdrop-filter: blur(4px);
       opacity: 0;
       pointer-events: none !important;
@@ -641,9 +805,9 @@
       border-radius: 28px;
       border: 3px solid #FFFFFF;
       box-shadow:
-        0 25px 60px -10px rgba(61, 49, 74, 0.48),
+        0 25px 60px -10px rgba(61, 49, 74, 0.5),
         0 0 0 6px rgba(255, 214, 224, 0.75);
-      transform: translateY(36px) scale(0.86);
+      transform: translateY(36px) scale(0.84);
       opacity: 0;
       transition:
         transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -657,21 +821,10 @@
       opacity: 1;
     }
 
-    @media (max-width: 768px) {
-      .classroom-viewport-3d {
-        min-height: 640px;
-        padding: 10px 6px 24px 6px;
-      }
-      .classroom-stage-3d {
-        padding: 14px 10px 26px 10px;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .classroom-stage-3d,
-      .long-desk-3d-wrapper,
-      .seat-slot-3d,
-      .desk-memory-card-3d {
-        transition-duration: 0.12s !important;
+    @media (max-width: 1024px) {
+      .wall-side-strip-left,
+      .wall-side-strip-right {
+        display: none;
       }
     }
   </style>
@@ -973,23 +1126,22 @@
       </div>
       <div id="guestbookWallGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
     </section>
-
-    <!-- ============================================================================
-         6.5 MÔ HÌNH LỚP HỌC 11T2 3D (GÓC NHÌN TỪ CUỐI LỚP • 2 DÃY BÀN DÀI 4 NGƯỜI)
+<!-- ============================================================================
+         6.5 MÔ HÌNH PHÒNG HỌC 11T2 3D (PHỐI CẢNH TỪ CUỐI LỚP • 6 HÀNG x 2 DÃY BÀN DÀI)
          ============================================================================ -->
     <section id="section-map" class="page-section hidden space-y-6">
-      <div class="bg-white/90 rounded-3xl p-4 sm:p-7 border-2 border-pink-200 shadow-soft space-y-5">
+      <div class="map-shell-no-blur rounded-3xl p-4 sm:p-7 shadow-soft space-y-5">
 
         <!-- Tiêu đề & Thanh công cụ điều khiển 3D -->
         <div class="text-center space-y-2">
-          <div class="inline-flex flex-wrap items-center justify-center gap-2 px-3.5 py-1 rounded-full bg-pastel-pink/60 border border-pink-300 text-xs font-bold text-pastel-ink">
-            <span>👀 Góc nhìn 3D từ cuối lớp hướng lên bảng</span>
+          <div class="inline-flex flex-wrap items-center justify-center gap-2 px-3.5 py-1 rounded-full bg-pastel-pink/70 border border-pink-300 text-xs font-bold text-pastel-ink">
+            <span>🏛️ Phối cảnh 3D từ cuối lớp nhìn lên bảng</span>
             <span>•</span>
-            <span id="mapOccupiedCounter">Đã xếp 0/40 chỗ ngồi</span>
+            <span id="mapOccupiedCounter">Đã xếp 0/48 chỗ ngồi (12 bàn dài)</span>
           </div>
           <h2 class="font-hand text-3xl sm:text-4xl font-bold text-pastel-ink">🏫 Không Gian Lớp Học 11T2</h2>
           <p class="text-xs sm:text-sm text-pastel-muted max-w-2xl mx-auto">
-            Mô hình <strong>2 dãy bàn dài (mỗi bàn 4 học sinh)</strong>. Hãy bấm trực tiếp vào bất kỳ <strong>hộc bàn / tên học sinh</strong> nào hoặc <strong>Bàn Giáo Viên</strong> để mở ngăn bàn và xem thẻ ký ức!
+            Mô hình 3D tái hiện đúng phòng học thực tế: <strong>6 hàng × 2 dãy bàn gỗ dài (4 bạn/bàn)</strong>, quạt trần, TV 50 inch và cửa lớp ở bàn đầu. Bấm vào bất kỳ <strong>bạn nào hoặc hộc bàn nào</strong> để Camera 3D bay tới mở ngăn bàn!
           </p>
 
           <!-- Cụm nút điều khiển Camera & Quản lý Sơ đồ -->
@@ -998,12 +1150,12 @@
               <span>👁️</span> Góc nhìn toàn cảnh từ cuối lớp
             </button>
             <button onclick="visitRandomOccupiedDesk()" class="px-4 py-2 rounded-full bg-pastel-butter hover:bg-amber-200 text-amber-950 font-bold text-xs border-2 border-amber-300 shadow-sm transition flex items-center gap-1.5">
-              <span>🎲</span> Ghé thăm chỗ ngồi ngẫu nhiên
+              <span>🎲</span> Bay tới hộc bàn ngẫu nhiên
             </button>
-            <button id="btnToggle3DTilt" onclick="toggleParallaxTilt()" class="px-3.5 py-2 rounded-full bg-white/90 hover:bg-pastel-blue/40 text-pastel-ink font-bold text-xs border border-blue-200 shadow-sm transition flex items-center gap-1.5">
-              <span>🧭</span> Hiệu ứng liếc mắt 3D: Bật
+            <button id="btnToggle3DTilt" onclick="toggleParallaxTilt()" class="px-3.5 py-2 rounded-full bg-white hover:bg-pastel-blue/40 text-pastel-ink font-bold text-xs border border-blue-200 shadow-sm transition flex items-center gap-1.5">
+              <span>🧭</span> Chuyển động 3D theo chuột: Bật
             </button>
-            <button id="btnToggleSfx" onclick="toggleClassroomSfx()" class="px-3.5 py-2 rounded-full bg-white/90 hover:bg-pastel-lavender/40 text-pastel-ink font-bold text-xs border border-purple-200 shadow-sm transition flex items-center gap-1.5">
+            <button id="btnToggleSfx" onclick="toggleClassroomSfx()" class="px-3.5 py-2 rounded-full bg-white hover:bg-pastel-lavender/40 text-pastel-ink font-bold text-xs border border-purple-200 shadow-sm transition flex items-center gap-1.5">
               <span>🔔</span> Âm thanh: Bật
             </button>
 
@@ -1016,9 +1168,9 @@
                 <span>🔄</span> Đổi chỗ 2 bạn
               </button>
               <div class="inline-flex items-center bg-white rounded-full border border-pink-200 px-2.5 py-1 text-xs font-bold gap-1.5">
-                <span>Số bàn mỗi dãy:</span>
+                <span>Số hàng bàn:</span>
                 <button onclick="changeClassroomRowCount(-1)" class="w-5 h-5 rounded-full bg-pink-100 hover:bg-pink-200 text-pastel-ink flex items-center justify-center font-bold">-</button>
-                <span id="mapRowCountLabel" class="px-1">5</span>
+                <span id="mapRowCountLabel" class="px-1">6</span>
                 <button onclick="changeClassroomRowCount(1)" class="w-5 h-5 rounded-full bg-pink-100 hover:bg-pink-200 text-pastel-ink flex items-center justify-center font-bold">+</button>
               </div>
             </div>
@@ -1029,142 +1181,174 @@
         </div>
 
         <!-- ======================================================================
-             KHÔNG GIAN PHÒNG HỌC 3D (NHÌN TỪ CUỐI LỚP LÊN BẢNG)
+             KHÔNG GIAN PHÒNG HỌC 3D (NHÌN TỪ CUỐI LỚP LÊN BẢNG NHƯ ẢNH 2)
              ====================================================================== -->
         <div id="classroomViewport3D" class="classroom-viewport-3d">
-          <div class="sunbeam-overlay"></div>
 
-          <!-- SÀN & TƯỜNG LỚP HỌC 3D (STAGE) -->
-          <div id="classroomStage3D" class="classroom-stage-3d" style="transform: rotateX(10deg) rotateY(0deg) scale(0.98);">
+          <!-- RIG CAMERA 3D (Xử lý hiệu ứng bay 3D tới từng chiếc bàn) -->
+          <div id="classroomStage3D" class="classroom-camera-rig">
 
-            <!-- 1. TƯỜNG ĐẦU LỚP 3D: CỬA LỚP ĐẦU BÀN TRÁI + TV 50 INCH + BẢNG LỚN + BÀN GIÁO VIÊN -->
-            <div class="front-wall-3d">
+            <!-- 1. TRẦN NHÀ 3D: DẦM TRẦN, ĐÈN TUÝP SÁNG & 2 QUẠT TRẦN QUAY -->
+            <div class="room-ceiling-3d">
+              <div class="ceiling-beam"></div>
+              <div class="max-w-4xl mx-auto grid grid-cols-5 items-center gap-4 relative z-10">
+                <div class="tube-light-3d"></div>
+                <div class="flex flex-col items-center">
+                  <div class="w-1.5 h-3 bg-slate-400"></div>
+                  <div class="ceiling-fan-spin" title="Quạt trần lớp 11T2">
+                    <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-2 bg-slate-300 rounded-full border border-slate-400"></div>
+                    <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-2 bg-slate-300 rounded-full border border-slate-400"></div>
+                    <div class="absolute inset-3 rounded-full bg-white border-2 border-slate-400"></div>
+                  </div>
+                </div>
+                <div class="tube-light-3d"></div>
+                <div class="flex flex-col items-center">
+                  <div class="w-1.5 h-3 bg-slate-400"></div>
+                  <div class="ceiling-fan-spin" title="Quạt trần lớp 11T2">
+                    <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-2 bg-slate-300 rounded-full border border-slate-400"></div>
+                    <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-2 bg-slate-300 rounded-full border border-slate-400"></div>
+                    <div class="absolute inset-3 rounded-full bg-white border-2 border-slate-400"></div>
+                  </div>
+                </div>
+                <div class="tube-light-3d"></div>
+              </div>
+            </div>
+
+            <!-- 2. TƯỜNG BÊN TRÁI (QUẠT TREO TƯỜNG CÁNH CAM & RÈM CỬA SỔ) -->
+            <div class="wall-side-strip-left">
+              <div class="wall-fan-box" title="Quạt treo tường cánh cam">
+                <div class="orange-fan-blades"></div>
+              </div>
+              <div class="wall-curtain-drape"></div>
+              <div class="wall-curtain-drape"></div>
+              <div class="wall-louver-window"></div>
+            </div>
+
+            <!-- 3. TƯỜNG BÊN PHẢI (QUẠT TREO TƯỜNG CÁNH CAM, RÈM & CỬA SỔ CHỚP KÍNH) -->
+            <div class="wall-side-strip-right">
+              <div class="wall-fan-box" title="Quạt treo tường cánh cam">
+                <div class="orange-fan-blades"></div>
+              </div>
+              <div class="wall-curtain-drape"></div>
+              <div class="wall-louver-window"></div>
+              <div class="wall-louver-window"></div>
+            </div>
+
+            <!-- 4. BỨC TƯỜNG ĐẦU LỚP (CỬA CHÍNH BÊN TRÁI BÀN 1 • TV 50 INCH • BẢNG XANH • BÀN GIÁO VIÊN) -->
+            <div id="frontWall3DLayer" class="front-classroom-wall">
               <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
 
-                <!-- CỘT TRÁI (2/12): CỬA LỚP NẰM BÊN TRÁI NGAY BÀN ĐẦU -->
-                <div class="lg:col-span-2 flex lg:flex-col items-center justify-between lg:justify-end gap-2">
-                  <div class="w-full max-w-[140px] classroom-door-front-left" title="Cửa ra vào lớp nằm bên trái ngay bàn đầu">
-                    <div class="text-[9px] font-bold text-amber-100 bg-amber-950/80 px-2 py-0.5 rounded-full text-center">
-                      🚪 CỬA LỚP (Đầu lớp)
+                <!-- CỘT TRÁI (2/12): CỬA CHÍNH LỚP HỌC NẰM BÊN TRÁI NGAY BÀN ĐẦU -->
+                <div class="lg:col-span-2 flex lg:flex-col items-center justify-between lg:justify-end gap-1.5">
+                  <div class="w-full max-w-[132px] doorway-front-left-3d" title="Cửa lớp bên trái nằm ngay bàn đầu">
+                    <div class="doorway-leaf-open"></div>
+                    <div class="relative z-10 bg-teal-900/85 text-amber-100 text-[9px] font-bold px-2 py-0.5 rounded-full text-center">
+                      🚪 CỬA LỚP (Bàn 1)
                     </div>
-                    <div class="door-glass-window my-1">
-                      <span class="text-xs font-bold text-sky-900">11T2 👋</span>
+                    <div class="relative z-10 text-center my-auto">
+                      <span class="text-lg">🌤️🌿</span>
+                      <p class="text-[9px] font-bold text-amber-950 bg-white/80 rounded px-1 mt-0.5">Hành lang lớp</p>
                     </div>
-                    <div class="door-wood-panel">
-                      <div class="door-handle-knob"></div>
-                    </div>
+                    <div class="relative z-10 h-3 bg-amber-800/40 rounded"></div>
                   </div>
-                  <span class="text-[10px] font-bold text-amber-900/80 bg-amber-100/80 px-2.5 py-0.5 rounded-full border border-amber-300">
-                    ⬅ Lối ra hành lang
-                  </span>
                 </div>
 
-                <!-- CỘT GIỮA (7/12): TIVI 50 INCH TREO TRÊN BẢNG & BẢNG LỚP 3D -->
+                <!-- CỘT GIỮA (7/12): SMART TV 50 INCH TREO TRÊN BẢNG XANH LỚP 11T2 -->
                 <div class="lg:col-span-7 flex flex-col items-center">
-
-                  <!-- CHIẾC SMART TV 50 INCH TREO PHÍA TRÊN BẢNG -->
+                  <!-- TIVI 50 INCH -->
                   <div class="tv-50inch-wrap" onclick="cycleClassroomTvChannel()" title="Bấm vào TV 50 inch để đổi nội dung trình chiếu!">
                     <div class="tv-50inch-frame">
-                      <div class="flex items-center justify-between text-[9px] text-sky-300/90 font-mono mb-0.5">
-                        <span>📺 SMART TV 50" • 4K UHD</span>
-                        <span id="tvChannelBadge" class="px-1.5 py-0.2 bg-sky-500/30 rounded text-sky-200">HDMI 1 • Bấm để đổi kênh</span>
+                      <div class="flex items-center justify-between text-[8.5px] text-sky-300 font-mono mb-0.5">
+                        <span>📺 SMART TV 50"</span>
+                        <span id="tvChannelBadge" class="px-1.5 py-0.2 bg-sky-500/30 rounded text-sky-200">HDMI 1 • Bấm đổi kênh</span>
                       </div>
-                      <div id="tvScreenContent" class="py-1.5 px-2 rounded bg-gradient-to-r from-indigo-950/90 via-slate-900 to-pink-950/90 border border-white/10 text-center">
-                        <p class="font-hand text-xs sm:text-sm font-bold text-amber-300 tracking-wide">
-                          ✨ Trình chiếu Kỷ Niệm Thanh Xuân 11T2 (2025 - 2028) ✨
+                      <div id="tvScreenContent" class="py-1.5 px-2 rounded bg-gradient-to-r from-indigo-950 via-slate-900 to-pink-950 border border-white/15 text-center">
+                        <p class="font-hand text-xs sm:text-sm font-bold text-amber-300">
+                          ✨ Kỷ Niệm Thanh Xuân 11T2 (2025 - 2028) ✨
                         </p>
                       </div>
-                      <div class="tv-power-led"></div>
                     </div>
-                    <div class="tv-mount-bracket"></div>
+                    <div class="tv-mount-pole"></div>
                   </div>
 
-                  <!-- BẢNG LỚP 11T2 3D -->
-                  <div class="blackboard-3d w-full text-center">
-                    <div class="flex items-center justify-between text-[10px] text-emerald-200/80 font-mono mb-1 px-1">
+                  <!-- BẢNG XANH LỚP 11T2 -->
+                  <div class="green-chalkboard-3d w-full text-center">
+                    <div class="flex items-center justify-between text-[10px] text-emerald-200/85 font-mono mb-1 px-1">
                       <span>Thứ Hai, Niên khóa 2025-2028</span>
-                      <span>Sĩ số: Đại gia đình 11T2 ♥</span>
+                      <span>Sĩ số: 11T2 Đủ ♥</span>
                     </div>
-                    <h3 class="font-hand text-xl sm:text-3xl font-bold text-white tracking-wider uppercase drop-shadow">
+                    <h3 class="font-hand text-xl sm:text-2xl font-bold text-white tracking-wider uppercase drop-shadow">
                       LỚP 11T2 — THANH XUÂN RỰC RỠ
                     </h3>
-                    <p id="blackboardQuoteText" class="text-xs text-amber-200/95 font-hand mt-1">
+                    <p id="blackboardQuoteText" class="text-xs text-amber-200 font-hand mt-0.5">
                       “Đoàn kết - Tự tin - Cháy hết mình cùng Thanh Xuân!”
                     </p>
-                    <!-- Phấn & Khăn lau bảng 3D -->
-                    <div class="absolute bottom-1.5 right-5 w-10 h-2 bg-white/95 rounded-sm rotate-3 shadow"></div>
-                    <div class="absolute bottom-1.5 right-20 w-7 h-2 bg-pink-300/95 rounded-sm -rotate-6 shadow"></div>
-                    <div class="absolute bottom-1 left-5 w-12 h-4 bg-amber-600 rounded border border-amber-800 shadow"></div>
+                    <!-- Phấn trắng, phấn hồng và khăn lau bảng -->
+                    <div class="absolute bottom-1 right-5 w-9 h-1.5 bg-white rounded-xs rotate-3"></div>
+                    <div class="absolute bottom-1 right-16 w-6 h-1.5 bg-pink-300 rounded-xs -rotate-6"></div>
+                    <div class="absolute bottom-0.5 left-5 w-11 h-3.5 bg-amber-600 rounded-xs border border-amber-900"></div>
                   </div>
-
                 </div>
 
-                <!-- CỘT PHẢI (3/12): BÀN GIÁO VIÊN 3D ĐỘC LẬP TRÊN BỤC GIẢNG -->
+                <!-- CỘT PHẢI (3/12): BÀN GIÁO VIÊN PHỦ KHĂN TRẢI BÀN GÓC PHẢI ĐẦU LỚP -->
                 <div class="lg:col-span-3 flex flex-col items-center lg:items-end justify-end">
                   <div id="desk-el-teacher-desk"
                        data-desk-id="teacher-desk"
                        onclick="handleDeskClick('teacher-desk', event)"
-                       class="teacher-desk-3d-box w-full max-w-[240px]">
-                    <!-- Mặt trên bàn Giáo viên -->
-                    <div class="teacher-desk-top">
-                      <div class="flex items-center justify-between mb-1.5">
-                        <span class="px-2 py-0.5 rounded-full bg-amber-950 text-amber-100 text-[10px] font-bold tracking-wide uppercase">
+                       class="teacher-desk-3d-box w-full max-w-[235px]">
+                    <div class="teacher-tablecloth-top">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="px-2 py-0.5 rounded-full bg-amber-950 text-amber-100 text-[9.5px] font-bold uppercase">
                           👑 Bàn Giáo Viên
                         </span>
-                        <div class="flex items-center gap-1 text-sm">
+                        <div class="flex items-center gap-1 text-xs">
                           <span title="Sổ đầu bài">📗</span>
-                          <span title="Hoa hướng dương">🌻</span>
+                          <span title="Lọ hoa">🌻</span>
                         </div>
                       </div>
-                      <div id="teacherDeskInnerPreview" class="flex items-center gap-2.5 bg-white/85 p-2 rounded-xl border border-amber-200">
+                      <div id="teacherDeskInnerPreview" class="flex items-center gap-2 bg-white/95 p-1.5 rounded-xl border border-pink-200 shadow-2xs">
                         <!-- JS render thông tin Giáo viên tại đây -->
                       </div>
                     </div>
-                    <!-- Thân trước & Hộc bàn Giáo viên -->
-                    <div class="teacher-desk-front flex items-center justify-between text-[10px] text-amber-100/90 font-bold">
+                    <div class="teacher-desk-wood-body flex items-center justify-between text-[9.5px] text-amber-100 font-bold">
                       <span>🗄️ Hộc bàn GV</span>
-                      <span class="px-2 py-0.5 rounded bg-amber-950/60 border border-amber-400/40 text-[9px]">Bấm xem / sửa</span>
+                      <span class="px-1.5 py-0.2 rounded bg-amber-950/80 border border-amber-400/40">Bấm mở</span>
                     </div>
                   </div>
                 </div>
 
               </div>
-
-              <!-- Bục giảng gỗ nối liền đầu lớp -->
-              <div class="podium-platform-3d flex flex-wrap items-center justify-between text-[11px] font-bold text-amber-950 gap-2">
-                <span>🚪 Cửa lớp bên trái (Ngay bàn đầu)</span>
-                <span>⬆️ BỤC GIẢNG ĐẦU LỚP 11T2 ⬆️</span>
-                <span>👩‍🏫 Khu vực Bàn Giáo Viên</span>
-              </div>
             </div>
 
-            <!-- 2. TIÊU ĐỀ 2 DÃY BÀN DÀI (MỖI BÀN DÀI 4 CHỖ NGỒI) -->
-            <div class="grid grid-cols-1 lg:grid-cols-11 gap-3 items-center mb-4 text-center">
-              <div class="lg:col-span-5 py-2 px-4 rounded-2xl bg-pastel-pink/80 border-2 border-pink-300 font-hand font-bold text-sm sm:text-base text-pastel-ink shadow-xs flex items-center justify-between">
-                <span>🪟 DÃY BÊN TRÁI (4 chỗ / bàn dài)</span>
-                <span class="text-[11px] font-sans bg-white/80 px-2.5 py-0.5 rounded-full border border-pink-200">Hộc bàn 1 → 4</span>
+            <!-- 5. HAI DÃY BÀN GỖ DÀI 3D NHÔ CAO (6 HÀNG × 2 DÃY, NGĂN CÁCH BỞI LỐI ĐI GIỮA LỚP) -->
+            <div class="classroom-rows-corridor">
+              <!-- Nhãn chỉ dẫn 2 Dãy Bàn & Lối đi giữa -->
+              <div class="grid grid-cols-1 lg:grid-cols-11 gap-2 items-center mb-3 text-center max-w-[88%] mx-auto">
+                <div class="lg:col-span-5 py-1.5 px-3 rounded-xl bg-pastel-pink/90 border-2 border-pink-300 font-hand font-bold text-xs sm:text-sm text-pastel-ink shadow-xs flex items-center justify-between">
+                  <span>🪟 DÃY BÀN TRÁI (4 bạn / bàn)</span>
+                  <span class="text-[10px] font-sans bg-white px-2 py-0.5 rounded-full">Chỗ 1 → 4</span>
+                </div>
+                <div class="hidden lg:flex lg:col-span-1 items-center justify-center">
+                  <span class="px-2 py-0.5 rounded-full bg-amber-100 border border-amber-300 text-[9px] font-bold text-amber-950 uppercase">
+                    Lối đi
+                  </span>
+                </div>
+                <div class="lg:col-span-5 py-1.5 px-3 rounded-xl bg-pastel-blue/90 border-2 border-sky-300 font-hand font-bold text-xs sm:text-sm text-pastel-ink shadow-xs flex items-center justify-between">
+                  <span>💡 DÃY BÀN PHẢI (4 bạn / bàn)</span>
+                  <span class="text-[10px] font-sans bg-white px-2 py-0.5 rounded-full">Chỗ 1 → 4</span>
+                </div>
               </div>
-              <div class="hidden lg:flex lg:col-span-1 items-center justify-center">
-                <span class="px-2.5 py-1 rounded-full bg-amber-100/90 border border-amber-300 text-[10px] font-bold text-amber-900 uppercase tracking-wider">
-                  Lối đi
-                </span>
-              </div>
-              <div class="lg:col-span-5 py-2 px-4 rounded-2xl bg-pastel-blue/80 border-2 border-sky-300 font-hand font-bold text-sm sm:text-base text-pastel-ink shadow-xs flex items-center justify-between">
-                <span>💡 DÃY BÊN PHẢI (4 chỗ / bàn dài)</span>
-                <span class="text-[11px] font-sans bg-white/80 px-2.5 py-0.5 rounded-full border border-sky-200">Hộc bàn 1 → 4</span>
-              </div>
-            </div>
 
-            <!-- 3. KHU VỰC 2 DÃY BÀN DÀI 3D (MỖI BÀN DÀI CÓ 4 CHỖ NGỒI & 4 HỘC BÀN SÂU) -->
-            <div id="classroomGrid3D" class="space-y-7">
-              <!-- JS tự động render các hàng bàn dài (2 dãy Trái - Phải, mỗi bàn 4 chỗ + 4 hộc bàn 3D) -->
-            </div>
+              <!-- Lưới 6 hàng bàn dài 3D có chiều sâu phối cảnh -->
+              <div id="classroomGrid3D" class="space-y-5">
+                <!-- JS tự động render 6 hàng bàn dài 3D (có Standee nhô cao, mặt bàn, 4 hộc bàn sâu, chân bàn & ghế băng dài) -->
+              </div>
 
-            <!-- 4. CHÚ THÍCH VỊ TRÍ ĐỨNG CUỐI LỚP -->
-            <div class="mt-9 pt-4 border-t-2 border-dashed border-amber-800/30 flex flex-wrap items-center justify-between text-xs font-bold text-amber-950 gap-2 bg-white/60 px-4 py-2.5 rounded-2xl">
-              <span class="flex items-center gap-1.5">🧍‍♂️ <strong>Vị trí góc nhìn của bạn:</strong> Đứng từ cuối lớp nhìn thẳng lên bảng</span>
-              <span>💡 Mẹo: Bấm vào bất kỳ người nào hoặc hộc bàn nào trong bàn 4 người để mở thẻ ký ức!</span>
-              <span>🧹 Góc cuối lớp 11T2</span>
+              <!-- Chú thích vị trí người đứng ở cuối lớp -->
+              <div class="mt-8 pt-3 border-t-2 border-dashed border-amber-900/30 flex flex-wrap items-center justify-between text-xs font-bold text-amber-950 gap-2 bg-white/85 px-4 py-2.5 rounded-2xl shadow-xs">
+                <span>🧍‍♂️ <strong>Góc nhìn hiện tại:</strong> Đứng từ cuối lớp (sau Hàng bàn 6) nhìn thẳng lên bảng</span>
+                <span>💡 Bấm vào bất kỳ học sinh hoặc hộc bàn nào (từ Bàn 1 đến Bàn 6) để bay tới mở ngăn bàn!</span>
+              </div>
             </div>
 
           </div>
@@ -1172,7 +1356,7 @@
       </div>
 
       <!-- ====================================================================
-           THẺ KÝ ỨC THÀNH VIÊN / GIÁO VIÊN 3D (BẬT LÊN KHI BẤM VÀO HỘC BÀN)
+           THẺ KÝ ỨC THÀNH VIÊN / GIÁO VIÊN 3D (BẬT LÊN KHI CAMERA BAY TỚI BÀN)
            ==================================================================== -->
       <div id="deskMemoryBackdrop" class="desk-memory-card-backdrop" onclick="handleBackdropCloseDesk(event)">
         <div id="deskMemoryCard3D" class="desk-memory-card-3d p-5 sm:p-7" onclick="event.stopPropagation()">
@@ -2057,11 +2241,16 @@
     }
 
  // ============================================================================
-    // HỆ THỐNG SƠ ĐỒ LỚP HỌC 3D TƯƠNG TÁC (2 DÃY BÀN DÀI x 4 CHỖ NGỒI + TV 50 INCH)
+  // ============================================================================
+    // HỆ THỐNG SƠ ĐỒ LỚP HỌC 3D TƯƠNG TÁC (6 HÀNG × 2 DÃY BÀN DÀI 4 NGƯỜI + CAMERA BAY 3D)
     // ============================================================================
+    // Mặc định lớp có 6 hàng bàn dài (6 hàng x 2 dãy = 12 bàn dài = 48 chỗ ngồi)
+    classroomRowCount = 6;
+    let hasInitializedSixRows = false;
     let currentTvChannelIndex = 0;
+
     const CLASSROOM_TV_CHANNELS = [
-      { badge: "HDMI 1 • Kỷ Yếu 11T2", html: `<p class="font-hand text-xs sm:text-sm font-bold text-amber-300 tracking-wide">✨ Trình chiếu Kỷ Niệm Thanh Xuân 11T2 (2025 - 2028) ✨</p>` },
+      { badge: "HDMI 1 • Kỷ Yếu 11T2", html: `<p class="font-hand text-xs sm:text-sm font-bold text-amber-300 tracking-wide">✨ Kỷ Niệm Thanh Xuân 11T2 (2025 - 2028) ✨</p>` },
       { badge: "HDMI 2 • Lịch Thi THPT", html: `<p class="font-mono text-xs font-bold text-emerald-300">🎯 Quyết tâm chinh phục Kỳ thi THPT Quốc Gia 2028!</p>` },
       { badge: "TV Mode • Góc Điện Ảnh", html: `<p class="font-hand text-xs sm:text-sm font-bold text-pink-300">🍿 Giờ ra chơi: Cả lớp tụ tập xem MV & Bóng chuyền 11T2!</p>` },
       { badge: "Standby • Tiết Học Mới", html: `<p class="font-hand text-xs sm:text-sm font-bold text-sky-200">📚 Chúc tập thể 11T2 một tuần học tràn đầy năng lượng!</p>` }
@@ -2077,10 +2266,6 @@
       playClassroomSynthesizedSfx("flip");
     }
 
-    // Quy ước desk_id cho 2 Dãy Bàn Dài (Mỗi bàn dài có 4 chỗ ngồi):
-    // - Dãy Trái (section = 1): Chỗ 1..4 có group_num = 1..4 -> desk-1-{row}, desk-2-{row}, desk-3-{row}, desk-4-{row}
-    //   (Nhờ vậy dữ liệu cũ desk-1-1, desk-2-1... hiển thị nguyên vẹn 100%)
-    // - Dãy Phải (section = 2): Chỗ 1..4 có group_num = 5..8 -> desk-5-{row}, desk-6-{row}, desk-7-{row}, desk-8-{row}
     function buildSeatDeskId(sectionNum, rowNum, seatIndex) {
       const colCode = (sectionNum - 1) * 4 + seatIndex;
       return `desk-${colCode}-${rowNum}`;
@@ -2165,7 +2350,7 @@
       } catch (e) {}
     }
 
-    // Xây dựng HTML cho 1 Chiếc Bàn Dài 3D (Gồm 4 chỗ ngồi trên mặt bàn + 4 hộc bàn sâu phía dưới)
+    // Dựng 1 Chiếc Bàn Gỗ Dài 3D (Có 4 Standee học sinh nhô cao + Mặt bàn gỗ + 4 Hộc bàn sâu + Chân bàn cao + Ghế băng dài)
     function buildLongBench3DHtml(sectionNum, rowNum) {
       const sectionTitle = sectionNum === 1 ? "Dãy Trái" : "Dãy Phải";
       const badgeColor = sectionNum === 1
@@ -2190,15 +2375,15 @@
 
         const avatarHtml = occupied
           ? (d.photo_url
-              ? `<img src="${escapeHtml(d.photo_url)}" loading="lazy" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-pink-300 shadow-xs shrink-0">`
-              : `<div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-pastel-pink border-2 border-white flex items-center justify-center text-sm sm:text-base shadow-xs shrink-0">${escapeHtml(sticker)}</div>`)
-          : `<div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-900/10 border border-dashed border-amber-800/40 flex items-center justify-center text-xs font-bold text-amber-900/60 shrink-0">+</div>`;
+              ? `<img src="${escapeHtml(d.photo_url)}" loading="lazy" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-pink-400 shadow-xs shrink-0">`
+              : `<div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-pastel-pink border-2 border-pink-300 flex items-center justify-center text-sm sm:text-base shadow-xs shrink-0">${escapeHtml(sticker)}</div>`)
+          : `<div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-amber-900/10 border border-dashed border-amber-800/50 flex items-center justify-center text-xs font-bold text-amber-900/70 shrink-0">+</div>`;
 
         const miniPopPhoto = d?.photo_url
           ? `<img src="${escapeHtml(d.photo_url)}" class="w-full h-full object-cover rounded-xs">`
           : `<div class="w-full h-full bg-pastel-pink/60 flex items-center justify-center text-sm">${escapeHtml(sticker)}</div>`;
 
-        // 1. Phần chỗ ngồi trên mặt bàn gỗ
+        // 1. Thẻ Standee 3D dựng đứng nhô cao khỏi mặt bàn gỗ
         surfaceSlotsHtml += `
           <div id="desk-el-${deskId}"
                data-desk-id="${deskId}"
@@ -2207,12 +2392,12 @@
                onmouseleave="highlightSeatAndCubby('${deskId}', false)"
                class="seat-slot-3d ${occupied ? 'is-occupied' : 'is-empty'} ${isFocused ? 'is-focused' : ''} ${isSwapSource ? 'is-swap-source' : ''}">
             <div class="seat-standee-card">
-              <div class="w-full flex items-center justify-between text-[9px] font-bold text-amber-900/70 px-1 mb-0.5">
+              <div class="w-full flex items-center justify-between text-[8.5px] font-bold text-amber-900/75 px-1 mb-0.5">
                 <span>Chỗ ${seatIdx}</span>
                 <span>${occupied ? escapeHtml(sticker) : 'Trống'}</span>
               </div>
               ${avatarHtml}
-              <p class="font-hand font-bold text-[11px] sm:text-xs text-pastel-ink truncate w-full px-0.5 mt-1 leading-tight">
+              <p class="font-hand font-bold text-[11px] sm:text-xs text-pastel-ink truncate w-full px-0.5 mt-0.5 leading-tight">
                 ${occupied ? escapeHtml(d.member_name) : 'Chỗ trống'}
               </p>
               <p class="text-[8px] sm:text-[9px] font-semibold text-pastel-muted truncate w-full px-0.5">
@@ -2222,9 +2407,10 @@
           </div>
         `;
 
-        // 2. Phần Hộc Bàn 3D tương ứng ngay bên dưới (Nhìn thấy rõ từ cuối lớp)
+        // 2. Hộc bàn gỗ 3D sâu bên dưới mặt bàn (Quay thẳng về phía người nhìn ở cuối lớp)
         cubbiesRowHtml += `
           <div id="cubby-el-${deskId}"
+               data-desk-id="${deskId}"
                onclick="handleDeskClick('${deskId}', event)"
                onmouseenter="highlightSeatAndCubby('${deskId}', true)"
                onmouseleave="highlightSeatAndCubby('${deskId}', false)"
@@ -2233,7 +2419,7 @@
             <div class="cubby-tray-3d">
               ${occupied
                 ? `<span>📚</span><span class="truncate max-w-[42px] text-[9px] font-bold">${escapeHtml(d.member_name.split(' ').pop())}</span>`
-                : `<span class="opacity-70 text-[9px]">Hộc ${seatIdx}</span>`}
+                : `<span class="opacity-75 text-[8.5px]">Hộc ${seatIdx}</span>`}
             </div>
             <div class="cubby-polaroid-pop">
               ${miniPopPhoto}
@@ -2247,32 +2433,35 @@
       return `
         <div id="bench-wrap-${sectionNum}-${rowNum}"
              class="long-desk-3d-wrapper ${hasFocusedSeatInThisBench ? 'has-active-seat' : ''}">
-          <!-- Mặt bàn dài 4 chỗ ngồi -->
-          <div class="long-desk-surface-3d">
-            <div class="flex items-center justify-between mb-1.5 px-1">
-              <span class="px-2.5 py-0.5 rounded-full border text-[10px] font-bold ${badgeColor}">
-                🪑 ${sectionTitle} • Bàn ${rowNum} (${occupiedInBench}/4 bạn)
-              </span>
-              ${canWriteContent()
-                ? `<button onclick="openDeskEditModal('${firstSeatId}'); event.stopPropagation();" class="text-[10px] font-bold text-amber-950 bg-white/80 hover:bg-white px-2 py-0.5 rounded-full border border-amber-300 shadow-2xs transition">✏️ Sửa bàn 4 người</button>`
-                : `<span class="text-[10px] font-bold text-amber-950/70">Bấm vào từng chỗ để xem</span>`}
-            </div>
+          <!-- A. Mặt bàn gỗ nằm ngang + 4 Standee học sinh nhô cao bên trên -->
+          <div class="long-desk-tabletop-3d">
             <div class="grid grid-cols-4 gap-1.5 sm:gap-2">
               ${surfaceSlotsHtml}
             </div>
+            <div class="flex items-center justify-between mt-1.5 pt-1 border-t border-amber-200/30 px-1">
+              <span class="px-2 py-0.2 rounded-full border text-[9.5px] font-bold ${badgeColor}">
+                🪑 ${sectionTitle} • Bàn ${rowNum} (${occupiedInBench}/4)
+              </span>
+              ${canWriteContent()
+                ? `<button type="button" onclick="openDeskEditModal('${firstSeatId}'); event.stopPropagation();" class="text-[9.5px] font-bold text-amber-950 bg-amber-100 hover:bg-white px-2 py-0.2 rounded-full border border-amber-300 shadow-2xs transition">✏️ Sửa bàn 4 người</button>`
+                : `<span class="text-[9.5px] font-bold text-amber-100/90">Hàng bàn ${rowNum}</span>`}
+            </div>
           </div>
 
-          <!-- 4 Hộc bàn 3D sâu bên dưới mặt bàn (Quay thẳng về phía cuối lớp) -->
-          <div class="long-desk-cubbies-row-3d">
+          <!-- B. Thân bàn chứa 4 Hộc bàn gỗ rỗng sâu nhìn từ cuối lớp -->
+          <div class="long-desk-cubbies-box-3d">
             <div class="grid grid-cols-4 gap-1.5 sm:gap-2">
               ${cubbiesRowHtml}
             </div>
           </div>
 
-          <!-- Chân bàn gỗ 2 bên -->
-          <div class="long-desk-legs-3d">
-            <div class="long-desk-leg"></div>
-            <div class="long-desk-leg"></div>
+          <!-- C. Chân bàn gỗ cao, thanh giằng, ghế băng gỗ dài & bóng đổ dưới sàn gạch -->
+          <div class="long-desk-underframe-3d">
+            <div class="desk-floor-shadow"></div>
+            <div class="wood-leg-pillar"></div>
+            <div class="wood-leg-crossbar"></div>
+            <div class="wooden-bench-3d"></div>
+            <div class="wood-leg-pillar"></div>
           </div>
         </div>
       `;
@@ -2286,6 +2475,12 @@
     }
 
     function renderMapSection() {
+      // Bảo đảm mặc định luôn có tối thiểu 6 hàng bàn theo đúng thực tế lớp 11T2
+      if (!hasInitializedSixRows) {
+        if (!classroomRowCount || classroomRowCount < 6) classroomRowCount = 6;
+        hasInitializedSixRows = true;
+      }
+
       updateAuthUI();
       const grid = document.getElementById("classroomGrid3D");
       const teacherPreview = document.getElementById("teacherDeskInnerPreview");
@@ -2303,27 +2498,27 @@
 
         if (tOccupied) {
           const thumbHtml = tData.photo_url
-            ? `<img src="${escapeHtml(tData.photo_url)}" class="w-11 h-11 rounded-xl object-cover border-2 border-amber-300 shadow-sm shrink-0">`
-            : `<div class="w-11 h-11 rounded-xl bg-amber-100 border-2 border-amber-300 flex items-center justify-center text-xl shrink-0">${escapeHtml(tData.sticker || '👑')}</div>`;
+            ? `<img src="${escapeHtml(tData.photo_url)}" class="w-10 h-10 rounded-xl object-cover border-2 border-pink-300 shadow-xs shrink-0">`
+            : `<div class="w-10 h-10 rounded-xl bg-amber-100 border-2 border-amber-300 flex items-center justify-center text-lg shrink-0">${escapeHtml(tData.sticker || '👑')}</div>`;
           teacherPreview.innerHTML = `
             ${thumbHtml}
             <div class="min-w-0 flex-1 text-left">
-              <p class="font-hand font-bold text-sm text-amber-950 truncate">${escapeHtml(tData.member_name || 'Giáo viên 11T2')}</p>
-              <p class="text-[10px] font-bold text-amber-900/80 truncate">${escapeHtml(tData.member_role || 'Chủ nhiệm / Bộ môn')}</p>
+              <p class="font-hand font-bold text-xs sm:text-sm text-pastel-ink truncate">${escapeHtml(tData.member_name || 'Giáo viên 11T2')}</p>
+              <p class="text-[9.5px] font-bold text-pastel-pinkDeep truncate">${escapeHtml(tData.member_role || 'Chủ nhiệm / Bộ môn')}</p>
             </div>
           `;
         } else {
           teacherPreview.innerHTML = `
-            <div class="w-10 h-10 rounded-xl bg-amber-100/70 border border-dashed border-amber-700/50 flex items-center justify-center text-lg shrink-0">👩‍🏫</div>
+            <div class="w-9 h-9 rounded-xl bg-pink-50 border border-dashed border-pink-400 flex items-center justify-center text-base shrink-0">👩‍🏫</div>
             <div class="min-w-0 flex-1 text-left">
-              <p class="font-hand font-bold text-xs text-amber-950">Chưa thiết lập GV</p>
-              <p class="text-[10px] text-amber-900/75">${canWriteContent() ? 'Bấm để thêm ảnh & lời nhắn' : 'Bấm để khám phá'}</p>
+              <p class="font-hand font-bold text-xs text-pastel-ink">Chưa thiết lập GV</p>
+              <p class="text-[9.5px] text-pastel-muted">${canWriteContent() ? 'Bấm thêm ảnh & lời nhắn' : 'Bấm để khám phá'}</p>
             </div>
           `;
         }
       }
 
-      // 2. Render 2 Dãy Bàn Dài (Dãy Trái & Dãy Phải, mỗi bàn 4 học sinh)
+      // 2. Render 6 Hàng × 2 Dãy Bàn Gỗ Dài (Độ rộng nở dần theo phối cảnh 1 điểm tụ từ Hàng 1 đến Hàng 6)
       if (!grid) return;
       const totalSeats = classroomRowCount * 2 * 4;
       let occupiedSeatsCount = 0;
@@ -2338,23 +2533,29 @@
 
       let rowsHtml = "";
       for (let row = 1; row <= classroomRowCount; row++) {
+        // Phối cảnh 1 điểm tụ: Bàn 1 ở xa (86% chiều ngang) -> Bàn 6 ở gần mắt người đứng cuối lớp (100% chiều ngang)
+        const progress = classroomRowCount > 1 ? (row - 1) / (classroomRowCount - 1) : 1;
+        const rowWidthPercent = (86 + progress * 14).toFixed(1);
+
         rowsHtml += `
-          <div class="grid grid-cols-1 lg:grid-cols-11 gap-4 lg:gap-3 items-end">
-            <!-- Bàn dài 4 người Dãy Trái -->
-            <div class="lg:col-span-5">
-              ${buildLongBench3DHtml(1, row)}
-            </div>
+          <div class="perspective-row-wrap" data-row-depth="${row}" style="width: ${rowWidthPercent}%;">
+            <div class="grid grid-cols-1 lg:grid-cols-11 gap-4 lg:gap-2.5 items-end">
+              <!-- Bàn dài 4 người Dãy Trái -->
+              <div class="lg:col-span-5">
+                ${buildLongBench3DHtml(1, row)}
+              </div>
 
-            <!-- Lối đi giữa lớp ở hàng bàn thứ ${row} -->
-            <div class="hidden lg:flex lg:col-span-1 flex-col items-center justify-center pb-6 opacity-70 pointer-events-none">
-              <span class="w-7 h-7 rounded-full bg-amber-900/10 border border-dashed border-amber-900/30 flex items-center justify-center text-[10px] font-bold text-amber-950">
-                H${row}
-              </span>
-            </div>
+              <!-- Lối đi lát gạch bông giữa lớp ở Hàng bàn ${row} -->
+              <div class="hidden lg:flex lg:col-span-1 flex-col items-center justify-center pb-7 pointer-events-none">
+                <span class="px-2 py-0.5 rounded-full bg-white/85 border border-slate-300 text-[9.5px] font-bold text-slate-700 shadow-2xs">
+                  Bàn ${row}
+                </span>
+              </div>
 
-            <!-- Bàn dài 4 người Dãy Phải -->
-            <div class="lg:col-span-5">
-              ${buildLongBench3DHtml(2, row)}
+              <!-- Bàn dài 4 người Dãy Phải -->
+              <div class="lg:col-span-5">
+                ${buildLongBench3DHtml(2, row)}
+              </div>
             </div>
           </div>
         `;
@@ -2364,11 +2565,11 @@
 
       const counterEl = document.getElementById("mapOccupiedCounter");
       if (counterEl) {
-        counterEl.textContent = `Đã xếp ${occupiedSeatsCount}/${totalSeats} chỗ ngồi (${classroomRowCount * 2} bàn dài)`;
+        counterEl.textContent = `Đã xếp ${occupiedSeatsCount}/${totalSeats} chỗ ngồi (${classroomRowCount} hàng • ${classroomRowCount * 2} bàn dài)`;
       }
     }
 
-    // Xử lý khi người dùng nhấn vào bất kỳ chỗ ngồi / hộc bàn nào (hoặc Bàn Giáo Viên)
+    // Xử lý khi người dùng nhấn vào bất kỳ chỗ ngồi / hộc bàn nào (từ Hàng 1 đến Hàng 6 hoặc Bàn Giáo Viên)
     async function handleDeskClick(deskId, event) {
       if (event) event.stopPropagation();
 
@@ -2394,17 +2595,17 @@
         return;
       }
 
-      // Trường hợp 2: Đang bật Chế độ Quản lý nhanh -> Mở thẳng form chỉnh sửa của đúng chỗ ngồi đó
+      // Trường hợp 2: Đang bật Chế độ Xếp chỗ nhanh -> Mở thẳng form chỉnh sửa của đúng chỗ ngồi đó
       if (isMapManageMode && canWriteContent()) {
         openDeskEditModal(deskId);
         return;
       }
 
-      // Trường hợp 3: Chế độ Khám phá 3D -> Camera tiến lại gần hộc bàn & Mở thẻ Ký Ức
+      // Trường hợp 3: Chế độ Khám phá 3D -> Camera thực hiện cú bay 3D (Fly-in) tới đúng hộc bàn & Mở thẻ Ký Ức
       focusCameraOnDesk(deskId);
     }
 
-    // Điều khiển Camera tiến tới đúng hộc bàn được chọn và bật Thẻ Ký Ức
+    // Hiệu ứng Camera 3D bay xuyên qua lớp học tiến sát vào đúng hộc bàn được chọn
     function focusCameraOnDesk(deskId) {
       const stage = document.getElementById("classroomStage3D");
       const deskEl = document.getElementById(`desk-el-${deskId}`);
@@ -2420,28 +2621,29 @@
       if (updatedDeskEl) {
         stage.classList.add("has-focused-desk");
 
-        const stageWidth = stage.offsetWidth;
-        const stageHeight = stage.offsetHeight;
-        let offsetLeft = 0;
-        let offsetTop = 0;
-        let curr = updatedDeskEl;
-        while (curr && curr !== stage) {
-          offsetLeft += curr.offsetLeft;
-          offsetTop += curr.offsetTop;
-          curr = curr.offsetParent;
-        }
-        const seatCenterX = offsetLeft + updatedDeskEl.offsetWidth / 2;
-        const seatCenterY = offsetTop + updatedDeskEl.offsetHeight / 2;
+        const stageRect = stage.getBoundingClientRect();
+        const deskRect = updatedDeskEl.getBoundingClientRect();
 
-        const deltaX = (stageWidth / 2) - seatCenterX;
-        const deltaY = (stageHeight / 2) - seatCenterY;
+        const stageCenterX = stageRect.left + stageRect.width / 2;
+        const stageCenterY = stageRect.top + stageRect.height / 2;
+        const deskCenterX = deskRect.left + deskRect.width / 2;
+        const deskCenterY = deskRect.top + deskRect.height / 2;
 
+        const deltaX = stageCenterX - deskCenterX;
+        const deltaY = stageCenterY - deskCenterY;
+
+        const info = parseSeatDeskId(deskId);
+        // Góc nghiêng 3D khi Camera bay vào dãy trái hoặc dãy phải
+        const yawAngle = info.isTeacher ? -4 : (info.sectionNum === 1 ? 7 : -7);
+        const pitchAngle = info.isTeacher ? 4 : -6;
         const isMobile = window.innerWidth < 768;
-        const zoomScale = isMobile ? 1.08 : 1.26;
-        const clampedX = Math.max(-stageWidth * 0.25, Math.min(stageWidth * 0.25, deltaX * 0.55));
-        const clampedY = Math.max(-stageHeight * 0.25, Math.min(stageHeight * 0.25, deltaY * 0.45));
+        const zoomScale = isMobile ? 1.18 : 1.52;
 
-        stage.style.transform = `translate3d(${Math.round(clampedX)}px, ${Math.round(clampedY)}px, 40px) rotateX(6deg) rotateY(0deg) scale(${zoomScale})`;
+        const clampedX = Math.max(-stageRect.width * 0.32, Math.min(stageRect.width * 0.32, deltaX * 0.68));
+        const clampedY = Math.max(-stageRect.height * 0.35, Math.min(stageRect.height * 0.35, deltaY * 0.62));
+
+        stage.style.transformOrigin = `50% 50%`;
+        stage.style.transform = `perspective(1100px) translate3d(${Math.round(clampedX)}px, ${Math.round(clampedY)}px, 140px) rotateX(${pitchAngle}deg) rotateY(${yawAngle}deg) scale(${zoomScale})`;
       }
 
       populateDeskMemoryCard(deskId);
@@ -2449,7 +2651,7 @@
         if (currentFocusedDeskId === deskId) {
           document.getElementById("deskMemoryBackdrop")?.classList.add("is-open");
         }
-      }, 220);
+      }, 340);
     }
 
     function resetClassroomCamera() {
@@ -2461,7 +2663,10 @@
       currentFocusedDeskId = null;
       if (stage) {
         stage.classList.remove("has-focused-desk");
-        stage.style.transform = `rotateX(10deg) rotateY(0deg) scale(0.98)`;
+        stage.style.transform = `none`;
+        document.querySelectorAll(".perspective-row-wrap").forEach(rowEl => {
+          rowEl.style.transform = `none`;
+        });
       }
       renderMapSection();
     }
@@ -2472,7 +2677,6 @@
       }
     }
 
-    // Đổ dữ liệu của đúng chỗ ngồi vào Thẻ Ký Ức 3D (kèm thanh 4 chỗ ngồi cùng bàn)
     function populateDeskMemoryCard(deskId) {
       const record = desksDataMap[deskId] || null;
       const occupied = isDeskOccupied(record);
@@ -2501,7 +2705,6 @@
           : "px-3 py-1 rounded-full bg-pastel-pink text-pastel-ink font-bold text-xs border border-pink-300 shadow-xs";
       }
 
-      // Render thanh chuyển nhanh 4 bạn ngồi chung bàn dài
       if (benchTabsWrap && benchTabs) {
         if (isTeacher) {
           benchTabsWrap.classList.add("hidden");
@@ -2654,7 +2857,7 @@
       focusCameraOnDesk(randomId);
     }
 
-    // Hiệu ứng liếc mắt 3D nhẹ nhàng từ cuối lớp (Không làm nghiêng chữ hay lệch vùng bấm)
+    // Hiệu ứng chuyển động chiều sâu 3D đa tầng (Multi-plane 3D Parallax) + Bộ bắt sự kiện chuột chống kẹt 100%
     function initClassroomParallaxMouse() {
       const viewport = document.getElementById("classroomViewport3D");
       const stage = document.getElementById("classroomStage3D");
@@ -2667,14 +2870,48 @@
         const relX = (e.clientX - rect.left) / rect.width - 0.5;
         const relY = (e.clientY - rect.top) / rect.height - 0.5;
 
-        const rotX = (10 - relY * 4).toFixed(2);
-        const rotY = (relX * 5).toFixed(2);
-        stage.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) scale(0.98)`;
+        // Dịch chuyển đa tầng (Hàng 6 ở gần mắt dịch chuyển nhiều hơn Hàng 1 ở xa, tạo chiều sâu 3D thật mà KHÔNG đẩy phần tử nào xuống Z < 0)
+        document.querySelectorAll(".perspective-row-wrap").forEach(rowEl => {
+          const depth = parseInt(rowEl.getAttribute("data-row-depth") || "1", 10);
+          const shiftX = (-relX * depth * 3.2).toFixed(1);
+          const shiftY = (-relY * depth * 1.8).toFixed(1);
+          rowEl.style.transform = `translate3d(${shiftX}px, ${shiftY}px, 0)`;
+        });
+
+        const frontWall = document.getElementById("frontWall3DLayer");
+        if (frontWall) {
+          frontWall.style.transform = `translate3d(${(relX * 6).toFixed(1)}px, ${(relY * 3).toFixed(1)}px, 0)`;
+        }
       });
 
       viewport.addEventListener("mouseleave", () => {
-        if (!currentFocusedDeskId && stage) {
-          stage.style.transform = `rotateX(10deg) rotateY(0deg) scale(0.98)`;
+        if (!currentFocusedDeskId) {
+          document.querySelectorAll(".perspective-row-wrap").forEach(rowEl => {
+            rowEl.style.transform = `none`;
+          });
+          const frontWall = document.getElementById("frontWall3DLayer");
+          if (frontWall) frontWall.style.transform = `none`;
+        }
+      });
+
+      // BỘ BẮT TỌA ĐỘ CHUỘT BỌC THÉP (Đảm bảo 100% các hàng từ Hàng 1 đến Hàng 6 luôn nhận click trong mọi trình duyệt)
+      viewport.addEventListener("click", (e) => {
+        if (e.target.closest("button") || e.target.closest(".tv-50inch-wrap")) return;
+        const directTarget = e.target.closest("[data-desk-id]");
+        if (directTarget) return; // Đã được xử lý bởi onclick trực tiếp
+
+        const x = e.clientX;
+        const y = e.clientY;
+        const allDeskNodes = viewport.querySelectorAll("[data-desk-id]");
+        for (const node of allDeskNodes) {
+          const r = node.getBoundingClientRect();
+          if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+            const foundId = node.getAttribute("data-desk-id");
+            if (foundId) {
+              handleDeskClick(foundId, e);
+              break;
+            }
+          }
         }
       });
     }
@@ -2682,7 +2919,7 @@
     function toggleParallaxTilt() {
       isParallaxTiltEnabled = !isParallaxTiltEnabled;
       const btn = document.getElementById("btnToggle3DTilt");
-      if (btn) btn.innerHTML = `<span>🧭</span> Hiệu ứng liếc mắt 3D: ${isParallaxTiltEnabled ? 'Bật' : 'Tắt'}`;
+      if (btn) btn.innerHTML = `<span>🧭</span> Chuyển động 3D theo chuột: ${isParallaxTiltEnabled ? 'Bật' : 'Tắt'}`;
       if (!isParallaxTiltEnabled && !currentFocusedDeskId) resetClassroomCamera();
     }
 
@@ -2721,7 +2958,7 @@
       }
       const swapBtn = document.getElementById("btnToggleSwapMode");
       if (swapBtn) swapBtn.innerHTML = `<span>🔄</span> Đổi chỗ 2 bạn`;
-      updateMapModeBanner(isMapManageMode ? "🛠️ Đang bật Chế độ Xếp chỗ Nhanh: Nhấn vào bất kỳ chỗ ngồi nào để mở ngay hộp thoại chọn học sinh và thiết lập hộc bàn." : "");
+      updateMapModeBanner(isMapManageMode ? "🛠️ Đang bật Chế độ Xếp chỗ Nhanh: Nhấn vào bất kỳ chỗ ngồi nào (từ Hàng 1 đến Hàng 6) để mở ngay hộp thoại chọn học sinh." : "");
       renderMapSection();
     }
 
@@ -2746,12 +2983,13 @@
     function changeClassroomRowCount(delta) {
       if (!canWriteContent()) return showToast("Cần quyền Thành viên hoặc Admin!", "warning");
       const next = classroomRowCount + delta;
-      if (next < 3 || next > 7) {
-        return showToast("Số bàn dài mỗi dãy hỗ trợ từ 3 đến 7 bàn!", "info");
+      if (next < 3 || next > 8) {
+        return showToast("Số hàng bàn mỗi dãy hỗ trợ từ 3 đến 8 hàng!", "info");
       }
       classroomRowCount = next;
+      hasInitializedSixRows = true;
       renderMapSection();
-      showToast(`Đã điều chỉnh sơ đồ thành ${classroomRowCount} bàn dài mỗi dãy (Dữ liệu các bàn vẫn được giữ nguyên an toàn).`, "info");
+      showToast(`Đã điều chỉnh sơ đồ thành ${classroomRowCount} hàng bàn mỗi dãy (${classroomRowCount * 8} chỗ ngồi).`, "info");
     }
 
     async function executeSwapTwoDesks(deskIdA, deskIdB) {
@@ -2817,7 +3055,6 @@
       }
     }
 
-    // Đổ danh sách học sinh có sẵn từ tab Thành viên (membersData) vào Dropdown chọn nhanh
     function populateExistingMembersDropdownForDesk(currentDeskId) {
       const selectEl = document.getElementById("editDeskSelectExistingMember");
       const countHint = document.getElementById("existingMemberCountHint");
@@ -2839,7 +3076,6 @@
         return;
       }
 
-      // Kiểm tra xem học sinh nào đã được xếp chỗ trên sơ đồ để ghi chú bên cạnh
       const assignedMap = {};
       Object.values(desksDataMap).forEach(rec => {
         if (rec && rec.desk_id && rec.desk_id !== "teacher-desk" && rec.member_name) {
@@ -2859,7 +3095,6 @@
       selectEl.innerHTML = `<option value="">-- Bấm để chọn học sinh có sẵn trong lớp (${membersData.length} bạn) --</option>` + optionsHtml;
     }
 
-    // Khi người dùng chọn 1 học sinh từ Dropdown Danh bạ lớp -> Tự động điền thông tin
     function handlePickExistingMemberForDesk(memberId) {
       if (!memberId) return;
       const m = membersData.find(x => String(x.id) === String(memberId));
@@ -2885,7 +3120,6 @@
       showToast(`✨ Đã điền thông tin của ${displayName} từ Danh bạ lớp!`, "info");
     }
 
-    // Mở Modal chỉnh sửa dữ liệu cho đúng chỗ ngồi (kèm thanh chuyển 4 chỗ ngồi của bàn dài)
     function openDeskEditModal(deskId) {
       if (!deskId) return;
       if (!canWriteContent()) {
@@ -2906,7 +3140,6 @@
         ? "👑 Chỉnh Sửa Bàn Giáo Viên"
         : `✏️ Thiết Lập ${getDeskLabel(deskId)}`;
 
-      // Render 4 tab chọn chỗ ngồi trong cùng chiếc bàn dài ngay trong Modal
       const switcherWrap = document.getElementById("editModalBenchSwitcherWrap");
       const switcherTabs = document.getElementById("editModalBenchTabs");
       if (switcherWrap && switcherTabs) {
@@ -2992,7 +3225,6 @@
       showToast("Ảnh sẽ được gỡ bỏ khi bạn bấm Lưu chỗ ngồi này.", "info");
     }
 
-    // Lưu thông tin của đúng chỗ ngồi đang chỉnh sửa lên Supabase Storage & Database
     async function saveDeskDataToSupabase() {
       if (!canWriteContent() || !supabaseClient) {
         return showToast("Bạn cần đăng nhập quyền Thành viên hoặc Admin để lưu!", "error");
@@ -3075,7 +3307,6 @@
         if (currentFocusedDeskId === deskId) {
           populateDeskMemoryCard(deskId);
         }
-        // Cập nhật lại trạng thái 4 tab trên Modal để người dùng có thể bấm sang sửa tiếp bạn ngồi cạnh nếu muốn
         openDeskEditModal(deskId);
         showToast(`✅ Đã lưu thông tin cho ${getDeskLabel(deskId)} thành công!`, "success");
       } catch (err) {
@@ -3110,7 +3341,6 @@
         }
       );
     }
-
     // CRUD Upload (Gallery)
     function handleFilesSelected(files) {
       if(!files.length) return;
