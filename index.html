@@ -192,306 +192,486 @@
       border: 2px dashed rgba(255, 143, 171, 0.8) !important; 
     }
 
-    /* ============================================================================
-       6. HỆ THỐNG MÔ HÌNH LỚP HỌC 3D TƯƠNG TÁC (3D CLASSROOM DIORAMA ENGINE)
+/* ============================================================================
+       6. HỆ THỐNG MÔ HÌNH LỚP HỌC 3D TƯƠNG TÁC (GÓC NHÌN TỪ CUỐI LỚP NHÌN LÊN BẢNG)
        ============================================================================ */
     .classroom-viewport-3d {
-      perspective: 1300px;
-      perspective-origin: 50% 42%;
+      perspective: 1200px;
+      perspective-origin: 50% 12%;
       position: relative;
       overflow: hidden;
-      min-height: 660px;
+      min-height: 760px;
       border-radius: 28px;
       background:
-        radial-gradient(circle at 20% 15%, rgba(255, 243, 176, 0.55) 0%, transparent 45%),
-        radial-gradient(circle at 85% 25%, rgba(200, 231, 255, 0.65) 0%, transparent 50%),
-        linear-gradient(160deg, rgba(255, 228, 236, 0.9) 0%, rgba(243, 232, 255, 0.88) 52%, rgba(224, 242, 254, 0.92) 100%);
-      border: 2px solid rgba(255, 255, 255, 0.85);
-      box-shadow: inset 0 0 60px rgba(255, 255, 255, 0.6), 0 18px 40px -10px rgba(61, 49, 74, 0.16);
+        radial-gradient(circle at 50% 0%, rgba(255, 251, 235, 0.95) 0%, transparent 55%),
+        linear-gradient(180deg, #F3E8FF 0%, #FCE7F3 38%, #E0F2FE 100%);
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.7), 0 20px 45px -12px rgba(61, 49, 74, 0.2);
       user-select: none;
+      padding: 18px 12px 36px 12px;
     }
 
-    /* Ánh nắng chiếu qua cửa sổ lớp học */
+    /* Ánh nắng chiếu xiên từ cửa sổ bên trái */
     .sunbeam-overlay {
       position: absolute;
       inset: 0;
-      pointer-events: none;
-      background: linear-gradient(115deg, rgba(255, 253, 230, 0.38) 0%, rgba(255, 253, 230, 0.12) 35%, transparent 60%);
-      z-index: 2;
+      pointer-events: none !important;
+      background: linear-gradient(108deg, rgba(255, 253, 220, 0.42) 0%, rgba(255, 253, 220, 0.14) 38%, transparent 65%);
+      z-index: 1;
     }
 
-    /* Sàn lớp học 3D có chiều sâu */
+    /* Không gian căn phòng 3D nhìn từ cuối lớp lên đầu lớp */
     .classroom-stage-3d {
       width: 100%;
-      max-width: 860px;
-      margin: 40px auto 50px auto;
-      padding: 36px 28px 46px 28px;
-      border-radius: 26px;
+      max-width: 1040px;
+      margin: 8px auto 20px auto;
+      padding: 24px 22px 38px 22px;
+      border-radius: 24px;
       transform-style: preserve-3d;
-      transition: transform 0.78s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
       will-change: transform;
       position: relative;
-      /* Nền gạch gỗ kẻ sọc chéo ấm áp như mô hình lớp học thu nhỏ */
-      background-color: #FFFDF7;
-      background-image: repeating-linear-gradient(
-        -35deg,
-        #FFFDF9,
-        #FFFDF9 26px,
-        #F7EBD9 26px,
-        #F7EBD9 52px
-      );
-      border: 4px solid #E6CCB2;
+      z-index: 5;
+      /* Sàn gạch lớp học có chiều sâu phối cảnh */
+      background-color: #FAF3E8;
+      background-image:
+        linear-gradient(to right, rgba(212, 163, 115, 0.22) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(212, 163, 115, 0.28) 2px, transparent 2px);
+      background-size: 64px 48px;
+      border: 4px solid #DFC3A5;
+      border-top: 8px solid #C89F78;
       box-shadow:
-        0 22px 0 -4px #D4A373,
-        0 38px 55px -8px rgba(61, 49, 74, 0.28),
-        inset 0 0 28px rgba(212, 163, 115, 0.25);
+        0 20px 0 -2px #B0845C,
+        0 28px 0 -4px #8A623E,
+        0 38px 60px -10px rgba(61, 49, 74, 0.35),
+        inset 0 18px 35px rgba(188, 138, 95, 0.18);
     }
 
-    /* Cạnh dày mặt sàn 3D */
-    .classroom-stage-3d::after {
-      content: "";
-      position: absolute;
-      inset: -4px;
-      border-radius: 26px;
-      pointer-events: none;
-      box-shadow: inset 0 2px 0 rgba(255,255,255,0.85);
-    }
-
-    /* Bảng đen 3D dựng đứng ở đầu lớp */
-    .blackboard-3d-wrap {
-      transform-style: preserve-3d;
-      transform: translateZ(26px) rotateX(-24deg);
-      transform-origin: bottom center;
-      transition: transform 0.5s ease;
-    }
-
-    .blackboard-3d {
-      background: linear-gradient(145deg, #1E3A3A 0%, #16292B 60%, #0F1E20 100%);
-      border: 8px solid #8B5A2B;
-      border-bottom-width: 12px;
-      border-radius: 16px;
-      box-shadow:
-        0 14px 24px -6px rgba(0, 0, 0, 0.35),
-        inset 0 2px 15px rgba(255, 255, 255, 0.08);
+    /* Tường đầu lớp 3D dựng đứng (chứa TV 50 inch, Bảng, Cửa lớp đầu bàn) */
+    .front-wall-3d {
       position: relative;
+      background: linear-gradient(180deg, #FFFDF9 0%, #FDF2F8 65%, #F5E6D3 100%);
+      border: 3px solid #E6CCB2;
+      border-bottom: 10px solid #C69C72;
+      border-radius: 22px 22px 14px 14px;
+      padding: 18px 16px 20px 16px;
+      margin-bottom: 28px;
+      box-shadow:
+        0 14px 28px -6px rgba(61, 49, 74, 0.18),
+        inset 0 4px 12px rgba(255, 255, 255, 0.9);
+      transform: translateZ(12px);
     }
 
-    /* Bàn học 3D (Học sinh & Giáo viên) */
-    .desk-3d-unit {
+    /* Cửa lớp bên trái nằm ngay khu vực bàn đầu */
+    .classroom-door-front-left {
       position: relative;
-      transform-style: preserve-3d;
-      transition:
-        transform 0.52s cubic-bezier(0.34, 1.56, 0.64, 1),
-        opacity 0.45s ease,
-        filter 0.45s ease;
-      cursor: pointer;
-    }
-
-    /* Bóng đổ thực tế dưới mặt sàn */
-    .desk-shadow-3d {
-      position: absolute;
-      inset: 8px 4px -10px 4px;
-      background: rgba(61, 49, 74, 0.22);
-      border-radius: 14px;
-      filter: blur(7px);
-      transform: translateZ(-2px);
-      transition: all 0.45s ease;
-      pointer-events: none;
-    }
-
-    /* Mặt bàn gỗ 3D */
-    .desk-surface-3d {
-      position: relative;
-      border-radius: 14px;
-      background: linear-gradient(145deg, #F3D5B5 0%, #E6B88A 55%, #D4A276 100%);
-      border: 2px solid #FFF5E4;
+      background: linear-gradient(180deg, #B57B4C 0%, #8F5B32 100%);
+      border: 4px solid #FDF8F2;
+      border-bottom-width: 0;
+      border-radius: 14px 14px 4px 4px;
       box-shadow:
-        0 10px 0 #A47148,
-        0 12px 0 #7F4F24,
-        inset 0 2px 4px rgba(255, 255, 255, 0.7);
-      transform: translateZ(14px);
-      transition: all 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
-      overflow: visible;
+        6px 8px 16px rgba(61, 49, 74, 0.22),
+        inset 0 2px 6px rgba(255, 255, 255, 0.35);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 148px;
+      transform: perspective(400px) rotateY(14deg);
+      transform-origin: left center;
     }
-
-    /* Bàn trống (Chưa thiết lập thành viên) */
-    .desk-3d-unit.is-empty .desk-surface-3d {
-      background: linear-gradient(145deg, #FAF3E8 0%, #EFE2CE 100%);
-      border: 2px dashed #C8AD8D;
-      box-shadow:
-        0 8px 0 #BC9E7C,
-        0 10px 0 #9C7E5E;
-    }
-
-    /* Bàn Giáo Viên VIP 3D */
-    .desk-3d-unit.is-teacher .desk-surface-3d {
-      background: linear-gradient(145deg, #FFE5B4 0%, #E6A96D 55%, #C67D3B 100%);
-      border: 2.5px solid #FFF8E7;
-      box-shadow:
-        0 13px 0 #8C5320,
-        0 16px 0 #5C340E,
-        0 0 25px rgba(255, 215, 0, 0.28),
-        inset 0 2px 6px rgba(255, 255, 255, 0.85);
-      transform: translateZ(20px);
-    }
-
-    /* Hộc ngăn bàn 3D kéo ra khi chọn */
-    .desk-drawer-3d {
-      position: absolute;
-      left: 12%;
-      right: 12%;
-      bottom: -4px;
-      height: 22px;
-      background: linear-gradient(to bottom, #BC8A5F, #8B5E34);
-      border-radius: 0 0 10px 10px;
-      border: 1.5px solid #6F4518;
-      transform: translateZ(6px) translateY(0);
-      transition: transform 0.48s cubic-bezier(0.34, 1.56, 0.64, 1);
+    .door-glass-window {
+      height: 46px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #BAE6FD 0%, #E0F2FE 55%, #7DD3FC 100%);
+      border: 2.5px solid #6F4518;
+      box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.8);
       display: flex;
       align-items: center;
       justify-content: center;
-      pointer-events: none;
-      z-index: -1;
     }
-    .desk-drawer-handle {
-      width: 22px;
-      height: 4px;
-      border-radius: 999px;
-      background: #FFE8D6;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.4);
-    }
-
-    /* Tấm ảnh Polaroid nhỏ nhô lên từ ngăn bàn khi mở */
-    .desk-mini-polaroid-pop {
-      position: absolute;
-      left: 50%;
-      top: 10%;
-      width: 54px;
-      height: 62px;
-      background: #FFFFFF;
-      padding: 4px 4px 10px 4px;
+    .door-wood-panel {
+      height: 52px;
       border-radius: 6px;
-      box-shadow: 0 8px 18px rgba(61, 49, 74, 0.3);
-      transform: translateX(-50%) translateY(15px) translateZ(8px) scale(0.2) rotate(-8deg);
-      opacity: 0;
-      transition: all 0.52s cubic-bezier(0.34, 1.56, 0.64, 1);
-      pointer-events: none;
-      z-index: 30;
+      border: 2px solid #6F4518;
+      background: rgba(92, 52, 14, 0.25);
+      position: relative;
+    }
+    .door-handle-knob {
+      position: absolute;
+      right: 10px;
+      top: -12px;
+      width: 14px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(to right, #FDE047, #CA8A04);
+      box-shadow: 0 2px 3px rgba(0,0,0,0.45);
     }
 
-    /* Hiệu ứng Hover vào bàn */
-    .desk-3d-unit:hover {
-      transform: translateZ(12px) translateY(-5px) rotateX(4deg);
+    /* Tivi 50 inch treo phía trên bảng */
+    .tv-50inch-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto 10px auto;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .tv-50inch-wrap:hover {
+      transform: scale(1.03) translateY(-2px);
+    }
+    .tv-50inch-frame {
+      background: linear-gradient(145deg, #0F172A 0%, #1E293B 45%, #334155 100%);
+      border: 5px solid #090D16;
+      border-bottom-width: 9px;
+      border-radius: 12px;
+      padding: 8px 12px;
+      box-shadow:
+        0 12px 22px -4px rgba(0, 0, 0, 0.45),
+        0 0 20px rgba(56, 189, 248, 0.25),
+        inset 0 1px 3px rgba(255, 255, 255, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Hiệu ứng mặt kính TV bóng */
+    .tv-50inch-frame::before {
+      content: "";
+      position: absolute;
+      top: -40%;
+      left: -20%;
+      width: 65%;
+      height: 180%;
+      background: linear-gradient(to right, rgba(255,255,255,0.08), rgba(255,255,255,0.01));
+      transform: rotate(25deg);
+      pointer-events: none;
+    }
+    .tv-mount-bracket {
+      width: 48px;
+      height: 8px;
+      background: #334155;
+      margin: 0 auto;
+      border-radius: 0 0 6px 6px;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+    }
+    .tv-power-led {
+      position: absolute;
+      bottom: -6px;
+      right: 14px;
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: #22C55E;
+      box-shadow: 0 0 6px #22C55E;
+    }
+
+    /* Bảng lớn lớp 11T2 dựng đứng */
+    .blackboard-3d {
+      background: linear-gradient(160deg, #163A32 0%, #112A24 65%, #0B1D19 100%);
+      border: 7px solid #8B5A2B;
+      border-bottom: 14px solid #6E4720;
+      border-radius: 14px;
+      box-shadow:
+        0 12px 24px -5px rgba(0, 0, 0, 0.38),
+        inset 0 2px 15px rgba(255, 255, 255, 0.08);
+      position: relative;
+      padding: 12px 16px 18px 16px;
+    }
+
+    /* Bục giảng gỗ 3D dưới chân bảng & bàn GV */
+    .podium-platform-3d {
+      margin-top: 12px;
+      background: linear-gradient(180deg, #EED7C1 0%, #D9B48F 100%);
+      border: 2px solid #FFF5E4;
+      border-bottom: 8px solid #A47148;
+      border-radius: 12px;
+      padding: 10px 14px;
+      box-shadow: 0 8px 16px rgba(61, 49, 74, 0.16);
+    }
+
+    /* ============================================================================
+       THIẾT KẾ BÀN DÀI 4 NGƯỜI NGỒI & HỘC BÀN 3D NHÌN TỪ CUỐI LỚP
+       ============================================================================ */
+    .long-desk-3d-wrapper {
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.35s ease, opacity 0.35s ease;
+      z-index: 15;
+    }
+    .long-desk-3d-wrapper:hover {
+      transform: translateY(-4px);
       z-index: 25;
     }
-    .desk-3d-unit:hover .desk-shadow-3d {
-      transform: translateZ(-6px) scale(1.06);
-      background: rgba(224, 87, 128, 0.26);
-      filter: blur(11px);
-    }
-    .desk-3d-unit:hover .desk-drawer-3d {
-      transform: translateZ(8px) translateY(8px);
+
+    /* Mặt bàn gỗ dài 3D (Nằm phía trên 4 hộc bàn) */
+    .long-desk-surface-3d {
+      position: relative;
+      background: linear-gradient(180deg, #F6DFC4 0%, #E7BA8C 65%, #D4A276 100%);
+      border: 2.5px solid #FFF8EE;
+      border-bottom: 7px solid #9C6639;
+      border-radius: 16px 16px 8px 8px;
+      padding: 8px 8px 10px 8px;
+      box-shadow:
+        0 8px 16px rgba(61, 49, 74, 0.15),
+        inset 0 2px 5px rgba(255, 255, 255, 0.8);
     }
 
-    /* Khi một bàn đang được Camera Focus */
-    .desk-3d-unit.is-focused {
-      transform: translateZ(34px) translateY(-8px) scale(1.08) !important;
-      z-index: 40 !important;
-      filter: none !important;
-      opacity: 1 !important;
-    }
-    .desk-3d-unit.is-focused .desk-surface-3d {
+    /* Khối thân dưới mặt bàn chứa 4 Hộc Bàn 3D nhìn thẳng từ cuối lớp */
+    .long-desk-cubbies-row-3d {
+      position: relative;
+      background: linear-gradient(180deg, #A47148 0%, #7F4F24 100%);
+      border-left: 6px solid #6F4518;
+      border-right: 6px solid #6F4518;
+      border-bottom: 6px solid #5C340E;
+      border-radius: 0 0 12px 12px;
+      padding: 6px;
       box-shadow:
-        0 12px 0 #A47148,
-        0 0 0 4px rgba(255, 143, 171, 0.85),
-        0 0 35px rgba(224, 87, 128, 0.65);
+        0 10px 0 -2px #4A280A,
+        0 16px 22px -4px rgba(61, 49, 74, 0.34);
     }
-    .desk-3d-unit.is-focused .desk-drawer-3d {
-      transform: translateZ(12px) translateY(18px);
+
+    /* Chân bàn gỗ 2 bên */
+    .long-desk-legs-3d {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 14px;
+      margin-top: -2px;
+      pointer-events: none;
     }
-    .desk-3d-unit.is-focused .desk-mini-polaroid-pop {
-      transform: translateX(-50%) translateY(-44px) translateZ(36px) scale(1) rotate(-4deg);
+    .long-desk-leg {
+      width: 12px;
+      height: 12px;
+      background: linear-gradient(to right, #5C340E, #8B5E34);
+      border-radius: 0 0 4px 4px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    /* Từng vị trí ngồi (1 trong 4 chỗ của bàn dài) */
+    .seat-slot-3d {
+      position: relative;
+      cursor: pointer !important;
+      pointer-events: auto !important;
+      border-radius: 12px;
+      transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 20;
+    }
+
+    /* Standee / Thẻ tên học sinh dựng trên mặt bàn để nhìn từ cuối lớp thấy rõ */
+    .seat-standee-card {
+      background: rgba(255, 253, 249, 0.94);
+      border: 2px solid #FFFFFF;
+      border-bottom: 3.5px solid #F4B8CE;
+      border-radius: 11px;
+      padding: 5px 4px;
+      box-shadow: 0 4px 10px rgba(61, 49, 74, 0.14);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-height: 74px;
+      justify-content: center;
+    }
+    .seat-slot-3d.is-empty .seat-standee-card {
+      background: rgba(250, 243, 232, 0.68);
+      border: 1.5px dashed #B59273;
+      box-shadow: none;
+    }
+
+    /* Hộc bàn 3D sâu bên trong (Nhìn thấy rõ lòng hộc bàn từ cuối lớp) */
+    .cubby-hole-3d {
+      position: relative;
+      height: 36px;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #2B1706 0%, #46270D 45%, #653B18 100%);
+      border: 1.5px solid #583111;
+      border-top: 3px solid #1E0F03;
+      box-shadow:
+        inset 0 6px 10px rgba(0, 0, 0, 0.72),
+        inset 0 -2px 4px rgba(255, 214, 170, 0.18);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 3px;
+      overflow: visible;
+      cursor: pointer !important;
+      pointer-events: auto !important;
+      transition: all 0.32s ease;
+    }
+
+    /* Ngăn kéo / Khay sách trong hộc bàn */
+    .cubby-tray-3d {
+      width: 86%;
+      height: 16px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, #8B5E34 0%, #6F4518 100%);
+      border-top: 1.5px solid #D4A373;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 10px;
+      color: #FFF8EE;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Ảnh Polaroid nhỏ nhô lên từ hộc bàn khi hover hoặc chọn */
+    .cubby-polaroid-pop {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      width: 44px;
+      height: 50px;
+      background: #FFFFFF;
+      padding: 3px 3px 8px 3px;
+      border-radius: 5px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.38);
+      transform: translateX(-50%) translateY(10px) scale(0.2) rotate(-6deg);
+      opacity: 0;
+      transition: all 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+      z-index: 35;
+    }
+
+    /* Hiệu ứng Hover vào từng chỗ ngồi hoặc hộc bàn */
+    .seat-slot-3d:hover .seat-standee-card,
+    .seat-slot-3d.is-hovered .seat-standee-card {
+      transform: translateY(-5px) scale(1.04);
+      border-color: #FF8FAB;
+      box-shadow: 0 10px 18px rgba(224, 87, 128, 0.28);
+      background: #FFFFFF;
+    }
+    .cubby-hole-3d:hover .cubby-tray-3d,
+    .seat-slot-3d.is-hovered .cubby-tray-3d {
+      transform: translateY(5px) scale(1.05);
+      background: linear-gradient(180deg, #BC8A5F 0%, #8B5E34 100%);
+    }
+
+    /* Khi một chỗ ngồi đang được Camera Focus */
+    .seat-slot-3d.is-focused .seat-standee-card {
+      transform: translateY(-8px) scale(1.08) !important;
+      border: 2.5px solid #E05780 !important;
+      box-shadow: 0 0 0 4px rgba(255, 143, 171, 0.55), 0 12px 24px rgba(224, 87, 128, 0.45) !important;
+      background: #FFFFFF !important;
+    }
+    .cubby-hole-3d.is-focused .cubby-tray-3d {
+      transform: translateY(9px) scale(1.08);
+      background: linear-gradient(180deg, #E05780 0%, #BE185D 100%);
+      border-color: #FFD6E0;
+    }
+    .cubby-hole-3d.is-focused .cubby-polaroid-pop {
+      transform: translateX(-50%) translateY(-22px) scale(1) rotate(-4deg);
       opacity: 1;
     }
 
-    /* Khi có 1 bàn đang được chọn, các bàn khác lùi nhẹ và mờ đi */
-    .classroom-stage-3d.has-focused-desk .desk-3d-unit:not(.is-focused) {
-      opacity: 0.38;
-      filter: blur(0.6px) saturate(0.75);
-      transform: translateZ(-6px) scale(0.96);
+    /* Chế độ Đổi chỗ 2 bạn (Swap Mode) */
+    .seat-slot-3d.is-swap-source .seat-standee-card {
+      border: 2.5px solid #0284C7 !important;
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.7), 0 0 22px rgba(2, 132, 199, 0.6) !important;
+      animation: pulseSwapSeat 1s infinite alternate;
+    }
+    @keyframes pulseSwapSeat {
+      0% { transform: translateY(-2px) scale(1); }
+      100% { transform: translateY(-7px) scale(1.05); }
     }
 
-    /* Khi chọn bàn trong chế độ Đổi chỗ (Swap Mode) */
-    .desk-3d-unit.is-swap-source .desk-surface-3d {
-      box-shadow:
-        0 10px 0 #72B5F2,
-        0 0 0 4px #38BDF8,
-        0 0 28px rgba(56, 189, 248, 0.85);
-      animation: pulseSwap 1.2s infinite alternate;
+    /* Bàn Giáo Viên 3D Đặc Biệt */
+    .teacher-desk-3d-box {
+      position: relative;
+      cursor: pointer !important;
+      pointer-events: auto !important;
+      transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 25;
     }
-    @keyframes pulseSwap {
-      0% { transform: translateZ(16px) scale(1); }
-      100% { transform: translateZ(24px) scale(1.05); }
+    .teacher-desk-3d-box:hover {
+      transform: translateY(-4px) scale(1.02);
+    }
+    .teacher-desk-top {
+      background: linear-gradient(180deg, #FFE8B6 0%, #E8AC65 70%, #C8823B 100%);
+      border: 2.5px solid #FFF9EB;
+      border-bottom: 6px solid #8C5320;
+      border-radius: 14px 14px 6px 6px;
+      padding: 10px 12px;
+      box-shadow: 0 8px 18px rgba(140, 83, 32, 0.25);
+    }
+    .teacher-desk-front {
+      background: linear-gradient(180deg, #9C5B23 0%, #6E3D12 100%);
+      border-left: 5px solid #5C340E;
+      border-right: 5px solid #5C340E;
+      border-bottom: 6px solid #432307;
+      border-radius: 0 0 10px 10px;
+      padding: 6px 10px;
+      box-shadow: 0 8px 0 -2px #3A1E05, 0 12px 20px rgba(0,0,0,0.3);
+    }
+    .teacher-desk-3d-box.is-focused .teacher-desk-top {
+      box-shadow: 0 0 0 4px #FBBF24, 0 0 28px rgba(245, 158, 11, 0.7);
     }
 
-    /* Thẻ Ký Ức Thành Viên 3D (Bật lên sau khi Camera bay tới bàn) */
+    /* Làm mờ nhẹ các bàn khác khi đang zoom vào 1 bàn */
+    .classroom-stage-3d.has-focused-desk .long-desk-3d-wrapper:not(.has-active-seat),
+    .classroom-stage-3d.has-focused-desk .teacher-desk-3d-box:not(.is-focused) {
+      opacity: 0.42;
+      filter: saturate(0.75);
+    }
+
+    /* Thẻ Ký Ức Thành Viên 3D (Bật lên khi bấm vào hộc bàn) */
     .desk-memory-card-backdrop {
-      position: absolute;
+      position: fixed;
       inset: 0;
-      z-index: 45;
+      z-index: 60;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
-      background: radial-gradient(circle at center, rgba(61, 49, 74, 0.18) 0%, rgba(61, 49, 74, 0.52) 100%);
-      backdrop-filter: blur(3px);
+      background: radial-gradient(circle at center, rgba(61, 49, 74, 0.28) 0%, rgba(61, 49, 74, 0.68) 100%);
+      backdrop-filter: blur(4px);
       opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.35s ease;
+      pointer-events: none !important;
+      transition: opacity 0.32s ease;
     }
     .desk-memory-card-backdrop.is-open {
       opacity: 1;
-      pointer-events: auto;
+      pointer-events: auto !important;
     }
 
     .desk-memory-card-3d {
       width: 100%;
-      max-width: 540px;
+      max-width: 580px;
       background: #FFFDF9 !important;
       border-radius: 28px;
       border: 3px solid #FFFFFF;
       box-shadow:
-        0 25px 60px -10px rgba(61, 49, 74, 0.42),
-        0 0 0 6px rgba(255, 214, 224, 0.65);
-      transform: translateY(42px) scale(0.82) rotateX(18deg);
+        0 25px 60px -10px rgba(61, 49, 74, 0.48),
+        0 0 0 6px rgba(255, 214, 224, 0.75);
+      transform: translateY(36px) scale(0.86);
       opacity: 0;
       transition:
-        transform 0.52s cubic-bezier(0.34, 1.56, 0.64, 1),
-        opacity 0.38s ease;
+        transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+        opacity 0.32s ease;
       position: relative;
-      overflow: visible;
+      max-height: 92vh;
+      overflow-y: auto;
     }
     .desk-memory-card-backdrop.is-open .desk-memory-card-3d {
-      transform: translateY(0) scale(1) rotateX(0deg);
+      transform: translateY(0) scale(1);
       opacity: 1;
     }
 
-    /* Tối ưu trên màn hình điện thoại & người dùng giảm chuyển động */
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
       .classroom-viewport-3d {
-        min-height: 580px;
-        perspective: 1000px;
+        min-height: 640px;
+        padding: 10px 6px 24px 6px;
       }
       .classroom-stage-3d {
-        padding: 22px 12px 32px 12px;
-        margin: 20px auto 30px auto;
+        padding: 14px 10px 26px 10px;
       }
     }
     @media (prefers-reduced-motion: reduce) {
       .classroom-stage-3d,
-      .desk-3d-unit,
+      .long-desk-3d-wrapper,
+      .seat-slot-3d,
       .desk-memory-card-3d {
-        transition-duration: 0.15s !important;
+        transition-duration: 0.12s !important;
       }
     }
   </style>
@@ -795,48 +975,48 @@
     </section>
 
     <!-- ============================================================================
-         6.5 MÔ HÌNH LỚP HỌC 11T2 THU NHỎ 3D TƯƠNG TÁC (HOÀN TOÀN MỚI)
+         6.5 MÔ HÌNH LỚP HỌC 11T2 3D (GÓC NHÌN TỪ CUỐI LỚP • 2 DÃY BÀN DÀI 4 NGƯỜI)
          ============================================================================ -->
     <section id="section-map" class="page-section hidden space-y-6">
-      <div class="bg-white/90 rounded-3xl p-5 sm:p-8 border-2 border-pink-200 shadow-soft space-y-5">
+      <div class="bg-white/90 rounded-3xl p-4 sm:p-7 border-2 border-pink-200 shadow-soft space-y-5">
 
         <!-- Tiêu đề & Thanh công cụ điều khiển 3D -->
         <div class="text-center space-y-2">
-          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-pastel-pink/60 border border-pink-300 text-xs font-bold text-pastel-ink">
-            <span>✨ Không gian 3D Tương tác</span>
+          <div class="inline-flex flex-wrap items-center justify-center gap-2 px-3.5 py-1 rounded-full bg-pastel-pink/60 border border-pink-300 text-xs font-bold text-pastel-ink">
+            <span>👀 Góc nhìn 3D từ cuối lớp hướng lên bảng</span>
             <span>•</span>
-            <span id="mapOccupiedCounter">Đã xếp 0/20 bàn</span>
+            <span id="mapOccupiedCounter">Đã xếp 0/40 chỗ ngồi</span>
           </div>
-          <h2 class="font-hand text-3xl sm:text-4xl font-bold text-pastel-ink">🏫 Lớp Học 11T2 Thu Nhỏ</h2>
+          <h2 class="font-hand text-3xl sm:text-4xl font-bold text-pastel-ink">🏫 Không Gian Lớp Học 11T2</h2>
           <p class="text-xs sm:text-sm text-pastel-muted max-w-2xl mx-auto">
-            Click vào bất kỳ chiếc bàn nào (hoặc <strong>Bàn Giáo Viên</strong>) để camera bay đến đúng chỗ ngồi, mở ngăn bàn và khám phá thẻ ký ức riêng!
+            Mô hình <strong>2 dãy bàn dài (mỗi bàn 4 học sinh)</strong>. Hãy bấm trực tiếp vào bất kỳ <strong>hộc bàn / tên học sinh</strong> nào hoặc <strong>Bàn Giáo Viên</strong> để mở ngăn bàn và xem thẻ ký ức!
           </p>
 
           <!-- Cụm nút điều khiển Camera & Quản lý Sơ đồ -->
           <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
             <button onclick="resetClassroomCamera()" class="px-4 py-2 rounded-full bg-white hover:bg-pastel-pink/40 text-pastel-ink font-bold text-xs border-2 border-pink-200 shadow-sm transition flex items-center gap-1.5">
-              <span>👁️</span> Trở về góc nhìn toàn cảnh
+              <span>👁️</span> Góc nhìn toàn cảnh từ cuối lớp
             </button>
             <button onclick="visitRandomOccupiedDesk()" class="px-4 py-2 rounded-full bg-pastel-butter hover:bg-amber-200 text-amber-950 font-bold text-xs border-2 border-amber-300 shadow-sm transition flex items-center gap-1.5">
-              <span>🎲</span> Ghé thăm bàn ngẫu nhiên
+              <span>🎲</span> Ghé thăm chỗ ngồi ngẫu nhiên
             </button>
             <button id="btnToggle3DTilt" onclick="toggleParallaxTilt()" class="px-3.5 py-2 rounded-full bg-white/90 hover:bg-pastel-blue/40 text-pastel-ink font-bold text-xs border border-blue-200 shadow-sm transition flex items-center gap-1.5">
-              <span>🧭</span> Nghiêng theo chuột: Bật
+              <span>🧭</span> Hiệu ứng liếc mắt 3D: Bật
             </button>
             <button id="btnToggleSfx" onclick="toggleClassroomSfx()" class="px-3.5 py-2 rounded-full bg-white/90 hover:bg-pastel-lavender/40 text-pastel-ink font-bold text-xs border border-purple-200 shadow-sm transition flex items-center gap-1.5">
-              <span>🔔</span> Âm hiệu ứng: Bật
+              <span>🔔</span> Âm thanh: Bật
             </button>
 
             <!-- Công cụ chỉ hiển thị cho Member/Admin -->
             <div id="mapAdminToolbar" class="hidden flex-wrap items-center justify-center gap-2 pl-2 border-l-2 border-dashed border-pink-300">
               <button id="btnToggleEditMode" onclick="toggleMapManageMode()" class="px-4 py-2 rounded-full bg-pastel-lavender hover:bg-purple-300 text-pastel-ink font-bold text-xs border-2 border-purple-300 shadow-sm transition flex items-center gap-1.5">
-                <span>🛠️</span> Chế độ quản lý: Tắt
+                <span>🛠️</span> Chế độ xếp chỗ nhanh: Tắt
               </button>
               <button id="btnToggleSwapMode" onclick="toggleSwapDeskMode()" class="px-4 py-2 rounded-full bg-pastel-blue hover:bg-sky-200 text-sky-950 font-bold text-xs border-2 border-sky-300 shadow-sm transition flex items-center gap-1.5">
-                <span>🔄</span> Đổi chỗ 2 bàn
+                <span>🔄</span> Đổi chỗ 2 bạn
               </button>
               <div class="inline-flex items-center bg-white rounded-full border border-pink-200 px-2.5 py-1 text-xs font-bold gap-1.5">
-                <span>Số dãy bàn:</span>
+                <span>Số bàn mỗi dãy:</span>
                 <button onclick="changeClassroomRowCount(-1)" class="w-5 h-5 rounded-full bg-pink-100 hover:bg-pink-200 text-pastel-ink flex items-center justify-center font-bold">-</button>
                 <span id="mapRowCountLabel" class="px-1">5</span>
                 <button onclick="changeClassroomRowCount(1)" class="w-5 h-5 rounded-full bg-pink-100 hover:bg-pink-200 text-pastel-ink flex items-center justify-center font-bold">+</button>
@@ -845,194 +1025,247 @@
           </div>
 
           <!-- Thông báo chế độ đang bật (Swap Mode / Edit Mode) -->
-          <div id="mapModeStatusBanner" class="hidden max-w-xl mx-auto mt-2 px-4 py-2 rounded-2xl bg-sky-100 border-2 border-sky-300 text-sky-950 text-xs font-bold shadow-sm"></div>
+          <div id="mapModeStatusBanner" class="hidden max-w-2xl mx-auto mt-2 px-4 py-2 rounded-2xl bg-sky-100 border-2 border-sky-300 text-sky-950 text-xs font-bold shadow-sm"></div>
         </div>
 
         <!-- ======================================================================
-             KHÔNG GIAN 3D VIEWPORT CHÍNH
+             KHÔNG GIAN PHÒNG HỌC 3D (NHÌN TỪ CUỐI LỚP LÊN BẢNG)
              ====================================================================== -->
         <div id="classroomViewport3D" class="classroom-viewport-3d">
           <div class="sunbeam-overlay"></div>
 
-          <!-- Cửa sổ lớp học trang trí bên trái -->
-          <div class="hidden xl:flex flex-col gap-6 absolute left-4 top-24 z-10 pointer-events-none opacity-80">
-            <div class="w-10 h-28 rounded-t-full bg-sky-200/70 border-4 border-white shadow-md flex flex-col justify-between p-1">
-              <div class="border-b-2 border-white h-1/2"></div>
-              <span class="text-[10px] text-center">🌤️</span>
-            </div>
-            <div class="w-10 h-28 rounded-t-full bg-sky-200/70 border-4 border-white shadow-md flex flex-col justify-between p-1">
-              <div class="border-b-2 border-white h-1/2"></div>
-              <span class="text-[10px] text-center">🍃</span>
-            </div>
-          </div>
+          <!-- SÀN & TƯỜNG LỚP HỌC 3D (STAGE) -->
+          <div id="classroomStage3D" class="classroom-stage-3d" style="transform: rotateX(10deg) rotateY(0deg) scale(0.98);">
 
-          <!-- SÀN LỚP HỌC 3D (STAGE) -->
-          <div id="classroomStage3D" class="classroom-stage-3d" style="transform: rotateX(48deg) rotateZ(-16deg) scale(0.92);">
+            <!-- 1. TƯỜNG ĐẦU LỚP 3D: CỬA LỚP ĐẦU BÀN TRÁI + TV 50 INCH + BẢNG LỚN + BÀN GIÁO VIÊN -->
+            <div class="front-wall-3d">
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
 
-            <!-- 1. KHU VỰC ĐẦU LỚP: BẢNG ĐEN 3D & BÀN GIÁO VIÊN -->
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end mb-8 pb-4 border-b-2 border-dashed border-amber-300/70">
+                <!-- CỘT TRÁI (2/12): CỬA LỚP NẰM BÊN TRÁI NGAY BÀN ĐẦU -->
+                <div class="lg:col-span-2 flex lg:flex-col items-center justify-between lg:justify-end gap-2">
+                  <div class="w-full max-w-[140px] classroom-door-front-left" title="Cửa ra vào lớp nằm bên trái ngay bàn đầu">
+                    <div class="text-[9px] font-bold text-amber-100 bg-amber-950/80 px-2 py-0.5 rounded-full text-center">
+                      🚪 CỬA LỚP (Đầu lớp)
+                    </div>
+                    <div class="door-glass-window my-1">
+                      <span class="text-xs font-bold text-sky-900">11T2 👋</span>
+                    </div>
+                    <div class="door-wood-panel">
+                      <div class="door-handle-knob"></div>
+                    </div>
+                  </div>
+                  <span class="text-[10px] font-bold text-amber-900/80 bg-amber-100/80 px-2.5 py-0.5 rounded-full border border-amber-300">
+                    ⬅ Lối ra hành lang
+                  </span>
+                </div>
 
-              <!-- BẢNG ĐEN LỚP 11T2 -->
-              <div class="md:col-span-8 flex flex-col items-center">
-                <div class="blackboard-3d-wrap w-full">
-                  <div class="blackboard-3d px-4 py-4 sm:py-5 text-center">
+                <!-- CỘT GIỮA (7/12): TIVI 50 INCH TREO TRÊN BẢNG & BẢNG LỚP 3D -->
+                <div class="lg:col-span-7 flex flex-col items-center">
+
+                  <!-- CHIẾC SMART TV 50 INCH TREO PHÍA TRÊN BẢNG -->
+                  <div class="tv-50inch-wrap" onclick="cycleClassroomTvChannel()" title="Bấm vào TV 50 inch để đổi nội dung trình chiếu!">
+                    <div class="tv-50inch-frame">
+                      <div class="flex items-center justify-between text-[9px] text-sky-300/90 font-mono mb-0.5">
+                        <span>📺 SMART TV 50" • 4K UHD</span>
+                        <span id="tvChannelBadge" class="px-1.5 py-0.2 bg-sky-500/30 rounded text-sky-200">HDMI 1 • Bấm để đổi kênh</span>
+                      </div>
+                      <div id="tvScreenContent" class="py-1.5 px-2 rounded bg-gradient-to-r from-indigo-950/90 via-slate-900 to-pink-950/90 border border-white/10 text-center">
+                        <p class="font-hand text-xs sm:text-sm font-bold text-amber-300 tracking-wide">
+                          ✨ Trình chiếu Kỷ Niệm Thanh Xuân 11T2 (2025 - 2028) ✨
+                        </p>
+                      </div>
+                      <div class="tv-power-led"></div>
+                    </div>
+                    <div class="tv-mount-bracket"></div>
+                  </div>
+
+                  <!-- BẢNG LỚP 11T2 3D -->
+                  <div class="blackboard-3d w-full text-center">
                     <div class="flex items-center justify-between text-[10px] text-emerald-200/80 font-mono mb-1 px-1">
                       <span>Thứ Hai, Niên khóa 2025-2028</span>
-                      <span>Sĩ số: 11T2 Đủ ♥</span>
+                      <span>Sĩ số: Đại gia đình 11T2 ♥</span>
                     </div>
                     <h3 class="font-hand text-xl sm:text-3xl font-bold text-white tracking-wider uppercase drop-shadow">
-                      LỚP 11T2 - 2025-2028
+                      LỚP 11T2 — THANH XUÂN RỰC RỠ
                     </h3>
-                    <p id="blackboardQuoteText" class="text-xs text-amber-200/90 font-hand mt-1">
+                    <p id="blackboardQuoteText" class="text-xs text-amber-200/95 font-hand mt-1">
                       “Đoàn kết - Tự tin - Cháy hết mình cùng Thanh Xuân!”
                     </p>
-                    <!-- Phấn và khăn lau bảng 3D -->
-                    <div class="absolute bottom-1.5 right-4 w-9 h-2 bg-white/95 rounded-sm rotate-6 shadow"></div>
-                    <div class="absolute bottom-1.5 right-16 w-6 h-2 bg-pink-300/95 rounded-sm -rotate-12 shadow"></div>
-                    <div class="absolute bottom-1 left-4 w-11 h-4 bg-amber-600 rounded border border-amber-800 shadow"></div>
+                    <!-- Phấn & Khăn lau bảng 3D -->
+                    <div class="absolute bottom-1.5 right-5 w-10 h-2 bg-white/95 rounded-sm rotate-3 shadow"></div>
+                    <div class="absolute bottom-1.5 right-20 w-7 h-2 bg-pink-300/95 rounded-sm -rotate-6 shadow"></div>
+                    <div class="absolute bottom-1 left-5 w-12 h-4 bg-amber-600 rounded border border-amber-800 shadow"></div>
                   </div>
-                </div>
-              </div>
 
-              <!-- BÀN GIÁO VIÊN 3D (VỊ TRÍ TƯƠNG TÁC ĐỘC LẬP) -->
-              <div class="md:col-span-4 flex justify-center md:justify-end">
-                <div id="desk-el-teacher-desk"
-                     data-desk-id="teacher-desk"
-                     onclick="handleDeskClick('teacher-desk', event)"
-                     class="desk-3d-unit is-teacher w-52 sm:w-56">
-                  <div class="desk-shadow-3d"></div>
-                  <div class="desk-surface-3d p-3.5">
-                    <!-- Trang trí lọ hoa & sổ đầu bài trên bàn GV -->
-                    <div class="flex items-center justify-between mb-1.5">
-                      <span class="px-2 py-0.5 rounded-full bg-amber-900/90 text-amber-100 text-[10px] font-bold tracking-wide uppercase shadow-xs">
-                        👑 Bàn Giáo Viên
-                      </span>
-                      <div class="flex items-center gap-1 text-sm">
-                        <span title="Sổ đầu bài">📗</span>
-                        <span title="Lọ hoa tươi">🌻</span>
+                </div>
+
+                <!-- CỘT PHẢI (3/12): BÀN GIÁO VIÊN 3D ĐỘC LẬP TRÊN BỤC GIẢNG -->
+                <div class="lg:col-span-3 flex flex-col items-center lg:items-end justify-end">
+                  <div id="desk-el-teacher-desk"
+                       data-desk-id="teacher-desk"
+                       onclick="handleDeskClick('teacher-desk', event)"
+                       class="teacher-desk-3d-box w-full max-w-[240px]">
+                    <!-- Mặt trên bàn Giáo viên -->
+                    <div class="teacher-desk-top">
+                      <div class="flex items-center justify-between mb-1.5">
+                        <span class="px-2 py-0.5 rounded-full bg-amber-950 text-amber-100 text-[10px] font-bold tracking-wide uppercase">
+                          👑 Bàn Giáo Viên
+                        </span>
+                        <div class="flex items-center gap-1 text-sm">
+                          <span title="Sổ đầu bài">📗</span>
+                          <span title="Hoa hướng dương">🌻</span>
+                        </div>
+                      </div>
+                      <div id="teacherDeskInnerPreview" class="flex items-center gap-2.5 bg-white/85 p-2 rounded-xl border border-amber-200">
+                        <!-- JS render thông tin Giáo viên tại đây -->
                       </div>
                     </div>
-                    <div id="teacherDeskInnerPreview" class="flex items-center gap-2.5 mt-1">
-                      <!-- JS sẽ tự động render thông tin Giáo viên tại đây -->
+                    <!-- Thân trước & Hộc bàn Giáo viên -->
+                    <div class="teacher-desk-front flex items-center justify-between text-[10px] text-amber-100/90 font-bold">
+                      <span>🗄️ Hộc bàn GV</span>
+                      <span class="px-2 py-0.5 rounded bg-amber-950/60 border border-amber-400/40 text-[9px]">Bấm xem / sửa</span>
                     </div>
                   </div>
-                  <div class="desk-drawer-3d">
-                    <div class="desk-drawer-handle"></div>
-                  </div>
-                  <div id="mini-pop-teacher-desk" class="desk-mini-polaroid-pop"></div>
                 </div>
+
               </div>
 
+              <!-- Bục giảng gỗ nối liền đầu lớp -->
+              <div class="podium-platform-3d flex flex-wrap items-center justify-between text-[11px] font-bold text-amber-950 gap-2">
+                <span>🚪 Cửa lớp bên trái (Ngay bàn đầu)</span>
+                <span>⬆️ BỤC GIẢNG ĐẦU LỚP 11T2 ⬆️</span>
+                <span>👩‍🏫 Khu vực Bàn Giáo Viên</span>
+              </div>
             </div>
 
-            <!-- Nhãn 4 Tổ -->
-            <div class="grid grid-cols-4 gap-3 sm:gap-6 mb-3 text-center">
-              <div class="py-1 rounded-xl bg-pastel-pink/70 border border-pink-300 font-hand font-bold text-xs sm:text-sm text-pastel-ink shadow-xs">🌸 Tổ 1</div>
-              <div class="py-1 rounded-xl bg-pastel-blue/70 border border-blue-300 font-hand font-bold text-xs sm:text-sm text-pastel-ink shadow-xs">☁️ Tổ 2</div>
-              <div class="py-1 rounded-xl bg-pastel-butter/80 border border-amber-300 font-hand font-bold text-xs sm:text-sm text-pastel-ink shadow-xs">🌻 Tổ 3</div>
-              <div class="py-1 rounded-xl bg-pastel-lavender/70 border border-purple-300 font-hand font-bold text-xs sm:text-sm text-pastel-ink shadow-xs">🔮 Tổ 4</div>
+            <!-- 2. TIÊU ĐỀ 2 DÃY BÀN DÀI (MỖI BÀN DÀI 4 CHỖ NGỒI) -->
+            <div class="grid grid-cols-1 lg:grid-cols-11 gap-3 items-center mb-4 text-center">
+              <div class="lg:col-span-5 py-2 px-4 rounded-2xl bg-pastel-pink/80 border-2 border-pink-300 font-hand font-bold text-sm sm:text-base text-pastel-ink shadow-xs flex items-center justify-between">
+                <span>🪟 DÃY BÊN TRÁI (4 chỗ / bàn dài)</span>
+                <span class="text-[11px] font-sans bg-white/80 px-2.5 py-0.5 rounded-full border border-pink-200">Hộc bàn 1 → 4</span>
+              </div>
+              <div class="hidden lg:flex lg:col-span-1 items-center justify-center">
+                <span class="px-2.5 py-1 rounded-full bg-amber-100/90 border border-amber-300 text-[10px] font-bold text-amber-900 uppercase tracking-wider">
+                  Lối đi
+                </span>
+              </div>
+              <div class="lg:col-span-5 py-2 px-4 rounded-2xl bg-pastel-blue/80 border-2 border-sky-300 font-hand font-bold text-sm sm:text-base text-pastel-ink shadow-xs flex items-center justify-between">
+                <span>💡 DÃY BÊN PHẢI (4 chỗ / bàn dài)</span>
+                <span class="text-[11px] font-sans bg-white/80 px-2.5 py-0.5 rounded-full border border-sky-200">Hộc bàn 1 → 4</span>
+              </div>
             </div>
 
-            <!-- 2. LƯỚI BÀN HỌC SINH 3D (4 TỔ x N BÀN) -->
-            <div id="classroomGrid3D" class="grid grid-cols-4 gap-x-3 sm:gap-x-6 gap-y-6 sm:gap-y-8">
-              <!-- JS render 20+ chiếc bàn 3D có chiều sâu tại đây -->
+            <!-- 3. KHU VỰC 2 DÃY BÀN DÀI 3D (MỖI BÀN DÀI CÓ 4 CHỖ NGỒI & 4 HỘC BÀN SÂU) -->
+            <div id="classroomGrid3D" class="space-y-7">
+              <!-- JS tự động render các hàng bàn dài (2 dãy Trái - Phải, mỗi bàn 4 chỗ + 4 hộc bàn 3D) -->
             </div>
 
-            <!-- Chú thích cuối lớp -->
-            <div class="mt-8 pt-3 border-t border-dashed border-amber-800/20 flex flex-wrap items-center justify-between text-[11px] font-bold text-amber-900/70 gap-2">
-              <span>🚪 Cửa lớp phía sau</span>
-              <span>💡 Mẹo: Bấm vào bàn để zoom 3D • Bấm "Đổi câu nói" trong thẻ để xem thêm quote vui</span>
-              <span>🧹 Góc trực nhật 11T2</span>
+            <!-- 4. CHÚ THÍCH VỊ TRÍ ĐỨNG CUỐI LỚP -->
+            <div class="mt-9 pt-4 border-t-2 border-dashed border-amber-800/30 flex flex-wrap items-center justify-between text-xs font-bold text-amber-950 gap-2 bg-white/60 px-4 py-2.5 rounded-2xl">
+              <span class="flex items-center gap-1.5">🧍‍♂️ <strong>Vị trí góc nhìn của bạn:</strong> Đứng từ cuối lớp nhìn thẳng lên bảng</span>
+              <span>💡 Mẹo: Bấm vào bất kỳ người nào hoặc hộc bàn nào trong bàn 4 người để mở thẻ ký ức!</span>
+              <span>🧹 Góc cuối lớp 11T2</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           THẺ KÝ ỨC THÀNH VIÊN / GIÁO VIÊN 3D (BẬT LÊN KHI BẤM VÀO HỘC BÀN)
+           ==================================================================== -->
+      <div id="deskMemoryBackdrop" class="desk-memory-card-backdrop" onclick="handleBackdropCloseDesk(event)">
+        <div id="deskMemoryCard3D" class="desk-memory-card-3d p-5 sm:p-7" onclick="event.stopPropagation()">
+          <div id="deskCardWashi" class="washi-tape"></div>
+
+          <!-- Header thẻ: Vị trí bàn & Nút chỉnh sửa / Đóng -->
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-dashed border-pink-200 pb-3 mb-3">
+            <div class="flex items-center gap-2">
+              <span id="deskCardSeatBadge" class="px-3 py-1 rounded-full bg-pastel-pink text-pastel-ink font-bold text-xs border border-pink-300 shadow-xs">
+                Dãy Trái • Bàn 1 • Chỗ 1
+              </span>
+              <span id="deskCardRoleBadge" class="hidden px-2.5 py-0.5 rounded-full bg-pastel-butter text-amber-900 font-bold text-xs border border-amber-300"></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button id="btnOpenEditFromCard" onclick="openDeskEditModal(currentFocusedDeskId)" class="hidden px-3 py-1.5 rounded-xl bg-pastel-lavender hover:bg-purple-300 text-pastel-ink font-bold text-xs border border-purple-300 shadow-xs transition">
+                ✏️ Sửa chỗ ngồi / bàn này
+              </button>
+              <button onclick="resetClassroomCamera()" class="w-8 h-8 rounded-full bg-pink-100 hover:bg-pastel-pinkDeep hover:text-white text-pastel-ink font-bold text-sm flex items-center justify-center transition" title="Đóng và trở về sơ đồ lớp">
+                ✕
+              </button>
             </div>
           </div>
 
-          <!-- ====================================================================
-               THẺ KÝ ỨC THÀNH VIÊN / GIÁO VIÊN 3D (BẬT LÊN KHI CAMERA BAY TỚI BÀN)
-               ==================================================================== -->
-          <div id="deskMemoryBackdrop" class="desk-memory-card-backdrop" onclick="handleBackdropCloseDesk(event)">
-            <div id="deskMemoryCard3D" class="desk-memory-card-3d p-5 sm:p-7" onclick="event.stopPropagation()">
-              <div id="deskCardWashi" class="washi-tape"></div>
+          <!-- Thanh chọn nhanh 4 chỗ ngồi trong cùng chiếc bàn dài -->
+          <div id="deskCardBenchTabsWrapper" class="mb-4 bg-pastel-cream p-2 rounded-2xl border border-pink-200">
+            <div class="text-[10px] font-bold text-pastel-muted uppercase mb-1.5 px-1 flex items-center justify-between">
+              <span>👥 4 Chỗ ngồi trên cùng chiếc bàn dài này:</span>
+              <span>Bấm để chuyển nhanh</span>
+            </div>
+            <div id="deskCardBenchTabs" class="grid grid-cols-4 gap-1.5">
+              <!-- JS render 4 tab chỗ ngồi của bàn dài -->
+            </div>
+          </div>
 
-              <!-- Nút Đóng & Nút Chỉnh sửa -->
-              <div class="flex items-center justify-between gap-2 border-b border-dashed border-pink-200 pb-3 mb-4">
-                <div class="flex items-center gap-2">
-                  <span id="deskCardSeatBadge" class="px-3 py-1 rounded-full bg-pastel-pink text-pastel-ink font-bold text-xs border border-pink-300 shadow-xs">
-                    Tổ 1 • Bàn 1
+          <!-- Nội dung chính của Thẻ Ký Ức -->
+          <div id="deskCardBodyContent" class="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center">
+            <!-- Cột trái: Khung ảnh Polaroid của chỗ ngồi -->
+            <div class="sm:col-span-5 flex justify-center">
+              <div class="polaroid-card tilt-left w-full max-w-[210px] bg-white shadow-polaroid">
+                <div id="deskCardPhotoBox" class="aspect-square rounded-xl overflow-hidden bg-pastel-paper flex flex-col items-center justify-center relative">
+                  <!-- Ảnh hoặc trạng thái trống -->
+                </div>
+                <div class="pt-2.5 text-center">
+                  <span id="deskCardStickerDisplay" class="text-xl">🌟</span>
+                  <p id="deskCardPolaroidCaption" class="font-hand text-sm font-bold text-pastel-ink truncate mt-0.5"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cột phải: Tên, Câu Joke / Quote vui & Giới thiệu -->
+            <div class="sm:col-span-7 space-y-3.5 text-left">
+              <div>
+                <p class="text-[11px] font-bold uppercase tracking-wider text-pastel-pinkDeep">Chủ nhân hộc bàn</p>
+                <h3 id="deskCardMemberName" class="font-hand text-2xl sm:text-3xl font-bold text-pastel-ink leading-tight mt-0.5">
+                  Chưa thiết lập
+                </h3>
+              </div>
+
+              <!-- Hộp câu Joke / Câu nói kinh điển -->
+              <div class="relative p-4 rounded-2xl bg-pastel-butter/75 border-2 border-dashed border-amber-300 shadow-soft">
+                <div class="flex items-center justify-between mb-1">
+                  <span id="deskCardJokeLabel" class="text-[11px] font-bold text-amber-900 uppercase flex items-center gap-1">
+                    💬 Câu nói kinh điển / Joke
                   </span>
-                  <span id="deskCardRoleBadge" class="hidden px-2.5 py-0.5 rounded-full bg-pastel-butter text-amber-900 font-bold text-xs border border-amber-300"></span>
+                  <button id="btnNextJokeLine" onclick="cycleDeskJokeLine()" class="hidden px-2 py-0.5 rounded-full bg-white/90 hover:bg-amber-200 text-[10px] font-bold text-amber-900 border border-amber-300 transition">
+                    🎲 Câu khác
+                  </button>
                 </div>
+                <p id="deskCardJokeText" class="font-hand text-base sm:text-lg font-bold text-pastel-ink leading-snug whitespace-pre-line">
+                  Chưa có câu joke nào được ghi cho hộc bàn này.
+                </p>
+              </div>
+
+              <!-- Giới thiệu bổ sung (Bio / Ghi chú) -->
+              <div id="deskCardBioWrapper" class="hidden p-3 rounded-xl bg-pastel-cream border border-pink-200 text-xs text-pastel-ink leading-relaxed">
+                <strong class="block text-pastel-pinkDeep mb-0.5">📌 Ghi chú kỷ niệm:</strong>
+                <span id="deskCardBioText"></span>
+              </div>
+
+              <!-- Chân thẻ: Điều hướng sang chỗ kế tiếp hoặc đóng -->
+              <div class="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-pink-100">
                 <div class="flex items-center gap-1.5">
-                  <button id="btnOpenEditFromCard" onclick="openDeskEditModal(currentFocusedDeskId)" class="hidden px-3 py-1.5 rounded-xl bg-pastel-lavender hover:bg-purple-300 text-pastel-ink font-bold text-xs border border-purple-300 shadow-xs transition">
-                    ✏️ Chỉnh sửa bàn này
+                  <button onclick="navigateAdjacentDesk(-1)" class="px-3 py-1.5 rounded-xl bg-white hover:bg-pink-50 border border-pink-200 text-xs font-bold text-pastel-ink transition">
+                    ← Chỗ trước
                   </button>
-                  <button onclick="resetClassroomCamera()" class="w-8 h-8 rounded-full bg-pink-100 hover:bg-pastel-pinkDeep hover:text-white text-pastel-ink font-bold text-sm flex items-center justify-center transition" title="Đóng và trở về sơ đồ lớp">
-                    ✕
+                  <button onclick="navigateAdjacentDesk(1)" class="px-3 py-1.5 rounded-xl bg-white hover:bg-pink-50 border border-pink-200 text-xs font-bold text-pastel-ink transition">
+                    Chỗ tiếp →
                   </button>
                 </div>
+                <button onclick="resetClassroomCamera()" class="px-4 py-1.5 rounded-xl bg-pastel-pinkDeep hover:bg-pink-600 text-white text-xs font-bold shadow-xs transition">
+                  Quay lại sơ đồ lớp
+                </button>
               </div>
-
-              <!-- Nội dung chính của Thẻ Ký Ức -->
-              <div id="deskCardBodyContent" class="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center">
-                <!-- Cột trái: Khung ảnh Polaroid của bàn -->
-                <div class="sm:col-span-5 flex justify-center">
-                  <div class="polaroid-card tilt-left w-full max-w-[210px] bg-white shadow-polaroid">
-                    <div id="deskCardPhotoBox" class="aspect-square rounded-xl overflow-hidden bg-pastel-paper flex flex-col items-center justify-center relative">
-                      <!-- Ảnh hoặc trạng thái trống -->
-                    </div>
-                    <div class="pt-2.5 text-center">
-                      <span id="deskCardStickerDisplay" class="text-xl">🌟</span>
-                      <p id="deskCardPolaroidCaption" class="font-hand text-sm font-bold text-pastel-ink truncate mt-0.5"></p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Cột phải: Tên, Câu Joke / Quote vui & Giới thiệu -->
-                <div class="sm:col-span-7 space-y-3.5 text-left">
-                  <div>
-                    <p class="text-[11px] font-bold uppercase tracking-wider text-pastel-pinkDeep">Chủ nhân vị trí</p>
-                    <h3 id="deskCardMemberName" class="font-hand text-2xl sm:text-3xl font-bold text-pastel-ink leading-tight mt-0.5">
-                      Chưa thiết lập
-                    </h3>
-                  </div>
-
-                  <!-- Hộp câu Joke / Câu nói kinh điển -->
-                  <div class="relative p-4 rounded-2xl bg-pastel-butter/75 border-2 border-dashed border-amber-300 shadow-soft">
-                    <div class="flex items-center justify-between mb-1">
-                      <span id="deskCardJokeLabel" class="text-[11px] font-bold text-amber-900 uppercase flex items-center gap-1">
-                        💬 Câu nói kinh điển / Joke
-                      </span>
-                      <button id="btnNextJokeLine" onclick="cycleDeskJokeLine()" class="hidden px-2 py-0.5 rounded-full bg-white/90 hover:bg-amber-200 text-[10px] font-bold text-amber-900 border border-amber-300 transition">
-                        🎲 Câu khác
-                      </button>
-                    </div>
-                    <p id="deskCardJokeText" class="font-hand text-base sm:text-lg font-bold text-pastel-ink leading-snug whitespace-pre-line">
-                      Chưa có câu joke nào được ghi cho bàn này.
-                    </p>
-                  </div>
-
-                  <!-- Giới thiệu bổ sung (Bio / Ghi chú) -->
-                  <div id="deskCardBioWrapper" class="hidden p-3 rounded-xl bg-pastel-cream border border-pink-200 text-xs text-pastel-ink leading-relaxed">
-                    <strong class="block text-pastel-pinkDeep mb-0.5">📌 Ghi chú thêm:</strong>
-                    <span id="deskCardBioText"></span>
-                  </div>
-
-                  <!-- Chân thẻ: Điều hướng sang bàn kế tiếp hoặc đóng -->
-                  <div class="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-pink-100">
-                    <div class="flex items-center gap-1.5">
-                      <button onclick="navigateAdjacentDesk(-1)" class="px-3 py-1.5 rounded-xl bg-white hover:bg-pink-50 border border-pink-200 text-xs font-bold text-pastel-ink transition">
-                        ← Bàn trước
-                      </button>
-                      <button onclick="navigateAdjacentDesk(1)" class="px-3 py-1.5 rounded-xl bg-white hover:bg-pink-50 border border-pink-200 text-xs font-bold text-pastel-ink transition">
-                        Bàn tiếp →
-                      </button>
-                    </div>
-                    <button onclick="resetClassroomCamera()" class="px-4 py-1.5 rounded-xl bg-pastel-pinkDeep hover:bg-pink-600 text-white text-xs font-bold shadow-xs transition">
-                      Quay lại sơ đồ lớp
-                    </button>
-                  </div>
-                </div>
-              </div>
-
             </div>
           </div>
 
@@ -1194,27 +1427,52 @@
        MODALS
        ============================================================================ -->
 
-  <!-- MODAL CHỈNH SỬA DỮ LIỆU BÀN HỌC / BÀN GIÁO VIÊN (ĐỘC LẬP TỪNG BÀN) -->
-  <div id="deskEditModal" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-[#FFFDF9] w-full max-w-lg rounded-3xl p-6 border-2 border-pink-300 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+ <!-- MODAL CHỈNH SỬA DỮ LIỆU CHỖ NGỒI (HỖ TRỢ CHỌN HỌC SINH CÓ SẴN & 4 CHỖ TRONG BÀN DÀI) -->
+  <div id="deskEditModal" class="fixed inset-0 z-[70] hidden bg-black/65 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#FFFDF9] w-full max-w-xl rounded-3xl p-6 border-2 border-pink-300 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-dashed border-pink-200 pb-3">
         <div>
-          <span id="editDeskCodeBadge" class="px-2.5 py-0.5 rounded-full bg-pastel-pink text-pastel-ink text-[11px] font-bold">Mã bàn: desk-1-1</span>
-          <h3 id="editDeskModalTitle" class="font-hand text-2xl font-bold text-pastel-ink mt-1">✏️ Thiết Lập Chỗ Ngồi</h3>
+          <span id="editDeskCodeBadge" class="px-2.5 py-0.5 rounded-full bg-pastel-pink text-pastel-ink text-[11px] font-bold">Dãy Trái • Bàn 1 • Chỗ 1</span>
+          <h3 id="editDeskModalTitle" class="font-hand text-2xl font-bold text-pastel-ink mt-1">✏️ Thiết Lập Chỗ Ngồi Trong Bàn</h3>
         </div>
         <button onclick="closeDeskEditModal()" class="w-8 h-8 rounded-full bg-pink-100 hover:bg-pink-200 text-pastel-ink font-bold text-lg flex items-center justify-center">✕</button>
+      </div>
+
+      <!-- Thanh chuyển nhanh 4 chỗ ngồi của chiếc bàn dài đang sửa -->
+      <div id="editModalBenchSwitcherWrap" class="bg-pastel-cream p-3 rounded-2xl border-2 border-pink-200 space-y-1.5">
+        <div class="flex items-center justify-between text-[11px] font-bold text-pastel-ink">
+          <span>🪑 Chọn vị trí ngồi trong chiếc bàn dài này (4 người / bàn):</span>
+          <span class="text-pastel-pinkDeep">Bấm để đổi hộc bàn</span>
+        </div>
+        <div id="editModalBenchTabs" class="grid grid-cols-4 gap-2">
+          <!-- JS render 4 nút chọn Chỗ 1, Chỗ 2, Chỗ 3, Chỗ 4 -->
+        </div>
       </div>
 
       <input id="editDeskIdHidden" type="hidden">
 
       <div class="space-y-3.5">
+        <!-- TÍNH NĂNG MỚI: CHỌN HỌC SINH CÓ SẴN TỪ TAB THÀNH VIÊN LỚP -->
+        <div id="editDeskExistingMemberWrap" class="p-3.5 rounded-2xl bg-gradient-to-r from-pastel-butter/60 via-pastel-pink/35 to-pastel-blue/40 border-2 border-amber-300 space-y-1.5">
+          <label class="block text-xs font-bold text-amber-950 flex items-center justify-between">
+            <span>🧑‍🎓 Chọn nhanh học sinh có sẵn từ Danh bạ lớp:</span>
+            <span id="existingMemberCountHint" class="text-[10px] px-2 py-0.5 rounded-full bg-white/80 text-amber-900">0 thành viên</span>
+          </label>
+          <select id="editDeskSelectExistingMember" onchange="handlePickExistingMemberForDesk(this.value)" class="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-amber-300 text-sm font-bold text-pastel-ink focus:ring-2 focus:ring-amber-400">
+            <option value="">-- Bấm để chọn học sinh có sẵn (Tự động điền thông tin) --</option>
+          </select>
+          <p class="text-[11px] text-amber-900/80">
+            💡 Khi chọn học sinh từ danh sách trên, tên, biệt danh, chức vụ và câu nói yêu thích sẽ tự động được điền xuống dưới. Bạn vẫn có thể sửa lại tùy ý!
+          </p>
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="sm:col-span-2">
             <label class="block text-xs font-bold text-pastel-ink mb-1">Tên hoặc Biệt danh người ngồi *</label>
-            <input id="editDeskMemberName" type="text" placeholder="VD: Nguyễn Văn A (Biệt danh: Cò)" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-pink-200 text-sm font-semibold focus:ring-2 focus:ring-pastel-pinkDark">
+            <input id="editDeskMemberName" type="text" placeholder="VD: Nguyễn Văn A (Cò)" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-pink-200 text-sm font-semibold focus:ring-2 focus:ring-pastel-pinkDark">
           </div>
           <div>
-            <label class="block text-xs font-bold text-pastel-ink mb-1">Sticker trên bàn</label>
+            <label class="block text-xs font-bold text-pastel-ink mb-1">Sticker hộc bàn</label>
             <select id="editDeskSticker" class="w-full px-3 py-2.5 rounded-xl bg-white border border-pink-200 text-sm font-bold">
               <option value="🧑‍🎓">🧑‍🎓 Học sinh</option>
               <option value="🌸">🌸 Hoa anh đào</option>
@@ -1233,14 +1491,14 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-pastel-ink mb-1">Danh hiệu / Chức vụ tại bàn (Tùy chọn)</label>
-          <input id="editDeskRoleInput" type="text" placeholder="VD: Tổ trưởng Tổ 1 / Giáo viên Chủ nhiệm / Cây hài của lớp..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-pink-200 text-sm">
+          <label class="block text-xs font-bold text-pastel-ink mb-1">Danh hiệu / Chức vụ tại lớp (Tùy chọn)</label>
+          <input id="editDeskRoleInput" type="text" placeholder="VD: Lớp trưởng / Thành viên / Giáo viên Chủ nhiệm..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-pink-200 text-sm">
         </div>
 
-        <!-- Khu vực tải ảnh & Xem trước ảnh riêng cho đúng bàn này -->
+        <!-- Khu vực tải ảnh & Xem trước ảnh riêng cho đúng chỗ ngồi này -->
         <div class="p-4 rounded-2xl bg-pastel-cream border-2 border-dashed border-pink-200 space-y-3">
           <div class="flex items-center justify-between">
-            <label class="block text-xs font-bold text-pastel-ink">📸 Ảnh đại diện gắn với bàn này</label>
+            <label class="block text-xs font-bold text-pastel-ink">📸 Ảnh đại diện gắn với chỗ ngồi này</label>
             <button id="btnRemoveDeskPhoto" type="button" onclick="markDeskPhotoForRemoval()" class="hidden text-xs font-bold text-red-600 hover:underline">
               🗑️ Xóa ảnh hiện tại
             </button>
@@ -1256,7 +1514,7 @@
                 📤 Chọn ảnh từ máy / điện thoại
               </button>
               <p class="text-[11px] text-pastel-muted leading-snug">
-                Ảnh sẽ được lưu trực tiếp lên Supabase Storage gắn riêng cho mã bàn này. Nếu không chọn ảnh mới, ảnh cũ sẽ được giữ nguyên.
+                Ảnh được lưu riêng cho đúng hộc bàn này trên Supabase Storage. Không làm ảnh hưởng tới 3 bạn ngồi cùng bàn hay các bàn khác.
               </p>
             </div>
           </div>
@@ -1265,33 +1523,32 @@
         <div>
           <label class="block text-xs font-bold text-pastel-ink mb-1">
             💬 Câu Joke / Câu nói kinh điển / Nhận xét vui *
-            <span class="font-normal text-pastel-muted">(Mỗi dòng là 1 câu, có thể nhập nhiều dòng để bấm đổi câu)</span>
+            <span class="font-normal text-pastel-muted">(Mỗi dòng 1 câu, có thể nhập nhiều dòng)</span>
           </label>
           <textarea id="editDeskJokeInput" rows="3" placeholder="VD:&#10;“Cô ơi hôm nay em quên mang vở ạ!”&#10;“Đi học vì đam mê nhưng ngủ gật là chính.”" class="w-full p-3.5 rounded-xl bg-white border border-pink-200 text-sm lined-paper"></textarea>
         </div>
 
         <div>
           <label class="block text-xs font-bold text-pastel-ink mb-1">📌 Giới thiệu thêm / Kỷ niệm đáng nhớ (Tùy chọn)</label>
-          <textarea id="editDeskBioInput" rows="2" placeholder="VD: Người luôn mang đồ ăn vặt cứu đói cả tổ..." class="w-full p-3 rounded-xl bg-white border border-pink-200 text-sm"></textarea>
+          <textarea id="editDeskBioInput" rows="2" placeholder="VD: Trùm phát đồ ăn vặt cứu đói cả bàn..." class="w-full p-3 rounded-xl bg-white border border-pink-200 text-sm"></textarea>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-pink-200">
         <button type="button" onclick="confirmClearDeskData()" class="px-3.5 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold text-xs transition">
-          🧹 Xóa trắng bàn này
+          🧹 Làm trống chỗ ngồi này
         </button>
         <div class="flex items-center gap-2">
           <button type="button" onclick="closeDeskEditModal()" class="px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-xs font-bold text-pastel-ink">
-            Hủy
+            Đóng
           </button>
           <button id="btnSaveDeskSubmit" type="button" onclick="saveDeskDataToSupabase()" class="px-5 py-2.5 rounded-xl bg-pastel-pinkDeep hover:bg-pink-600 text-white text-xs font-bold shadow-sticker transition">
-            💾 Lưu thông tin bàn
+            💾 Lưu chỗ ngồi này
           </button>
         </div>
       </div>
     </div>
   </div>
-
   <!-- AUTHENTICATION MODAL -->
   <div id="authModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-pastel-cream w-full max-w-md rounded-3xl p-6 border-2 border-blue-200 shadow-2xl space-y-4">
@@ -1799,16 +2056,64 @@
         </div>`).join('');
     }
 
+ // ============================================================================
+    // HỆ THỐNG SƠ ĐỒ LỚP HỌC 3D TƯƠNG TÁC (2 DÃY BÀN DÀI x 4 CHỖ NGỒI + TV 50 INCH)
     // ============================================================================
-    // HỆ THỐNG SƠ ĐỒ LỚP HỌC 3D TƯƠNG TÁC (RENDER, CAMERA 3D, QUẢN LÝ & LƯU TRỮ)
-    // ============================================================================
+    let currentTvChannelIndex = 0;
+    const CLASSROOM_TV_CHANNELS = [
+      { badge: "HDMI 1 • Kỷ Yếu 11T2", html: `<p class="font-hand text-xs sm:text-sm font-bold text-amber-300 tracking-wide">✨ Trình chiếu Kỷ Niệm Thanh Xuân 11T2 (2025 - 2028) ✨</p>` },
+      { badge: "HDMI 2 • Lịch Thi THPT", html: `<p class="font-mono text-xs font-bold text-emerald-300">🎯 Quyết tâm chinh phục Kỳ thi THPT Quốc Gia 2028!</p>` },
+      { badge: "TV Mode • Góc Điện Ảnh", html: `<p class="font-hand text-xs sm:text-sm font-bold text-pink-300">🍿 Giờ ra chơi: Cả lớp tụ tập xem MV & Bóng chuyền 11T2!</p>` },
+      { badge: "Standby • Tiết Học Mới", html: `<p class="font-hand text-xs sm:text-sm font-bold text-sky-200">📚 Chúc tập thể 11T2 một tuần học tràn đầy năng lượng!</p>` }
+    ];
+
+    function cycleClassroomTvChannel() {
+      currentTvChannelIndex = (currentTvChannelIndex + 1) % CLASSROOM_TV_CHANNELS.length;
+      const ch = CLASSROOM_TV_CHANNELS[currentTvChannelIndex];
+      const badgeEl = document.getElementById("tvChannelBadge");
+      const screenEl = document.getElementById("tvScreenContent");
+      if (badgeEl) badgeEl.textContent = ch.badge;
+      if (screenEl) screenEl.innerHTML = ch.html;
+      playClassroomSynthesizedSfx("flip");
+    }
+
+    // Quy ước desk_id cho 2 Dãy Bàn Dài (Mỗi bàn dài có 4 chỗ ngồi):
+    // - Dãy Trái (section = 1): Chỗ 1..4 có group_num = 1..4 -> desk-1-{row}, desk-2-{row}, desk-3-{row}, desk-4-{row}
+    //   (Nhờ vậy dữ liệu cũ desk-1-1, desk-2-1... hiển thị nguyên vẹn 100%)
+    // - Dãy Phải (section = 2): Chỗ 1..4 có group_num = 5..8 -> desk-5-{row}, desk-6-{row}, desk-7-{row}, desk-8-{row}
+    function buildSeatDeskId(sectionNum, rowNum, seatIndex) {
+      const colCode = (sectionNum - 1) * 4 + seatIndex;
+      return `desk-${colCode}-${rowNum}`;
+    }
+
+    function parseSeatDeskId(deskId) {
+      if (deskId === "teacher-desk") {
+        return { isTeacher: true, sectionNum: 0, rowNum: 0, seatIndex: 0, colCode: 0 };
+      }
+      const parts = String(deskId).split("-");
+      const colCode = parseInt(parts[1], 10) || 1;
+      const rowNum = parseInt(parts[2], 10) || 1;
+      const sectionNum = colCode <= 4 ? 1 : 2;
+      const seatIndex = ((colCode - 1) % 4) + 1;
+      return { isTeacher: false, sectionNum, rowNum, seatIndex, colCode };
+    }
+
     function getDeskLabel(deskId) {
       if (deskId === "teacher-desk") return "👑 Bàn Giáo Viên";
-      const parts = String(deskId).split("-");
-      if (parts.length === 3) {
-        return `Tổ ${parts[1]} • Bàn ${parts[2]}`;
-      }
-      return deskId;
+      const info = parseSeatDeskId(deskId);
+      const sectionName = info.sectionNum === 1 ? "Dãy Trái" : "Dãy Phải";
+      return `${sectionName} • Bàn ${info.rowNum} • Chỗ ${info.seatIndex}`;
+    }
+
+    function getSiblingSeatsInSameBench(deskId) {
+      if (!deskId || deskId === "teacher-desk") return [];
+      const info = parseSeatDeskId(deskId);
+      return [1, 2, 3, 4].map(sIdx => ({
+        seatIndex: sIdx,
+        deskId: buildSeatDeskId(info.sectionNum, info.rowNum, sIdx),
+        sectionNum: info.sectionNum,
+        rowNum: info.rowNum
+      }));
     }
 
     function isDeskOccupied(deskRecord) {
@@ -1860,6 +2165,126 @@
       } catch (e) {}
     }
 
+    // Xây dựng HTML cho 1 Chiếc Bàn Dài 3D (Gồm 4 chỗ ngồi trên mặt bàn + 4 hộc bàn sâu phía dưới)
+    function buildLongBench3DHtml(sectionNum, rowNum) {
+      const sectionTitle = sectionNum === 1 ? "Dãy Trái" : "Dãy Phải";
+      const badgeColor = sectionNum === 1
+        ? "bg-pink-100 text-pink-950 border-pink-300"
+        : "bg-sky-100 text-sky-950 border-sky-300";
+
+      let surfaceSlotsHtml = "";
+      let cubbiesRowHtml = "";
+      let occupiedInBench = 0;
+      let hasFocusedSeatInThisBench = false;
+
+      for (let seatIdx = 1; seatIdx <= 4; seatIdx++) {
+        const deskId = buildSeatDeskId(sectionNum, rowNum, seatIdx);
+        const d = desksDataMap[deskId];
+        const occupied = isDeskOccupied(d);
+        if (occupied) occupiedInBench++;
+
+        const isFocused = currentFocusedDeskId === deskId;
+        if (isFocused) hasFocusedSeatInThisBench = true;
+        const isSwapSource = swapSourceDeskId === deskId;
+        const sticker = d?.sticker || "🧑‍🎓";
+
+        const avatarHtml = occupied
+          ? (d.photo_url
+              ? `<img src="${escapeHtml(d.photo_url)}" loading="lazy" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-pink-300 shadow-xs shrink-0">`
+              : `<div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-pastel-pink border-2 border-white flex items-center justify-center text-sm sm:text-base shadow-xs shrink-0">${escapeHtml(sticker)}</div>`)
+          : `<div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-900/10 border border-dashed border-amber-800/40 flex items-center justify-center text-xs font-bold text-amber-900/60 shrink-0">+</div>`;
+
+        const miniPopPhoto = d?.photo_url
+          ? `<img src="${escapeHtml(d.photo_url)}" class="w-full h-full object-cover rounded-xs">`
+          : `<div class="w-full h-full bg-pastel-pink/60 flex items-center justify-center text-sm">${escapeHtml(sticker)}</div>`;
+
+        // 1. Phần chỗ ngồi trên mặt bàn gỗ
+        surfaceSlotsHtml += `
+          <div id="desk-el-${deskId}"
+               data-desk-id="${deskId}"
+               onclick="handleDeskClick('${deskId}', event)"
+               onmouseenter="highlightSeatAndCubby('${deskId}', true)"
+               onmouseleave="highlightSeatAndCubby('${deskId}', false)"
+               class="seat-slot-3d ${occupied ? 'is-occupied' : 'is-empty'} ${isFocused ? 'is-focused' : ''} ${isSwapSource ? 'is-swap-source' : ''}">
+            <div class="seat-standee-card">
+              <div class="w-full flex items-center justify-between text-[9px] font-bold text-amber-900/70 px-1 mb-0.5">
+                <span>Chỗ ${seatIdx}</span>
+                <span>${occupied ? escapeHtml(sticker) : 'Trống'}</span>
+              </div>
+              ${avatarHtml}
+              <p class="font-hand font-bold text-[11px] sm:text-xs text-pastel-ink truncate w-full px-0.5 mt-1 leading-tight">
+                ${occupied ? escapeHtml(d.member_name) : 'Chỗ trống'}
+              </p>
+              <p class="text-[8px] sm:text-[9px] font-semibold text-pastel-muted truncate w-full px-0.5">
+                ${occupied ? escapeHtml(d.member_role || 'Xem hộc bàn') : (canWriteContent() ? 'Bấm xếp chỗ' : 'Trống')}
+              </p>
+            </div>
+          </div>
+        `;
+
+        // 2. Phần Hộc Bàn 3D tương ứng ngay bên dưới (Nhìn thấy rõ từ cuối lớp)
+        cubbiesRowHtml += `
+          <div id="cubby-el-${deskId}"
+               onclick="handleDeskClick('${deskId}', event)"
+               onmouseenter="highlightSeatAndCubby('${deskId}', true)"
+               onmouseleave="highlightSeatAndCubby('${deskId}', false)"
+               title="Hộc bàn Chỗ ${seatIdx} (${occupied ? escapeHtml(d.member_name) : 'Trống'}) - Bấm để mở!"
+               class="cubby-hole-3d ${isFocused ? 'is-focused' : ''}">
+            <div class="cubby-tray-3d">
+              ${occupied
+                ? `<span>📚</span><span class="truncate max-w-[42px] text-[9px] font-bold">${escapeHtml(d.member_name.split(' ').pop())}</span>`
+                : `<span class="opacity-70 text-[9px]">Hộc ${seatIdx}</span>`}
+            </div>
+            <div class="cubby-polaroid-pop">
+              ${miniPopPhoto}
+            </div>
+          </div>
+        `;
+      }
+
+      const firstSeatId = buildSeatDeskId(sectionNum, rowNum, 1);
+
+      return `
+        <div id="bench-wrap-${sectionNum}-${rowNum}"
+             class="long-desk-3d-wrapper ${hasFocusedSeatInThisBench ? 'has-active-seat' : ''}">
+          <!-- Mặt bàn dài 4 chỗ ngồi -->
+          <div class="long-desk-surface-3d">
+            <div class="flex items-center justify-between mb-1.5 px-1">
+              <span class="px-2.5 py-0.5 rounded-full border text-[10px] font-bold ${badgeColor}">
+                🪑 ${sectionTitle} • Bàn ${rowNum} (${occupiedInBench}/4 bạn)
+              </span>
+              ${canWriteContent()
+                ? `<button onclick="openDeskEditModal('${firstSeatId}'); event.stopPropagation();" class="text-[10px] font-bold text-amber-950 bg-white/80 hover:bg-white px-2 py-0.5 rounded-full border border-amber-300 shadow-2xs transition">✏️ Sửa bàn 4 người</button>`
+                : `<span class="text-[10px] font-bold text-amber-950/70">Bấm vào từng chỗ để xem</span>`}
+            </div>
+            <div class="grid grid-cols-4 gap-1.5 sm:gap-2">
+              ${surfaceSlotsHtml}
+            </div>
+          </div>
+
+          <!-- 4 Hộc bàn 3D sâu bên dưới mặt bàn (Quay thẳng về phía cuối lớp) -->
+          <div class="long-desk-cubbies-row-3d">
+            <div class="grid grid-cols-4 gap-1.5 sm:gap-2">
+              ${cubbiesRowHtml}
+            </div>
+          </div>
+
+          <!-- Chân bàn gỗ 2 bên -->
+          <div class="long-desk-legs-3d">
+            <div class="long-desk-leg"></div>
+            <div class="long-desk-leg"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function highlightSeatAndCubby(deskId, isHover) {
+      const seatEl = document.getElementById(`desk-el-${deskId}`);
+      const cubbyEl = document.getElementById(`cubby-el-${deskId}`);
+      if (seatEl) seatEl.classList.toggle("is-hovered", isHover);
+      if (cubbyEl) cubbyEl.classList.toggle("is-hovered", isHover);
+    }
+
     function renderMapSection() {
       updateAuthUI();
       const grid = document.getElementById("classroomGrid3D");
@@ -1874,20 +2299,12 @@
         const tUnit = document.getElementById("desk-el-teacher-desk");
         if (tUnit) {
           tUnit.classList.toggle("is-focused", currentFocusedDeskId === "teacher-desk");
-          tUnit.classList.toggle("is-swap-source", swapSourceDeskId === "teacher-desk");
-        }
-
-        const miniPopT = document.getElementById("mini-pop-teacher-desk");
-        if (miniPopT) {
-          miniPopT.innerHTML = tData?.photo_url
-            ? `<img src="${escapeHtml(tData.photo_url)}" class="w-full h-full object-cover rounded-xs">`
-            : `<div class="w-full h-full bg-amber-100 flex items-center justify-center text-lg">${escapeHtml(tData?.sticker || '👑')}</div>`;
         }
 
         if (tOccupied) {
           const thumbHtml = tData.photo_url
-            ? `<img src="${escapeHtml(tData.photo_url)}" class="w-11 h-11 rounded-xl object-cover border-2 border-white shadow-sm shrink-0">`
-            : `<div class="w-11 h-11 rounded-xl bg-amber-100 border-2 border-white flex items-center justify-center text-xl shrink-0">${escapeHtml(tData.sticker || '👑')}</div>`;
+            ? `<img src="${escapeHtml(tData.photo_url)}" class="w-11 h-11 rounded-xl object-cover border-2 border-amber-300 shadow-sm shrink-0">`
+            : `<div class="w-11 h-11 rounded-xl bg-amber-100 border-2 border-amber-300 flex items-center justify-center text-xl shrink-0">${escapeHtml(tData.sticker || '👑')}</div>`;
           teacherPreview.innerHTML = `
             ${thumbHtml}
             <div class="min-w-0 flex-1 text-left">
@@ -1906,112 +2323,88 @@
         }
       }
 
-      // 2. Render Lưới Bàn Học Sinh (4 Tổ x classroomRowCount hàng)
+      // 2. Render 2 Dãy Bàn Dài (Dãy Trái & Dãy Phải, mỗi bàn 4 học sinh)
       if (!grid) return;
-      let totalDesks = classroomRowCount * 4;
-      let occupiedCount = 0;
-      let html = "";
+      const totalSeats = classroomRowCount * 2 * 4;
+      let occupiedSeatsCount = 0;
 
-      for (let row = 1; row <= classroomRowCount; row++) {
-        for (let col = 1; col <= 4; col++) {
-          const deskId = `desk-${col}-${row}`;
-          const d = desksDataMap[deskId];
-          const occupied = isDeskOccupied(d);
-          if (occupied) occupiedCount++;
-
-          const isFocused = currentFocusedDeskId === deskId;
-          const isSwapSource = swapSourceDeskId === deskId;
-          const sticker = d?.sticker || "🧑‍🎓";
-
-          const avatarBadgeHtml = occupied
-            ? (d.photo_url
-                ? `<img src="${escapeHtml(d.photo_url)}" loading="lazy" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full object-cover border-2 border-white shadow-sm shrink-0">`
-                : `<div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-pastel-pink border-2 border-white flex items-center justify-center text-base sm:text-lg shadow-xs shrink-0">${escapeHtml(sticker)}</div>`)
-            : `<div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-amber-900/10 border border-dashed border-amber-900/30 flex items-center justify-center text-xs text-amber-900/50 shrink-0">+</div>`;
-
-          const miniPopPhoto = d?.photo_url
-            ? `<img src="${escapeHtml(d.photo_url)}" class="w-full h-full object-cover rounded-xs">`
-            : `<div class="w-full h-full bg-pastel-pink/50 flex items-center justify-center text-base">${escapeHtml(sticker)}</div>`;
-
-          html += `
-            <div id="desk-el-${deskId}"
-                 data-desk-id="${deskId}"
-                 onclick="handleDeskClick('${deskId}', event)"
-                 class="desk-3d-unit ${occupied ? 'is-occupied' : 'is-empty'} ${isFocused ? 'is-focused' : ''} ${isSwapSource ? 'is-swap-source' : ''}">
-              <div class="desk-shadow-3d"></div>
-              <div class="desk-surface-3d p-2 sm:p-3">
-                <div class="flex items-center justify-between text-[9px] sm:text-[10px] font-bold text-amber-950/70 mb-1">
-                  <span>T${col}-B${row}</span>
-                  <span>${occupied ? escapeHtml(sticker) : 'Trống'}</span>
-                </div>
-                <div class="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2.5">
-                  ${avatarBadgeHtml}
-                  <div class="min-w-0 flex-1 text-center sm:text-left">
-                    <p class="font-hand font-bold text-xs sm:text-sm text-pastel-ink truncate leading-tight">
-                      ${occupied ? escapeHtml(d.member_name) : 'Chỗ trống'}
-                    </p>
-                    <p class="text-[9px] sm:text-[10px] font-semibold text-amber-900/75 truncate mt-0.5">
-                      ${occupied ? escapeHtml(d.member_role || (d.joke_text ? 'Có lời nhắn vui' : 'Thành viên 11T2')) : (canWriteContent() ? 'Bấm để xếp chỗ' : 'Chưa có dữ liệu')}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="desk-drawer-3d">
-                <div class="desk-drawer-handle"></div>
-              </div>
-              <div class="desk-mini-polaroid-pop">
-                ${miniPopPhoto}
-              </div>
-            </div>
-          `;
+      for (let r = 1; r <= classroomRowCount; r++) {
+        for (let col = 1; col <= 8; col++) {
+          if (isDeskOccupied(desksDataMap[`desk-${col}-${r}`])) {
+            occupiedSeatsCount++;
+          }
         }
       }
 
-      grid.innerHTML = html;
+      let rowsHtml = "";
+      for (let row = 1; row <= classroomRowCount; row++) {
+        rowsHtml += `
+          <div class="grid grid-cols-1 lg:grid-cols-11 gap-4 lg:gap-3 items-end">
+            <!-- Bàn dài 4 người Dãy Trái -->
+            <div class="lg:col-span-5">
+              ${buildLongBench3DHtml(1, row)}
+            </div>
+
+            <!-- Lối đi giữa lớp ở hàng bàn thứ ${row} -->
+            <div class="hidden lg:flex lg:col-span-1 flex-col items-center justify-center pb-6 opacity-70 pointer-events-none">
+              <span class="w-7 h-7 rounded-full bg-amber-900/10 border border-dashed border-amber-900/30 flex items-center justify-center text-[10px] font-bold text-amber-950">
+                H${row}
+              </span>
+            </div>
+
+            <!-- Bàn dài 4 người Dãy Phải -->
+            <div class="lg:col-span-5">
+              ${buildLongBench3DHtml(2, row)}
+            </div>
+          </div>
+        `;
+      }
+
+      grid.innerHTML = rowsHtml;
 
       const counterEl = document.getElementById("mapOccupiedCounter");
       if (counterEl) {
-        counterEl.textContent = `Đã xếp ${occupiedCount}/${totalDesks} bàn học sinh`;
+        counterEl.textContent = `Đã xếp ${occupiedSeatsCount}/${totalSeats} chỗ ngồi (${classroomRowCount * 2} bàn dài)`;
       }
     }
 
-    // Xử lý khi người dùng nhấn vào bất kỳ chiếc bàn nào (hoặc Bàn Giáo Viên)
+    // Xử lý khi người dùng nhấn vào bất kỳ chỗ ngồi / hộc bàn nào (hoặc Bàn Giáo Viên)
     async function handleDeskClick(deskId, event) {
       if (event) event.stopPropagation();
 
-      // Trường hợp 1: Đang ở chế độ Đổi chỗ 2 bàn (Swap Mode)
+      // Trường hợp 1: Đang ở chế độ Đổi chỗ 2 bạn (Swap Mode)
       if (isSwapDeskMode && canWriteContent()) {
         if (deskId === "teacher-desk") {
-          return showToast("Bàn Giáo Viên là vị trí độc lập, chỉ đổi chỗ giữa các bàn học sinh!", "warning");
+          return showToast("Bàn Giáo Viên là vị trí độc lập, chỉ đổi chỗ giữa các chỗ ngồi học sinh!", "warning");
         }
         if (!swapSourceDeskId) {
           swapSourceDeskId = deskId;
           renderMapSection();
-          updateMapModeBanner(`🔄 Đã chọn ${getDeskLabel(deskId)}. Hãy nhấn vào bàn thứ 2 để hoán đổi vị trí!`);
+          updateMapModeBanner(`🔄 Đã chọn ${getDeskLabel(deskId)}. Hãy nhấn vào chỗ ngồi thứ 2 để hoán đổi vị trí!`);
           playClassroomSynthesizedSfx("flip");
           return;
         }
         if (swapSourceDeskId === deskId) {
           swapSourceDeskId = null;
           renderMapSection();
-          updateMapModeBanner("🔄 Chế độ đổi chỗ: Hãy chọn bàn đầu tiên cần đổi vị trí.");
+          updateMapModeBanner("🔄 Chế độ đổi chỗ: Hãy chọn chỗ ngồi đầu tiên cần đổi vị trí.");
           return;
         }
         await executeSwapTwoDesks(swapSourceDeskId, deskId);
         return;
       }
 
-      // Trường hợp 2: Đang bật Chế độ Quản lý nhanh -> Mở thẳng form chỉnh sửa của đúng bàn đó
+      // Trường hợp 2: Đang bật Chế độ Quản lý nhanh -> Mở thẳng form chỉnh sửa của đúng chỗ ngồi đó
       if (isMapManageMode && canWriteContent()) {
         openDeskEditModal(deskId);
         return;
       }
 
-      // Trường hợp 3: Chế độ Khám phá 3D -> Camera bay đến đúng tọa độ bàn & Mở thẻ Ký Ức
+      // Trường hợp 3: Chế độ Khám phá 3D -> Camera tiến lại gần hộc bàn & Mở thẻ Ký Ức
       focusCameraOnDesk(deskId);
     }
 
-    // Thuật toán tính toán chính xác vị trí chiếc bàn trên mặt phẳng 3D và điều khiển Camera bay tới đó
+    // Điều khiển Camera tiến tới đúng hộc bàn được chọn và bật Thẻ Ký Ức
     function focusCameraOnDesk(deskId) {
       const stage = document.getElementById("classroomStage3D");
       const deskEl = document.getElementById(`desk-el-${deskId}`);
@@ -2021,50 +2414,42 @@
       currentJokeLineIndex = 0;
       playClassroomSynthesizedSfx("open");
 
-      // Cập nhật class nổi bật cho bàn được chọn và làm mờ nhẹ các bàn xung quanh
-      stage.classList.add("has-focused-desk");
-      document.querySelectorAll(".desk-3d-unit").forEach(el => {
-        el.classList.toggle("is-focused", el.getAttribute("data-desk-id") === deskId);
-      });
+      renderMapSection();
 
-      // Tính toán độ lệch tâm của chiếc bàn so với tâm của Stage
-      const stageWidth = stage.offsetWidth;
-      const stageHeight = stage.offsetHeight;
+      const updatedDeskEl = document.getElementById(`desk-el-${deskId}`);
+      if (updatedDeskEl) {
+        stage.classList.add("has-focused-desk");
 
-      // Tìm vị trí tương đối của deskEl bên trong stage
-      let offsetLeft = 0;
-      let offsetTop = 0;
-      let curr = deskEl;
-      while (curr && curr !== stage) {
-        offsetLeft += curr.offsetLeft;
-        offsetTop += curr.offsetTop;
-        curr = curr.offsetParent;
+        const stageWidth = stage.offsetWidth;
+        const stageHeight = stage.offsetHeight;
+        let offsetLeft = 0;
+        let offsetTop = 0;
+        let curr = updatedDeskEl;
+        while (curr && curr !== stage) {
+          offsetLeft += curr.offsetLeft;
+          offsetTop += curr.offsetTop;
+          curr = curr.offsetParent;
+        }
+        const seatCenterX = offsetLeft + updatedDeskEl.offsetWidth / 2;
+        const seatCenterY = offsetTop + updatedDeskEl.offsetHeight / 2;
+
+        const deltaX = (stageWidth / 2) - seatCenterX;
+        const deltaY = (stageHeight / 2) - seatCenterY;
+
+        const isMobile = window.innerWidth < 768;
+        const zoomScale = isMobile ? 1.08 : 1.26;
+        const clampedX = Math.max(-stageWidth * 0.25, Math.min(stageWidth * 0.25, deltaX * 0.55));
+        const clampedY = Math.max(-stageHeight * 0.25, Math.min(stageHeight * 0.25, deltaY * 0.45));
+
+        stage.style.transform = `translate3d(${Math.round(clampedX)}px, ${Math.round(clampedY)}px, 40px) rotateX(6deg) rotateY(0deg) scale(${zoomScale})`;
       }
-      const deskCenterX = offsetLeft + deskEl.offsetWidth / 2;
-      const deskCenterY = offsetTop + deskEl.offsetHeight / 2;
 
-      const deltaX = (stageWidth / 2) - deskCenterX;
-      const deltaY = (stageHeight / 2) - deskCenterY;
-
-      const isMobile = window.innerWidth < 640;
-      const isTeacher = deskId === "teacher-desk";
-      const zoomScale = isMobile ? 1.28 : (isTeacher ? 1.65 : 1.75);
-      const tiltX = isTeacher ? 24 : 30;
-      const tiltZ = isTeacher ? 0 : -4;
-
-      // Giới hạn biên độ dịch chuyển để mô hình luôn nằm đẹp trong khung nhìn
-      const clampedX = Math.max(-stageWidth * 0.36, Math.min(stageWidth * 0.36, deltaX));
-      const clampedY = Math.max(-stageHeight * 0.36, Math.min(stageHeight * 0.36, deltaY));
-
-      stage.style.transform = `translate3d(${Math.round(clampedX)}px, ${Math.round(clampedY)}px, 90px) rotateX(${tiltX}deg) rotateZ(${tiltZ}deg) scale(${zoomScale})`;
-
-      // Sau khi Camera tiến tới bàn và ngăn bàn bật mở (320ms), hiển thị Thẻ Ký Ức của đúng bàn đó
       populateDeskMemoryCard(deskId);
       setTimeout(() => {
         if (currentFocusedDeskId === deskId) {
           document.getElementById("deskMemoryBackdrop")?.classList.add("is-open");
         }
-      }, 320);
+      }, 220);
     }
 
     function resetClassroomCamera() {
@@ -2076,9 +2461,9 @@
       currentFocusedDeskId = null;
       if (stage) {
         stage.classList.remove("has-focused-desk");
-        stage.style.transform = `rotateX(48deg) rotateZ(-16deg) scale(0.92)`;
+        stage.style.transform = `rotateX(10deg) rotateY(0deg) scale(0.98)`;
       }
-      document.querySelectorAll(".desk-3d-unit").forEach(el => el.classList.remove("is-focused"));
+      renderMapSection();
     }
 
     function handleBackdropCloseDesk(e) {
@@ -2087,7 +2472,7 @@
       }
     }
 
-    // Đổ dữ liệu của đúng chiếc bàn vào Thẻ Ký Ức 3D
+    // Đổ dữ liệu của đúng chỗ ngồi vào Thẻ Ký Ức 3D (kèm thanh 4 chỗ ngồi cùng bàn)
     function populateDeskMemoryCard(deskId) {
       const record = desksDataMap[deskId] || null;
       const occupied = isDeskOccupied(record);
@@ -2106,12 +2491,42 @@
       const bioWrap = document.getElementById("deskCardBioWrapper");
       const bioText = document.getElementById("deskCardBioText");
       const washi = document.getElementById("deskCardWashi");
+      const benchTabsWrap = document.getElementById("deskCardBenchTabsWrapper");
+      const benchTabs = document.getElementById("deskCardBenchTabs");
 
       if (seatBadge) {
         seatBadge.textContent = getDeskLabel(deskId);
         seatBadge.className = isTeacher
           ? "px-3.5 py-1 rounded-full bg-pastel-butter text-amber-950 font-bold text-xs border border-amber-400 shadow-xs"
           : "px-3 py-1 rounded-full bg-pastel-pink text-pastel-ink font-bold text-xs border border-pink-300 shadow-xs";
+      }
+
+      // Render thanh chuyển nhanh 4 bạn ngồi chung bàn dài
+      if (benchTabsWrap && benchTabs) {
+        if (isTeacher) {
+          benchTabsWrap.classList.add("hidden");
+        } else {
+          benchTabsWrap.classList.remove("hidden");
+          const siblings = getSiblingSeatsInSameBench(deskId);
+          benchTabs.innerHTML = siblings.map(item => {
+            const sRec = desksDataMap[item.deskId];
+            const sOcc = isDeskOccupied(sRec);
+            const isCurr = item.deskId === deskId;
+            return `
+              <button type="button"
+                      onclick="focusCameraOnDesk('${item.deskId}')"
+                      class="p-2 rounded-xl border text-left transition flex flex-col justify-between ${isCurr ? 'bg-pastel-pinkDeep text-white border-pink-700 shadow-sm' : 'bg-white hover:bg-pink-50 text-pastel-ink border-pink-200'}">
+                <div class="flex items-center justify-between text-[10px] font-bold">
+                  <span>Chỗ ${item.seatIndex}</span>
+                  <span>${sOcc ? escapeHtml(sRec.sticker || '🧑‍🎓') : '🪑'}</span>
+                </div>
+                <div class="font-hand font-bold text-xs truncate mt-0.5">
+                  ${sOcc ? escapeHtml(sRec.member_name) : 'Trống'}
+                </div>
+              </button>
+            `;
+          }).join("");
+        }
       }
 
       if (washi) {
@@ -2165,7 +2580,7 @@
         } else {
           jokeTextEl.textContent = isTeacher
             ? "“Chúc tập thể 11T2 luôn đoàn kết và tỏa sáng!”"
-            : "Chưa có câu joke nào được nhập cho bàn này.";
+            : "Chưa có câu joke nào được nhập cho chỗ ngồi này.";
           nextJokeBtn.classList.add("hidden");
         }
 
@@ -2176,28 +2591,26 @@
           bioWrap.classList.add("hidden");
         }
       } else {
-        // Trạng thái bàn trống rõ ràng, tuyệt đối không dùng ảnh giả hay tên ngẫu nhiên
         roleBadge.classList.add("hidden");
         nextJokeBtn.classList.add("hidden");
         bioWrap.classList.add("hidden");
         stickerEl.textContent = isTeacher ? "👩‍🏫" : "🪑";
         polaroidCap.textContent = getDeskLabel(deskId);
-        nameEl.textContent = isTeacher ? "Bàn Giáo Viên (Chưa thiết lập)" : "Bàn này chưa có chủ nhân";
+        nameEl.textContent = isTeacher ? "Bàn Giáo Viên (Chưa thiết lập)" : "Hộc bàn này chưa có chủ nhân";
         jokeLabel.textContent = "📌 Trạng thái vị trí";
         jokeTextEl.textContent = canWriteContent()
-          ? "Bàn này hiện đang trống. Hãy bấm nút “✏️ Chỉnh sửa bàn này” ở góc trên để thêm Tên, Ảnh và Câu Joke cho thành viên ngồi tại đây nhé!"
+          ? "Chỗ ngồi này hiện đang trống. Hãy bấm nút “✏️ Sửa chỗ ngồi / bàn này” để chọn học sinh từ Danh bạ lớp hoặc tải ảnh lên nhé!"
           : "Vị trí này hiện chưa được cập nhật thông tin thành viên.";
         photoBox.innerHTML = `
           <div class="flex flex-col items-center justify-center p-4 text-center">
             <span class="text-4xl mb-2 opacity-60">${isTeacher ? '👩‍🏫' : '🪑'}</span>
-            <span class="text-xs font-bold text-pastel-muted">Vị trí trống</span>
-            ${canWriteContent() ? `<button onclick="openDeskEditModal('${deskId}')" class="mt-2 px-3 py-1 rounded-lg bg-pastel-pinkDeep text-white text-[11px] font-bold shadow-xs">+ Thiết lập ngay</button>` : ''}
+            <span class="text-xs font-bold text-pastel-muted">Chỗ ngồi trống</span>
+            ${canWriteContent() ? `<button onclick="openDeskEditModal('${deskId}')" class="mt-2 px-3 py-1 rounded-lg bg-pastel-pinkDeep text-white text-[11px] font-bold shadow-xs">+ Xếp chỗ ngay</button>` : ''}
           </div>
         `;
       }
     }
 
-    // Đổi qua lại giữa các dòng câu Joke nếu người quản lý nhập nhiều câu cho 1 bàn
     function cycleDeskJokeLine() {
       if (!currentFocusedDeskId) return;
       const record = desksDataMap[currentFocusedDeskId];
@@ -2216,11 +2629,10 @@
       }
     }
 
-    // Di chuyển sang bàn kế tiếp hoặc bàn trước đó ngay trong chế độ 3D
     function navigateAdjacentDesk(direction) {
       const allIds = ["teacher-desk"];
       for (let r = 1; r <= classroomRowCount; r++) {
-        for (let c = 1; c <= 4; c++) {
+        for (let c = 1; c <= 8; c++) {
           allIds.push(`desk-${c}-${r}`);
         }
       }
@@ -2229,12 +2641,11 @@
       focusCameraOnDesk(allIds[nextIdx]);
     }
 
-    // Bay ngẫu nhiên tới một bàn đã có thành viên
     function visitRandomOccupiedDesk() {
       const occupiedIds = Object.keys(desksDataMap).filter(id => isDeskOccupied(desksDataMap[id]));
       if (occupiedIds.length === 0) {
-        showToast("Hiện chưa có bàn nào được điền thông tin. Hãy bấm vào bàn đầu tiên để thiết lập nhé!", "info");
-        focusCameraOnDesk("teacher-desk");
+        showToast("Hiện chưa có chỗ ngồi nào được điền thông tin. Hãy bấm vào một hộc bàn để thiết lập nhé!", "info");
+        focusCameraOnDesk("desk-1-1");
         return;
       }
       const candidates = occupiedIds.filter(id => id !== currentFocusedDeskId);
@@ -2243,7 +2654,7 @@
       focusCameraOnDesk(randomId);
     }
 
-    // Hiệu ứng nghiêng nhẹ mô hình lớp học theo hướng con trỏ chuột (Khi ở góc nhìn toàn cảnh)
+    // Hiệu ứng liếc mắt 3D nhẹ nhàng từ cuối lớp (Không làm nghiêng chữ hay lệch vùng bấm)
     function initClassroomParallaxMouse() {
       const viewport = document.getElementById("classroomViewport3D");
       const stage = document.getElementById("classroomStage3D");
@@ -2256,14 +2667,14 @@
         const relX = (e.clientX - rect.left) / rect.width - 0.5;
         const relY = (e.clientY - rect.top) / rect.height - 0.5;
 
-        const rotX = (48 - relY * 7).toFixed(2);
-        const rotZ = (-16 + relX * 8).toFixed(2);
-        stage.style.transform = `rotateX(${rotX}deg) rotateZ(${rotZ}deg) scale(0.92)`;
+        const rotX = (10 - relY * 4).toFixed(2);
+        const rotY = (relX * 5).toFixed(2);
+        stage.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) scale(0.98)`;
       });
 
       viewport.addEventListener("mouseleave", () => {
         if (!currentFocusedDeskId && stage) {
-          stage.style.transform = `rotateX(48deg) rotateZ(-16deg) scale(0.92)`;
+          stage.style.transform = `rotateX(10deg) rotateY(0deg) scale(0.98)`;
         }
       });
     }
@@ -2271,14 +2682,14 @@
     function toggleParallaxTilt() {
       isParallaxTiltEnabled = !isParallaxTiltEnabled;
       const btn = document.getElementById("btnToggle3DTilt");
-      if (btn) btn.innerHTML = `<span>🧭</span> Nghiêng theo chuột: ${isParallaxTiltEnabled ? 'Bật' : 'Tắt'}`;
+      if (btn) btn.innerHTML = `<span>🧭</span> Hiệu ứng liếc mắt 3D: ${isParallaxTiltEnabled ? 'Bật' : 'Tắt'}`;
       if (!isParallaxTiltEnabled && !currentFocusedDeskId) resetClassroomCamera();
     }
 
     function toggleClassroomSfx() {
       isClassroomSfxEnabled = !isClassroomSfxEnabled;
       const btn = document.getElementById("btnToggleSfx");
-      if (btn) btn.innerHTML = `<span>🔔</span> Âm hiệu ứng: ${isClassroomSfxEnabled ? 'Bật' : 'Tắt'}`;
+      if (btn) btn.innerHTML = `<span>🔔</span> Âm thanh: ${isClassroomSfxEnabled ? 'Bật' : 'Tắt'}`;
     }
 
     function updateMapModeBanner(msg) {
@@ -2303,14 +2714,14 @@
       }
       const btn = document.getElementById("btnToggleEditMode");
       if (btn) {
-        btn.innerHTML = `<span>🛠️</span> Chế độ quản lý: ${isMapManageMode ? 'Đang BẬT' : 'Tắt'}`;
+        btn.innerHTML = `<span>🛠️</span> Chế độ xếp chỗ nhanh: ${isMapManageMode ? 'Đang BẬT' : 'Tắt'}`;
         btn.className = isMapManageMode
           ? "px-4 py-2 rounded-full bg-pastel-pinkDeep text-white font-bold text-xs border-2 border-pink-700 shadow-sm transition flex items-center gap-1.5"
           : "px-4 py-2 rounded-full bg-pastel-lavender hover:bg-purple-300 text-pastel-ink font-bold text-xs border-2 border-purple-300 shadow-sm transition flex items-center gap-1.5";
       }
       const swapBtn = document.getElementById("btnToggleSwapMode");
-      if (swapBtn) swapBtn.innerHTML = `<span>🔄</span> Đổi chỗ 2 bàn`;
-      updateMapModeBanner(isMapManageMode ? "🛠️ Đang bật Chế độ Quản lý Nhanh: Nhấn vào bất kỳ bàn nào để mở ngay hộp thoại chỉnh sửa của bàn đó." : "");
+      if (swapBtn) swapBtn.innerHTML = `<span>🔄</span> Đổi chỗ 2 bạn`;
+      updateMapModeBanner(isMapManageMode ? "🛠️ Đang bật Chế độ Xếp chỗ Nhanh: Nhấn vào bất kỳ chỗ ngồi nào để mở ngay hộp thoại chọn học sinh và thiết lập hộc bàn." : "");
       renderMapSection();
     }
 
@@ -2322,45 +2733,40 @@
         isMapManageMode = false;
         resetClassroomCamera();
         const editBtn = document.getElementById("btnToggleEditMode");
-        if (editBtn) editBtn.innerHTML = `<span>🛠️</span> Chế độ quản lý: Tắt`;
+        if (editBtn) editBtn.innerHTML = `<span>🛠️</span> Chế độ xếp chỗ nhanh: Tắt`;
       }
       const btn = document.getElementById("btnToggleSwapMode");
       if (btn) {
-        btn.innerHTML = `<span>🔄</span> ${isSwapDeskMode ? 'Hủy đổi chỗ' : 'Đổi chỗ 2 bàn'}`;
+        btn.innerHTML = `<span>🔄</span> ${isSwapDeskMode ? 'Hủy đổi chỗ' : 'Đổi chỗ 2 bạn'}`;
       }
-      updateMapModeBanner(isSwapDeskMode ? "🔄 Chế độ Đổi chỗ 2 bàn: Hãy nhấn vào bàn thứ 1, sau đó nhấn vào bàn thứ 2 để hoán đổi dữ liệu của 2 bạn." : "");
+      updateMapModeBanner(isSwapDeskMode ? "🔄 Chế độ Đổi chỗ 2 bạn: Hãy nhấn vào chỗ ngồi thứ 1, sau đó nhấn vào chỗ ngồi thứ 2 để hoán đổi vị trí." : "");
       renderMapSection();
     }
 
     function changeClassroomRowCount(delta) {
       if (!canWriteContent()) return showToast("Cần quyền Thành viên hoặc Admin!", "warning");
       const next = classroomRowCount + delta;
-      if (next < 4 || next > 7) {
-        return showToast("Số dãy bàn trong mỗi tổ hỗ trợ từ 4 đến 7 bàn!", "info");
+      if (next < 3 || next > 7) {
+        return showToast("Số bàn dài mỗi dãy hỗ trợ từ 3 đến 7 bàn!", "info");
       }
       classroomRowCount = next;
       renderMapSection();
-      showToast(`Đã điều chỉnh sơ đồ thành ${classroomRowCount} bàn mỗi tổ (Dữ liệu các bàn vẫn được giữ nguyên an toàn).`, "info");
+      showToast(`Đã điều chỉnh sơ đồ thành ${classroomRowCount} bàn dài mỗi dãy (Dữ liệu các bàn vẫn được giữ nguyên an toàn).`, "info");
     }
 
-    // Hoán đổi vị trí của 2 bàn mà không làm mất hay lệch dữ liệu
     async function executeSwapTwoDesks(deskIdA, deskIdB) {
       if (!canWriteContent() || !supabaseClient) return;
       const recA = desksDataMap[deskIdA] || {};
       const recB = desksDataMap[deskIdB] || {};
 
-      const parseCoords = (id) => {
-        const p = id.split("-");
-        return { group_num: parseInt(p[1], 10) || 1, row_num: parseInt(p[2], 10) || 1 };
-      };
-      const coordA = parseCoords(deskIdA);
-      const coordB = parseCoords(deskIdB);
+      const coordA = parseSeatDeskId(deskIdA);
+      const coordB = parseSeatDeskId(deskIdB);
 
       const payloadA = {
         desk_id: deskIdA,
         desk_type: "student",
-        group_num: coordA.group_num,
-        row_num: coordA.row_num,
+        group_num: coordA.colCode,
+        row_num: coordA.rowNum,
         member_name: recB.member_name || "",
         member_role: recB.member_role || "",
         sticker: recB.sticker || "🧑‍🎓",
@@ -2376,8 +2782,8 @@
       const payloadB = {
         desk_id: deskIdB,
         desk_type: "student",
-        group_num: coordB.group_num,
-        row_num: coordB.row_num,
+        group_num: coordB.colCode,
+        row_num: coordB.rowNum,
         member_name: recA.member_name || "",
         member_role: recA.member_role || "",
         sticker: recA.sticker || "🧑‍🎓",
@@ -2400,7 +2806,7 @@
         swapSourceDeskId = null;
         isSwapDeskMode = false;
         const btn = document.getElementById("btnToggleSwapMode");
-        if (btn) btn.innerHTML = `<span>🔄</span> Đổi chỗ 2 bàn`;
+        if (btn) btn.innerHTML = `<span>🔄</span> Đổi chỗ 2 bạn`;
         updateMapModeBanner("");
         renderMapSection();
         showToast(`✅ Đã đổi chỗ ${getDeskLabel(deskIdA)} và ${getDeskLabel(deskIdB)} thành công!`, "success");
@@ -2411,7 +2817,75 @@
       }
     }
 
-    // Mở Modal chỉnh sửa dữ liệu cho đúng chiếc bàn được chọn
+    // Đổ danh sách học sinh có sẵn từ tab Thành viên (membersData) vào Dropdown chọn nhanh
+    function populateExistingMembersDropdownForDesk(currentDeskId) {
+      const selectEl = document.getElementById("editDeskSelectExistingMember");
+      const countHint = document.getElementById("existingMemberCountHint");
+      const wrapEl = document.getElementById("editDeskExistingMemberWrap");
+      if (!selectEl || !wrapEl) return;
+
+      if (currentDeskId === "teacher-desk") {
+        wrapEl.classList.add("hidden");
+        return;
+      }
+      wrapEl.classList.remove("hidden");
+
+      if (countHint) {
+        countHint.textContent = `${membersData.length} hồ sơ có sẵn`;
+      }
+
+      if (!membersData || membersData.length === 0) {
+        selectEl.innerHTML = `<option value="">-- Chưa có hồ sơ nào trong tab Thành viên (Hãy nhập tên bên dưới) --</option>`;
+        return;
+      }
+
+      // Kiểm tra xem học sinh nào đã được xếp chỗ trên sơ đồ để ghi chú bên cạnh
+      const assignedMap = {};
+      Object.values(desksDataMap).forEach(rec => {
+        if (rec && rec.desk_id && rec.desk_id !== "teacher-desk" && rec.member_name) {
+          assignedMap[rec.member_name.trim().toLowerCase()] = getDeskLabel(rec.desk_id);
+        }
+      });
+
+      const optionsHtml = membersData.map(m => {
+        const fullName = (m.full_name || "").trim();
+        const nick = (m.nickname || "").trim();
+        const displayWithNick = nick ? `${fullName} (${nick})` : fullName;
+        const seatedAt = assignedMap[fullName.toLowerCase()] || assignedMap[displayWithNick.toLowerCase()];
+        const seatNote = seatedAt ? ` — [Đã xếp: ${seatedAt}]` : " — [Chưa xếp chỗ]";
+        return `<option value="${escapeHtml(m.id)}">🧑‍🎓 ${escapeHtml(displayWithNick)}${escapeHtml(seatNote)}</option>`;
+      }).join("");
+
+      selectEl.innerHTML = `<option value="">-- Bấm để chọn học sinh có sẵn trong lớp (${membersData.length} bạn) --</option>` + optionsHtml;
+    }
+
+    // Khi người dùng chọn 1 học sinh từ Dropdown Danh bạ lớp -> Tự động điền thông tin
+    function handlePickExistingMemberForDesk(memberId) {
+      if (!memberId) return;
+      const m = membersData.find(x => String(x.id) === String(memberId));
+      if (!m) return;
+
+      const fullName = (m.full_name || "").trim();
+      const nick = (m.nickname || "").trim();
+      const displayName = nick ? `${fullName} (${nick})` : fullName;
+
+      const nameInput = document.getElementById("editDeskMemberName");
+      const roleInput = document.getElementById("editDeskRoleInput");
+      const jokeInput = document.getElementById("editDeskJokeInput");
+      const bioInput = document.getElementById("editDeskBioInput");
+
+      if (nameInput) nameInput.value = displayName;
+      if (roleInput) roleInput.value = m.class_role || "Thành viên 11T2";
+      if (jokeInput && (!jokeInput.value.trim() || jokeInput.value.trim().length < 3) && m.quote) {
+        jokeInput.value = m.quote;
+      }
+      if (bioInput && !bioInput.value.trim() && m.birthday) {
+        bioInput.value = `🎂 Sinh nhật: ${formatDateVN(m.birthday)}`;
+      }
+      showToast(`✨ Đã điền thông tin của ${displayName} từ Danh bạ lớp!`, "info");
+    }
+
+    // Mở Modal chỉnh sửa dữ liệu cho đúng chỗ ngồi (kèm thanh chuyển 4 chỗ ngồi của bàn dài)
     function openDeskEditModal(deskId) {
       if (!deskId) return;
       if (!canWriteContent()) {
@@ -2431,6 +2905,38 @@
       document.getElementById("editDeskModalTitle").textContent = isTeacher
         ? "👑 Chỉnh Sửa Bàn Giáo Viên"
         : `✏️ Thiết Lập ${getDeskLabel(deskId)}`;
+
+      // Render 4 tab chọn chỗ ngồi trong cùng chiếc bàn dài ngay trong Modal
+      const switcherWrap = document.getElementById("editModalBenchSwitcherWrap");
+      const switcherTabs = document.getElementById("editModalBenchTabs");
+      if (switcherWrap && switcherTabs) {
+        if (isTeacher) {
+          switcherWrap.classList.add("hidden");
+        } else {
+          switcherWrap.classList.remove("hidden");
+          const siblings = getSiblingSeatsInSameBench(deskId);
+          switcherTabs.innerHTML = siblings.map(item => {
+            const sRec = desksDataMap[item.deskId];
+            const sOcc = isDeskOccupied(sRec);
+            const active = item.deskId === deskId;
+            return `
+              <button type="button"
+                      onclick="openDeskEditModal('${item.deskId}')"
+                      class="p-2 rounded-xl border text-left transition ${active ? 'bg-pastel-pinkDeep text-white border-pink-700 shadow-xs' : 'bg-white hover:bg-pink-50 text-pastel-ink border-pink-200'}">
+                <div class="flex items-center justify-between text-[10px] font-bold">
+                  <span>Chỗ ${item.seatIndex}</span>
+                  <span>${sOcc ? '✅' : '➕'}</span>
+                </div>
+                <div class="font-hand font-bold text-xs truncate mt-0.5">
+                  ${sOcc ? escapeHtml(sRec.member_name) : 'Chưa xếp'}
+                </div>
+              </button>
+            `;
+          }).join("");
+        }
+      }
+
+      populateExistingMembersDropdownForDesk(deskId);
 
       document.getElementById("editDeskMemberName").value = rec.member_name || "";
       document.getElementById("editDeskSticker").value = rec.sticker || (isTeacher ? "👑" : "🧑‍🎓");
@@ -2483,10 +2989,10 @@
       const fileInput = document.getElementById("editDeskPhotoFileInput");
       if (fileInput) fileInput.value = "";
       renderEditDeskPhotoPreview("");
-      showToast("Ảnh sẽ được gỡ bỏ khi bạn bấm Lưu thông tin bàn.", "info");
+      showToast("Ảnh sẽ được gỡ bỏ khi bạn bấm Lưu chỗ ngồi này.", "info");
     }
 
-    // Lưu thông tin của đúng chiếc bàn đang chỉnh sửa lên Supabase Storage & Database
+    // Lưu thông tin của đúng chỗ ngồi đang chỉnh sửa lên Supabase Storage & Database
     async function saveDeskDataToSupabase() {
       if (!canWriteContent() || !supabaseClient) {
         return showToast("Bạn cần đăng nhập quyền Thành viên hoặc Admin để lưu!", "error");
@@ -2502,7 +3008,7 @@
       const bioText = document.getElementById("editDeskBioInput").value.trim();
 
       if (!memberName && !jokeText && !selectedDeskPhotoFile) {
-        return showToast("Vui lòng nhập ít nhất Tên thành viên hoặc Câu Joke (hoặc bấm 'Xóa trắng bàn này')!", "warning");
+        return showToast("Vui lòng chọn học sinh hoặc nhập ít nhất Tên / Câu Joke!", "warning");
       }
 
       const btnSave = document.getElementById("btnSaveDeskSubmit");
@@ -2514,13 +3020,11 @@
       let finalStoragePath = existingRecord.storage_path || "";
 
       try {
-        // 1. Nếu người dùng bấm xóa ảnh cũ
         if (isDeskPhotoMarkedRemoved) {
           finalPhotoUrl = "";
           finalStoragePath = "";
         }
 
-        // 2. Nếu người dùng chọn tải ảnh mới từ máy -> Upload vào Supabase Storage gắn theo deskId
         if (selectedDeskPhotoFile) {
           const ext = (selectedDeskPhotoFile.name.split(".").pop() || "jpg").toLowerCase();
           const safeDeskPath = `desks/${deskId}_${Date.now()}.${ext}`;
@@ -2539,21 +3043,12 @@
           finalPhotoUrl = pubData.publicUrl;
         }
 
-        // 3. Chuẩn bị bản ghi độc lập cho đúng mã bàn (desk_id)
-        const isTeacher = deskId === "teacher-desk";
-        let groupNum = null;
-        let rowNum = null;
-        if (!isTeacher) {
-          const parts = deskId.split("-");
-          groupNum = parseInt(parts[1], 10) || 1;
-          rowNum = parseInt(parts[2], 10) || 1;
-        }
-
+        const parsed = parseSeatDeskId(deskId);
         const payload = {
           desk_id: deskId,
-          desk_type: isTeacher ? "teacher" : "student",
-          group_num: groupNum,
-          row_num: rowNum,
+          desk_type: parsed.isTeacher ? "teacher" : "student",
+          group_num: parsed.isTeacher ? null : parsed.colCode,
+          row_num: parsed.isTeacher ? null : parsed.rowNum,
           member_name: memberName,
           member_role: memberRole,
           sticker: sticker,
@@ -2574,31 +3069,30 @@
 
         if (dbErr) throw dbErr;
 
-        // Chỉ cập nhật đúng bàn deskId trong bộ nhớ sau khi Supabase xác nhận thành công
         desksDataMap[deskId] = savedRow || payload;
 
-        closeDeskEditModal();
         renderMapSection();
         if (currentFocusedDeskId === deskId) {
           populateDeskMemoryCard(deskId);
         }
+        // Cập nhật lại trạng thái 4 tab trên Modal để người dùng có thể bấm sang sửa tiếp bạn ngồi cạnh nếu muốn
+        openDeskEditModal(deskId);
         showToast(`✅ Đã lưu thông tin cho ${getDeskLabel(deskId)} thành công!`, "success");
       } catch (err) {
         console.error("Lỗi khi lưu dữ liệu bàn học:", err);
         showToast(`Lỗi lưu dữ liệu: ${err.message || "Vui lòng kiểm tra bảng classroom_desks trên Supabase!"}`, "error");
       } finally {
         btnSave.disabled = false;
-        btnSave.textContent = "💾 Lưu thông tin bàn";
+        btnSave.textContent = "💾 Lưu chỗ ngồi này";
       }
     }
 
-    // Xóa trắng thông tin của 1 bàn cụ thể (Trả về bàn trống)
     function confirmClearDeskData() {
       const deskId = document.getElementById("editDeskIdHidden").value.trim();
       if (!deskId) return;
       openConfirmModal(
-        "Xóa trắng vị trí bàn",
-        `Bạn có chắc chắn muốn làm trống ${getDeskLabel(deskId)} không? Các bàn khác trong lớp hoàn toàn không bị ảnh hưởng.`,
+        "Làm trống vị trí ngồi",
+        `Bạn có chắc chắn muốn làm trống ${getDeskLabel(deskId)} không? 3 bạn ngồi cùng bàn và các bàn khác hoàn toàn không bị ảnh hưởng.`,
         async () => {
           try {
             const { error } = await supabaseClient.from("classroom_desks").delete().eq("desk_id", deskId);
@@ -2609,9 +3103,9 @@
             if (currentFocusedDeskId === deskId) {
               populateDeskMemoryCard(deskId);
             }
-            showToast(`🧹 Đã trả ${getDeskLabel(deskId)} về trạng thái bàn trống!`, "success");
+            showToast(`🧹 Đã trả ${getDeskLabel(deskId)} về trạng thái chỗ trống!`, "success");
           } catch (err) {
-            showToast(`Không thể xóa trắng bàn: ${err.message}`, "error");
+            showToast(`Không thể xóa trắng chỗ ngồi: ${err.message}`, "error");
           }
         }
       );
