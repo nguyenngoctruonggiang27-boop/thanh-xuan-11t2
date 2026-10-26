@@ -2296,7 +2296,7 @@
       document.getElementById("homeAlbumsPreviewGrid").innerHTML = albumsData.map((a, i) => buildAlbumCardHtml(a, i)).join("");
     }
 
-   ffunction buildAlbumCardHtml(a, i) {
+   function buildAlbumCardHtml(a, i) {
       const pts = photosData.filter(p => p.album_slug === a.slug), count = pts.length, cover = a.cover_url || (pts[0]?.public_url || "");
       const wc = ["", "washi-blue", "washi-lavender", "washi-butter"], tc = ["tilt-left", "tilt-right", "tilt-slight", ""];
       return `
