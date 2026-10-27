@@ -862,8 +862,8 @@
       100% { transform: translateY(-10px) scale(1.07); }
     }
 
-    /* ============================================================================
-       5. THẺ KÝ ỨC DYNAMIC ISLAND (TRONG SUỐT 100% BÊN PHÍA BÀN HỌC ĐỂ KHÔNG BỊ MỜ)
+   /* ============================================================================
+       5. THẺ KÝ ỨC 3D ĐỐI XỨNG 2 BÊN & KHUNG ĐIỀU HƯỚNG TRỰC DIỆN RIÊNG BIỆT
        ============================================================================ */
     .desk-memory-card-backdrop {
       position: fixed;
@@ -872,115 +872,149 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      padding: 44px max(20px, calc(25vw - 235px)) 16px 20px;
-      /* Bỏ hoàn toàn lớp phủ mờ toàn màn hình để hộc bàn bên dưới sáng nét 100% */
+      padding: 40px max(24px, calc(25vw - 230px)) 16px 24px;
       background: transparent !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
       opacity: 0;
       pointer-events: none !important;
-      transition: opacity 0.35s ease;
-      perspective: 1200px;
+      transition: opacity 0.32s ease;
     }
-    /* Khi xem Dãy Trái -> Thẻ nằm chính giữa nửa khung hình bên PHẢI */
+    /* Khi xem Dãy Trái -> Cụm thẻ nằm bên PHẢI */
     .desk-memory-card-backdrop.card-on-right {
       justify-content: flex-end;
-      padding-right: max(20px, calc(25vw - 235px));
-      padding-left: 20px;
-      perspective-origin: 75% 50%;
+      padding-right: max(24px, calc(25vw - 230px));
+      padding-left: 24px;
     }
-    /* Khi xem Dãy Phải hoặc Bàn GV -> Thẻ nằm chính giữa nửa khung hình bên TRÁI */
+    /* Khi xem Dãy Phải hoặc Bàn GV -> Cụm thẻ nằm bên TRÁI */
     .desk-memory-card-backdrop.card-on-left {
       justify-content: flex-start;
-      padding-left: max(20px, calc(25vw - 235px));
-      padding-right: 20px;
-      perspective-origin: 25% 50%;
+      padding-left: max(24px, calc(25vw - 230px));
+      padding-right: 24px;
     }
     .desk-memory-card-backdrop.is-open {
       opacity: 1;
       pointer-events: auto !important;
     }
 
+    /* Khung bọc chứa Thẻ 3D (ở trên) và Thanh điều hướng trực diện (ở dưới) */
+    .desk-card-and-dock-wrap {
+      width: 100%;
+      max-width: 465px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
     .desk-memory-card-3d {
       width: 100%;
-      max-width: 470px;
       background: #FFFDF9 !important;
-      border-radius: 30px;
+      border-radius: 28px;
       border: 3px solid #FFFFFF;
       transform-origin: center center;
-      transform: perspective(1200px) translateY(-60px) translateZ(0px) rotateX(0deg) rotateY(0deg) scale(0.35);
+      transform: perspective(1400px) translateY(-40px) rotateX(0deg) rotateY(0deg) scale(0.4);
       opacity: 0;
       transition:
-        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.52s cubic-bezier(0.22, 1, 0.36, 1),
         opacity 0.28s ease,
-        box-shadow 0.55s ease;
+        box-shadow 0.52s ease;
       position: relative;
-      max-height: 85vh;
+      max-height: 74vh;
       overflow-y: auto;
     }
 
-    /* 1. KHI XEM DÃY TRÁI: Thẻ ở nửa bên phải, xoay -20 độ hướng về phía người nhìn */
+    /* 1. KHI XEM DÃY TRÁI: Thẻ nằm bên phải, nghiêng nhẹ -14 độ chuẩn đối xứng */
     .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-left-view {
       opacity: 1 !important;
-      transform: perspective(1200px) translateY(6px) translateZ(35px) rotateX(4deg) rotateY(-20deg) scale(0.95);
+      transform: perspective(1400px) translateY(0px) rotateX(2deg) rotateY(-14deg) scale(0.96);
       box-shadow:
-        10px 8px 0px #F4B8CE,
-        22px 28px 48px -8px rgba(15, 23, 42, 0.45),
+        9px 8px 0px #F4B8CE,
+        20px 26px 44px -8px rgba(15, 23, 42, 0.42),
         0 0 0 4px rgba(255, 214, 224, 0.9);
     }
 
-    /* 2. KHI XEM DÃY PHẢI: Thẻ ở nửa bên trái, xoay ngược lại +20 độ hướng về phía người nhìn */
+    /* 2. KHI XEM DÃY PHẢI: Thẻ nằm bên trái, nghiêng nhẹ +14 độ đối xứng 100% với bên trái */
     .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-right-view {
       opacity: 1 !important;
-      transform: perspective(1200px) translateY(6px) translateZ(35px) rotateX(4deg) rotateY(20deg) scale(0.95);
+      transform: perspective(1400px) translateY(0px) rotateX(2deg) rotateY(14deg) scale(0.96);
       box-shadow:
-        -10px 8px 0px #93C5FD,
-        -22px 28px 48px -8px rgba(15, 23, 42, 0.45),
+        -9px 8px 0px #93C5FD,
+        -20px 26px 44px -8px rgba(15, 23, 42, 0.42),
         0 0 0 4px rgba(200, 231, 255, 0.9);
     }
 
-    /* 3. KHI XEM BÀN GIÁO VIÊN: Thẻ ở nửa bên trái, xoay +20 độ đối diện với Bàn GV bên phải */
+    /* 3. KHI XEM BÀN GIÁO VIÊN: Thẻ nằm bên trái, nghiêng nhẹ +14 độ */
     .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-teacher-view {
       opacity: 1 !important;
-      transform: perspective(1200px) translateY(6px) translateZ(35px) rotateX(4deg) rotateY(20deg) scale(0.95);
+      transform: perspective(1400px) translateY(0px) rotateX(2deg) rotateY(14deg) scale(0.96);
       box-shadow:
-        -10px 8px 0px #FCD34D,
-        -22px 28px 48px -8px rgba(15, 23, 42, 0.45),
+        -9px 8px 0px #FCD34D,
+        -20px 26px 44px -8px rgba(15, 23, 42, 0.42),
         0 0 0 4px rgba(255, 243, 176, 0.95);
     }
 
-    /* Viên thuốc Dynamic Island */
+    /* KHUNG ĐIỀU HƯỚNG RIÊNG BIỆT NẰM TRỰC DIỆN 100% VỚI MÀN HÌNH (KHÔNG NGHIÊNG) */
+    .desk-flat-nav-dock {
+      width: 100%;
+      background: #FFFDF9;
+      border: 2.5px solid #FFFFFF;
+      border-radius: 22px;
+      padding: 10px 14px;
+      box-shadow:
+        0 14px 30px -6px rgba(15, 23, 42, 0.35),
+        0 0 0 3px rgba(244, 184, 206, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      /* Giữ phẳng tuyệt đối trực diện màn hình */
+      transform: translateY(20px) scale(0.85);
+      opacity: 0;
+      transition:
+        transform 0.48s cubic-bezier(0.22, 1, 0.36, 1) 0.06s,
+        opacity 0.28s ease 0.06s;
+    }
+    .desk-memory-card-backdrop.is-open .desk-flat-nav-dock {
+      transform: none !important;
+      opacity: 1 !important;
+    }
+
+    /* Thanh trang trí đầu thẻ */
     .card-dynamic-island-notch {
-      width: 124px;
+      width: 148px;
       height: 24px;
-      background: #090A0F;
+      background: #3D314A;
       border-radius: 999px;
       margin: -4px auto 12px auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 10px;
-      box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 4px 10px rgba(0,0,0,0.2);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 4px 10px rgba(0,0,0,0.15);
     }
 
-    /* Trên Mobile: Căn giữa màn hình để không bị tràn lề */
+    /* Trên Mobile: Căn giữa màn hình */
     @media (max-width: 768px) {
       .desk-memory-card-backdrop,
       .desk-memory-card-backdrop.card-on-right,
       .desk-memory-card-backdrop.card-on-left {
         justify-content: center !important;
-        padding: 42px 12px 14px 12px !important;
+        padding: 38px 12px 12px 12px !important;
         background: rgba(15, 23, 42, 0.25) !important;
+      }
+      .desk- memory-card-3d {
+        max-height: 68vh;
       }
       .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-left-view {
         opacity: 1 !important;
-        transform: perspective(900px) translateY(0px) rotateX(3deg) rotateY(-12deg) scale(0.96);
+        transform: perspective(1000px) translateY(0px) rotateX(2deg) rotateY(-8deg) scale(0.97);
         box-shadow: 6px 5px 0px #F4B8CE, 12px 18px 28px -6px rgba(15, 23, 42, 0.38);
       }
       .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-right-view,
       .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-teacher-view {
         opacity: 1 !important;
-        transform: perspective(900px) translateY(0px) rotateX(3deg) rotateY(12deg) scale(0.96);
+        transform: perspective(1000px) translateY(0px) rotateX(2deg) rotateY(8deg) scale(0.97);
         box-shadow: -6px 5px 0px #93C5FD, -12px 18px 28px -6px rgba(15, 23, 42, 0.38);
       }
     }
@@ -1635,105 +1669,108 @@
       <!-- ====================================================================
            THẺ KÝ ỨC BUNG MỞ KIỂU DYNAMIC ISLAND (KHÔNG LÀM MỜ ĐỤC LỚP HỌC PHÍA SAU)
            ==================================================================== -->
-      <div id="deskMemoryBackdrop" class="desk-memory-card-backdrop" onclick="handleBackdropCloseDesk(event)">
-        <div id="deskMemoryCard3D" class="desk-memory-card-3d p-4 sm:p-6" onclick="event.stopPropagation()">
+    <div id="deskMemoryBackdrop" class="desk-memory-card-backdrop" onclick="handleBackdropCloseDesk(event)">
+        <div class="desk-card-and-dock-wrap" onclick="event.stopPropagation()">
 
-          <!-- Viên thuốc Dynamic Island ở đỉnh thẻ -->
-          <div class="card-dynamic-island-notch">
-            <div class="island-camera-dot"></div>
-            <span class="text-[9px] font-mono font-bold text-white/90 tracking-wider uppercase">11T2 • Island</span>
-            <div class="island-live-Dot"></div>
-          </div>
+          <!-- 1. KHUNG THÔNG TIN CHỖ NGỒI (XOAY 3D ĐỐI XỨNG) -->
+          <div id="deskMemoryCard3D" class="desk-memory-card-3d p-4 sm:p-6">
 
-          <!-- Header thẻ: Vị trí bàn & Nút chỉnh sửa / Đóng -->
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-dashed border-pink-200 pb-2.5 mb-3">
-            <div class="flex items-center gap-2">
-              <span id="deskCardSeatBadge" class="px-3 py-1 rounded-full bg-pastel-pink text-pastel-ink font-bold text-xs border border-pink-300 shadow-xs">
-                Dãy Trái • Bàn 1 • Chỗ 1
-              </span>
-              <span id="deskCardRoleBadge" class="hidden px-2.5 py-0.5 rounded-full bg-pastel-butter text-amber-900 font-bold text-xs border border-amber-300"></span>
+            <!-- Nhãn tiêu đề đầu thẻ -->
+            <div class="card-dynamic-island-notch">
+              <div class="island-camera-dot"></div>
+              <span class="text-[9px] font-mono font-bold text-white/95 tracking-wider uppercase">11T2 • HỒ SƠ BÀN</span>
+              <div class="island-live-Dot"></div>
             </div>
-            <div class="flex items-center gap-1.5">
-              <button id="btnOpenEditFromCard" onclick="openDeskEditModal(currentFocusedDeskId)" class="hidden px-3 py-1.5 rounded-xl bg-pastel-lavender hover:bg-purple-300 text-pastel-ink font-bold text-xs border border-purple-300 shadow-xs transition">
-                ✏️ Sửa chỗ ngồi / bàn này
-              </button>
-              <button onclick="resetClassroomCamera()" class="w-8 h-8 rounded-full bg-pink-100 hover:bg-pastel-pinkDeep hover:text-white text-pastel-ink font-bold text-sm flex items-center justify-center transition" title="Thu gọn về Dynamic Island">
-                ✕
-              </button>
-            </div>
-          </div>
 
-          <!-- Thanh chọn nhanh 4 chỗ ngồi trong cùng chiếc bàn dài -->
-          <div id="deskCardBenchTabsWrapper" class="mb-3.5 bg-pastel-cream p-2 rounded-2xl border border-pink-200">
-            <div class="text-[10px] font-bold text-pastel-muted uppercase mb-1.5 px-1 flex items-center justify-between">
-              <span>👥 4 Chỗ ngồi trên cùng chiếc bàn dài này:</span>
-              <span>Bấm để chuyển nhanh</span>
-            </div>
-            <div id="deskCardBenchTabs" class="grid grid-cols-4 gap-1.5">
-              <!-- JS render 4 tab chỗ ngồi của bàn dài -->
-            </div>
-          </div>
-
-          <!-- Nội dung chính của Thẻ Ký Ức -->
-          <div id="deskCardBodyContent" class="grid grid-cols-1 sm:grid-cols-12 gap-4 sm:gap-5 items-center">
-            <!-- Cột trái: Khung ảnh Polaroid của chỗ ngồi -->
-            <div class="sm:col-span-5 flex justify-center">
-              <div class="polaroid-card tilt-left w-full max-w-[190px] sm:max-w-[210px] bg-white shadow-polaroid">
-                <div id="deskCardPhotoBox" class="aspect-square rounded-xl overflow-hidden bg-pastel-paper flex flex-col items-center justify-center relative">
-                  <!-- Ảnh hoặc trạng thái trống -->
-                </div>
-                <div class="pt-2 text-center">
-                  <span id="deskCardStickerDisplay" class="text-xl">🌟</span>
-                  <p id="deskCardPolaroidCaption" class="font-hand text-sm font-bold text-pastel-ink truncate mt-0.5"></p>
-                </div>
+            <!-- Header thẻ: Vị trí bàn & Nút chỉnh sửa / Đóng -->
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-dashed border-pink-200 pb-2.5 mb-3">
+              <div class="flex items-center gap-2">
+                <span id="deskCardSeatBadge" class="px-3 py-1 rounded-full bg-pastel-pink text-pastel-ink font-bold text-xs border border-pink-300 shadow-xs">
+                  Dãy Trái • Bàn 1 • Chỗ 1
+                </span>
+                <span id="deskCardRoleBadge" class="hidden px-2.5 py-0.5 rounded-full bg-pastel-butter text-amber-900 font-bold text-xs border border-amber-300"></span>
               </div>
-            </div>
-
-            <!-- Cột phải: Tên, Câu Joke / Quote vui & Giới thiệu -->
-            <div class="sm:col-span-7 space-y-3 text-left">
-              <div>
-                <p class="text-[11px] font-bold uppercase tracking-wider text-pastel-pinkDeep">Chủ nhân hộc bàn</p>
-                <h3 id="deskCardMemberName" class="font-hand text-2xl sm:text-3xl font-bold text-pastel-ink leading-tight mt-0.5">
-                  Chưa thiết lập
-                </h3>
-              </div>
-
-              <!-- Hộp câu Joke / Câu nói kinh điển -->
-              <div class="relative p-3.5 rounded-2xl bg-pastel-butter/75 border-2 border-dashed border-amber-300 shadow-soft">
-                <div class="flex items-center justify-between mb-1">
-                  <span id="deskCardJokeLabel" class="text-[11px] font-bold text-amber-900 uppercase flex items-center gap-1">
-                    💬 Câu nói kinh điển / Joke
-                  </span>
-                  <button id="btnNextJokeLine" onclick="cycleDeskJokeLine()" class="hidden px-2 py-0.5 rounded-full bg-white/90 hover:bg-amber-200 text-[10px] font-bold text-amber-900 border border-amber-300 transition">
-                    🎲 Câu khác
-                  </button>
-                </div>
-                <p id="deskCardJokeText" class="font-hand text-base sm:text-lg font-bold text-pastel-ink leading-snug whitespace-pre-line">
-                  Chưa có câu joke nào được ghi cho hộc bàn này.
-                </p>
-              </div>
-
-              <!-- Giới thiệu bổ sung (Bio / Ghi chú) -->
-              <div id="deskCardBioWrapper" class="hidden p-3 rounded-xl bg-pastel-cream border border-pink-200 text-xs text-pastel-ink leading-relaxed">
-                <strong class="block text-pastel-pinkDeep mb-0.5">📌 Ghi chú kỷ niệm:</strong>
-                <span id="deskCardBioText"></span>
-              </div>
-
-              <!-- Chân thẻ: Điều hướng sang chỗ kế tiếp hoặc đóng -->
-              <div class="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-pink-100">
-                <div class="flex items-center gap-1.5">
-                  <button onclick="navigateAdjacentDesk(-1)" class="px-3 py-1.5 rounded-xl bg-white hover:bg-pink-50 border border-pink-200 text-xs font-bold text-pastel-ink transition">
-                    ← Chỗ trước
-                  </button>
-                  <button onclick="navigateAdjacentDesk(1)" class="px-3 py-1.5 rounded-xl bg-white hover:bg-pink-50 border border-pink-200 text-xs font-bold text-pastel-ink transition">
-                    Chỗ tiếp →
-                  </button>
-                </div>
-                <button onclick="resetClassroomCamera()" class="px-4 py-1.5 rounded-xl bg-pastel-pinkDeep hover:bg-pink-600 text-white text-xs font-bold shadow-xs transition">
-                  Thu gọn Dynamic Island ↑
+              <div class="flex items-center gap-1.5">
+                <button id="btnOpenEditFromCard" onclick="openDeskEditModal(currentFocusedDeskId)" class="hidden px-3 py-1.5 rounded-xl bg-pastel-lavender hover:bg-purple-300 text-pastel-ink font-bold text-xs border border-purple-300 shadow-xs transition">
+                  ✏️ Sửa chỗ ngồi / bàn này
+                </button>
+                <button onclick="resetClassroomCamera()" class="w-8 h-8 rounded-full bg-pink-100 hover:bg-pastel-pinkDeep hover:text-white text-pastel-ink font-bold text-sm flex items-center justify-center transition" title="Quay lại sơ đồ lớp">
+                  ✕
                 </button>
               </div>
             </div>
+
+            <!-- Thanh chọn nhanh 4 chỗ ngồi trong cùng chiếc bàn dài -->
+            <div id="deskCardBenchTabsWrapper" class="mb-3.5 bg-pastel-cream p-2 rounded-2xl border border-pink-200">
+              <div class="text-[10px] font-bold text-pastel-muted uppercase mb-1.5 px-1 flex items-center justify-between">
+                <span>👥 4 Chỗ ngồi trên cùng chiếc bàn dài này:</span>
+                <span>Bấm để chuyển nhanh</span>
+              </div>
+              <div id="deskCardBenchTabs" class="grid grid-cols-4 gap-1.5">
+                <!-- JS render 4 tab chỗ ngồi của bàn dài -->
+              </div>
+            </div>
+
+            <!-- Nội dung chính của Thẻ Ký Ức -->
+            <div id="deskCardBodyContent" class="grid grid-cols-1 sm:grid-cols-12 gap-4 sm:gap-5 items-center">
+              <!-- Cột trái: Khung ảnh Polaroid của chỗ ngồi -->
+              <div class="sm:col-span-5 flex justify-center">
+                <div class="polaroid-card tilt-left w-full max-w-[190px] sm:max-w-[210px] bg-white shadow-polaroid">
+                  <div id="deskCardPhotoBox" class="aspect-square rounded-xl overflow-hidden bg-pastel-paper flex flex-col items-center justify-center relative">
+                    <!-- Ảnh hoặc trạng thái trống -->
+                  </div>
+                  <div class="pt-2 text-center">
+                    <span id="deskCardStickerDisplay" class="text-xl">🌟</span>
+                    <p id="deskCardPolaroidCaption" class="font-hand text-sm font-bold text-pastel-ink truncate mt-0.5"></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cột phải: Tên, Câu Joke / Quote vui & Giới thiệu -->
+              <div class="sm:col-span-7 space-y-3 text-left">
+                <div>
+                  <p class="text-[11px] font-bold uppercase tracking-wider text-pastel-pinkDeep">Chủ nhân hộc bàn</p>
+                  <h3 id="deskCardMemberName" class="font-hand text-2xl sm:text-3xl font-bold text-pastel-ink leading-tight mt-0.5">
+                    Chưa thiết lập
+                  </h3>
+                </div>
+
+                <!-- Hộp câu Joke / Câu nói kinh điển -->
+                <div class="relative p-3.5 rounded-2xl bg-pastel-butter/75 border-2 border-dashed border-amber-300 shadow-soft">
+                  <div class="flex items-center justify-between mb-1">
+                    <span id="deskCardJokeLabel" class="text-[11px] font-bold text-amber-900 uppercase flex items-center gap-1">
+                      💬 Câu nói kinh điển / Joke
+                    </span>
+                    <button id="btnNextJokeLine" onclick="cycleDeskJokeLine()" class="hidden px-2 py-0.5 rounded-full bg-white/90 hover:bg-amber-200 text-[10px] font-bold text-amber-900 border border-amber-300 transition">
+                      🎲 Câu khác
+                    </button>
+                  </div>
+                  <p id="deskCardJokeText" class="font-hand text-base sm:text-lg font-bold text-pastel-ink leading-snug whitespace-pre-line">
+                    Chưa có câu joke nào được ghi cho hộc bàn này.
+                  </p>
+                </div>
+
+                <!-- Giới thiệu bổ sung (Bio / Ghi chú) -->
+                <div id="deskCardBioWrapper" class="hidden p-3 rounded-xl bg-pastel-cream border border-pink-200 text-xs text-pastel-ink leading-relaxed">
+                  <strong class="block text-pastel-pinkDeep mb-0.5">📌 Ghi chú kỷ niệm:</strong>
+                  <span id="deskCardBioText"></span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 2. KHUNG ĐIỀU HƯỚNG ĐỘC LẬP NẰM TRỰC DIỆN MÀN HÌNH (PHẲNG 0 ĐỘ - KHÔNG NGHIÊNG) -->
+          <div id="deskFlatNavDock" class="desk-flat-nav-dock">
+            <button onclick="navigateAdjacentDesk(-1)" class="px-3.5 py-2 rounded-xl bg-pastel-cream hover:bg-pastel-pink/50 border-2 border-pink-200 text-xs font-bold text-pastel-ink shadow-2xs transition flex items-center gap-1">
+              <span>←</span> Chỗ trước
+            </button>
+            <button onclick="resetClassroomCamera()" class="flex-1 py-2 px-4 rounded-xl bg-pastel-pinkDeep hover:bg-pink-600 text-white text-xs sm:text-sm font-bold shadow-sticker transition text-center">
+              🗺️ Quay lại sơ đồ lớp
+            </button>
+            <button onclick="navigateAdjacentDesk(1)" class="px-3.5 py-2 rounded-xl bg-pastel-cream hover:bg-pastel-pink/50 border-2 border-pink-200 text-xs font-bold text-pastel-ink shadow-2xs transition flex items-center gap-1">
+              Chỗ tiếp <span>→</span>
+            </button>
           </div>
 
         </div>
