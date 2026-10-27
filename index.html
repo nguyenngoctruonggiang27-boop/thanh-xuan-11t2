@@ -954,32 +954,38 @@
         0 0 0 4px rgba(255, 243, 176, 0.95);
     }
 
-    /* KHUNG ĐIỀU HƯỚNG RIÊNG BIỆT NẰM TRỰC DIỆN 100% VỚI MÀN HÌNH (KHÔNG NGHIÊNG) */
+   /* KHUNG ĐIỀU HƯỚNG CỐ ĐỊNH CHÍNH GIỮA MÀN HÌNH (KHÔNG NHẢY VỊ TRÍ KHI ĐỔI DÃY) */
     .desk-flat-nav-dock {
-      width: 100%;
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      width: calc(100% - 28px);
+      max-width: 440px;
+      z-index: 80;
       background: #FFFDF9;
       border: 2.5px solid #FFFFFF;
       border-radius: 22px;
       padding: 10px 14px;
       box-shadow:
-        0 14px 30px -6px rgba(15, 23, 42, 0.35),
-        0 0 0 3px rgba(244, 184, 206, 0.85);
+        0 14px 30px -6px rgba(15, 23, 42, 0.38),
+        0 0 0 3px rgba(244, 184, 206, 0.9);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      /* Giữ phẳng tuyệt đối trực diện màn hình */
-      transform: translateY(20px) scale(0.85);
+      /* Căn chính giữa màn hình tuyệt đối */
+      transform: translate(-50%, 24px) scale(0.9);
       opacity: 0;
+      pointer-events: none;
       transition:
-        transform 0.48s cubic-bezier(0.22, 1, 0.36, 1) 0.06s,
-        opacity 0.28s ease 0.06s;
+        transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.25s ease;
     }
     .desk-memory-card-backdrop.is-open .desk-flat-nav-dock {
-      transform: none !important;
+      transform: translate(-50%, 0) scale(1) !important;
       opacity: 1 !important;
+      pointer-events: auto !important;
     }
-
     /* Thanh trang trí đầu thẻ */
     .card-dynamic-island-notch {
       width: 148px;
