@@ -806,7 +806,7 @@
     }
 
 /* ============================================================================
-       5. THẺ KÝ ỨC BUNG MỞ KIỂU DYNAMIC ISLAND (HIỆU ỨNG 3D NỔI 35 ĐỘ TRÁI/PHẢI)
+       5. THẺ KÝ ỨC BUNG MỞ KIỂU DYNAMIC ISLAND (NGHIÊNG 20 ĐỘ & LÙI SANG PHẢI)
        ============================================================================ */
     .desk-memory-card-backdrop {
       position: fixed;
@@ -814,14 +814,14 @@
       z-index: 65;
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 40px 14px 16px 14px;
-      background: rgba(15, 23, 42, 0.18);
+      justify-content: flex-end; /* Đẩy thẻ lùi sang bên phải màn hình */
+      padding: 44px 4% 16px 14px;
+      background: rgba(15, 23, 42, 0.12);
       opacity: 0;
       pointer-events: none !important;
       transition: opacity 0.35s ease;
-      perspective: 1100px;
-      perspective-origin: 50% 50%;
+      perspective: 1200px;
+      perspective-origin: 70% 50%;
     }
     .desk-memory-card-backdrop.is-open {
       opacity: 1;
@@ -830,56 +830,56 @@
 
     .desk-memory-card-3d {
       width: 100%;
-      max-width: 540px;
+      max-width: 480px; /* Thu gọn bề ngang thẻ vừa vặn để nhường chỗ nhìn rõ hộc bàn */
       background: #FFFDF9 !important;
-      border-radius: 32px;
+      border-radius: 30px;
       border: 3px solid #FFFFFF;
       transform-origin: center center;
-      /* Trạng thái đóng: thu nhỏ ở phía trên */
-      transform: perspective(1100px) translateY(-60px) translateZ(0px) rotateX(0deg) rotateY(0deg) scale(0.35);
+      /* Trạng thái đóng */
+      transform: perspective(1200px) translateY(-60px) translateZ(0px) rotateX(0deg) rotateY(0deg) scale(0.35);
       opacity: 0;
       transition:
-        transform 0.58s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
         opacity 0.28s ease,
-        box-shadow 0.58s ease;
+        box-shadow 0.55s ease;
       position: relative;
       max-height: 85vh;
       overflow-y: auto;
     }
 
-    /* Bắt buộc hiện thẻ rõ 100% khi mở */
+    /* Mặc định khi mở thẻ */
     .desk-memory-card-backdrop.is-open .desk-memory-card-3d {
       opacity: 1 !important;
-      transform: perspective(1100px) translateY(0px) translateZ(40px) rotateX(6deg) rotateY(-35deg) scale(0.95);
+      transform: perspective(1200px) translateY(6px) translateZ(30px) rotateX(4deg) rotateY(-20deg) scale(0.95);
     }
 
-    /* 1. DÃY TRÁI: Sơ đồ lớp nghiêng phải -> Thẻ thông tin xoay ngược lại -35 độ */
+    /* 1. DÃY TRÁI: Thẻ nằm bên phải, nghiêng nhẹ -20 độ hướng về phía người xem */
     .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-left-view {
       opacity: 1 !important;
-      transform: perspective(1100px) translateY(0px) translateZ(50px) rotateX(6deg) rotateY(-35deg) scale(0.94);
+      transform: perspective(1200px) translateY(6px) translateZ(35px) rotateX(4deg) rotateY(-20deg) scale(0.95);
       box-shadow:
-        12px 10px 0px #F4B8CE,
-        28px 35px 55px -8px rgba(15, 23, 42, 0.48),
+        8px 8px 0px #F4B8CE,
+        20px 28px 48px -8px rgba(15, 23, 42, 0.42),
         0 0 0 4px rgba(255, 214, 224, 0.85);
     }
 
-    /* 2. DÃY PHẢI: Sơ đồ lớp nghiêng trái -> Thẻ thông tin xoay ngược lại +35 độ */
+    /* 2. DÃY PHẢI: Thẻ nghiêng chiều ngược lại +20 độ */
     .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-right-view {
       opacity: 1 !important;
-      transform: perspective(1100px) translateY(0px) translateZ(50px) rotateX(6deg) rotateY(35deg) scale(0.94);
+      transform: perspective(1200px) translateY(6px) translateZ(35px) rotateX(4deg) rotateY(20deg) scale(0.95);
       box-shadow:
-        -12px 10px 0px #93C5FD,
-        -28px 35px 55px -8px rgba(15, 23, 42, 0.48),
+        -8px 8px 0px #93C5FD,
+        -20px 28px 48px -8px rgba(15, 23, 42, 0.42),
         0 0 0 4px rgba(200, 231, 255, 0.85);
     }
 
-    /* 3. BÀN GIÁO VIÊN: Xoay 3D nổi bật */
+    /* 3. BÀN GIÁO VIÊN: Nghiêng 18 độ */
     .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-teacher-view {
       opacity: 1 !important;
-      transform: perspective(1100px) translateY(0px) translateZ(50px) rotateX(6deg) rotateY(30deg) scale(0.95);
+      transform: perspective(1200px) translateY(6px) translateZ(35px) rotateX(4deg) rotateY(-18deg) scale(0.95);
       box-shadow:
-        -10px 10px 0px #FCD34D,
-        -22px 32px 50px -8px rgba(15, 23, 42, 0.45),
+        8px 8px 0px #FCD34D,
+        18px 26px 45px -8px rgba(15, 23, 42, 0.4),
         0 0 0 4px rgba(255, 243, 176, 0.9);
     }
 
@@ -897,22 +897,26 @@
       box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 4px 10px rgba(0,0,0,0.2);
     }
 
-    /* Trên Mobile: Nghiêng vừa phải (18 độ) để dễ đọc chữ và bấm nút */
+    /* Trên Mobile: Căn giữa vừa màn hình và nghiêng nhẹ 12 độ */
     @media (max-width: 768px) {
+      .desk-memory-card-backdrop {
+        justify-content: center;
+        padding: 42px 12px 14px 12px;
+      }
       .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-left-view {
         opacity: 1 !important;
-        transform: perspective(900px) translateY(0px) rotateX(4deg) rotateY(-18deg) scale(0.96);
-        box-shadow: 7px 6px 0px #F4B8CE, 14px 20px 32px -6px rgba(15, 23, 42, 0.4);
+        transform: perspective(900px) translateY(0px) rotateX(3deg) rotateY(-12deg) scale(0.96);
+        box-shadow: 6px 5px 0px #F4B8CE, 12px 18px 28px -6px rgba(15, 23, 42, 0.38);
       }
       .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-right-view {
         opacity: 1 !important;
-        transform: perspective(900px) translateY(0px) rotateX(4deg) rotateY(18deg) scale(0.96);
-        box-shadow: -7px 6px 0px #93C5FD, -14px 20px 32px -6px rgba(15, 23, 42, 0.4);
+        transform: perspective(900px) translateY(0px) rotateX(3deg) rotateY(12deg) scale(0.96);
+        box-shadow: -6px 5px 0px #93C5FD, -12px 18px 28px -6px rgba(15, 23, 42, 0.38);
       }
       .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-teacher-view {
         opacity: 1 !important;
-        transform: perspective(900px) translateY(0px) rotateX(4deg) rotateY(16deg) scale(0.96);
-        box-shadow: -7px 6px 0px #FCD34D, -14px 20px 32px -6px rgba(15, 23, 42, 0.4);
+        transform: perspective(900px) translateY(0px) rotateX(3deg) rotateY(-10deg) scale(0.96);
+        box-shadow: 6px 5px 0px #FCD34D, 12px 18px 28px -6px rgba(15, 23, 42, 0.38);
       }
     }
     /* ============================================================================
@@ -2837,7 +2841,7 @@ let currentTvChannelIndex = 0;
     }
 
 // Điều khiển Camera bay 3D tới đúng hộc bàn & Cấp lệnh xoay Thẻ Ký Ức ngược lại
-    function focusCameraOnDesk(deskId) {
+function focusCameraOnDesk(deskId) {
       const stage = document.getElementById("classroomStage3D");
       const deskEl = document.getElementById(`desk-el-${deskId}`);
       if (!stage || !deskEl) return;
@@ -2853,40 +2857,43 @@ let currentTvChannelIndex = 0;
       if (updatedDeskEl) {
         stage.classList.add("has-focused-desk");
 
+        const isMobile = window.innerWidth < 768;
         const stageRect = stage.getBoundingClientRect();
         const deskRect = updatedDeskEl.getBoundingClientRect();
 
-        const stageCenterX = stageRect.left + stageRect.width / 2;
-        const stageCenterY = stageRect.top + stageRect.height / 2;
+        // Đưa vị trí hộc bàn đang chọn sang nửa bên trái màn hình (cách tâm 210px về bên trái)
+        // để nhường nửa bên phải cho Thẻ Thông Tin, giúp nhìn rõ 100% cả hộc bàn lẫn thẻ!
+        const targetScreenX = stageRect.left + (isMobile ? stageRect.width * 0.5 : stageRect.width * 0.28);
+        const targetScreenY = stageRect.top + stageRect.height * 0.52;
+
         const deskCenterX = deskRect.left + deskRect.width / 2;
         const deskCenterY = deskRect.top + deskRect.height / 2;
 
-        const deltaX = stageCenterX - deskCenterX;
-        const deltaY = stageCenterY - deskCenterY;
+        const deltaX = targetScreenX - deskCenterX;
+        const deltaY = targetScreenY - deskCenterY;
 
         const info = parseSeatDeskId(deskId);
-        
-        // 1. TĂNG GÓC NGHIÊNG BẢN ĐỒ THÊM ~20%
-        const yawAngle = info.isTeacher ? -6 : (info.sectionNum === 1 ? 15 : -15);
-        const pitchAngle = info.isTeacher ? 5 : -12;
-        const isMobile = window.innerWidth < 768;
-        const zoomScale = isMobile ? 1.24 : 1.48;
 
-        const clampedX = Math.max(-stageRect.width * 0.3, Math.min(stageRect.width * 0.3, deltaX * 0.65));
-        const clampedY = Math.max(-stageRect.height * 0.32, Math.min(stageRect.height * 0.32, deltaY * 0.58));
+        // Sơ đồ lớp nghiêng 3D thêm 20% theo chiều ngược với thẻ
+        const yawAngle = info.isTeacher ? -6 : (info.sectionNum === 1 ? 14 : -14);
+        const pitchAngle = info.isTeacher ? 5 : -11;
+        const zoomScale = isMobile ? 1.22 : 1.42;
+
+        const clampedX = Math.max(-stageRect.width * 0.45, Math.min(stageRect.width * 0.45, deltaX * 0.78));
+        const clampedY = Math.max(-stageRect.height * 0.35, Math.min(stageRect.height * 0.35, deltaY * 0.62));
 
         stage.style.transformOrigin = `50% 50%`;
-        stage.style.transform = `perspective(1100px) translate3d(${Math.round(clampedX)}px, ${Math.round(clampedY)}px, 120px) rotateX(${pitchAngle}deg) rotateY(${yawAngle}deg) scale(${zoomScale})`;
+        stage.style.transform = `perspective(1100px) translate3d(${Math.round(clampedX)}px, ${Math.round(clampedY)}px, 110px) rotateX(${pitchAngle}deg) rotateY(${yawAngle}deg) scale(${zoomScale})`;
 
-        // 2. GẮN CLASS ĐIỀU KHIỂN HƯỚNG XOAY CỦA THẺ KÝ ỨC (NGƯỢC CHIỀU BẢN ĐỒ)
+        // Gắn class xoay 20 độ ngược chiều cho Thẻ Ký Ức
         const card3D = document.getElementById("deskMemoryCard3D");
         if (card3D) {
           card3D.classList.remove("tilt-left-view", "tilt-right-view", "tilt-teacher-view");
           if (info.isTeacher) {
             card3D.classList.add("tilt-teacher-view");
-          } else if (info.sectionNum === 1) { // Dãy Trái
+          } else if (info.sectionNum === 1) {
             card3D.classList.add("tilt-left-view");
-          } else { // Dãy Phải
+          } else {
             card3D.classList.add("tilt-right-view");
           }
         }
@@ -2897,9 +2904,8 @@ let currentTvChannelIndex = 0;
         if (currentFocusedDeskId === deskId) {
           document.getElementById("deskMemoryBackdrop")?.classList.add("is-open");
         }
-      }, 240);
+      }, 220);
     }
-
     function resetClassroomCamera() {
       const stage = document.getElementById("classroomStage3D");
       const backdrop = document.getElementById("deskMemoryBackdrop");
