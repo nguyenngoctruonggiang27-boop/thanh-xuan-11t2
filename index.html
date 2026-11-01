@@ -4425,10 +4425,21 @@ function focusCameraOnDesk(deskId) {
     }
 
     // Quản lý Lịch sử tham quan Web (Tài khoản đăng nhập + Tài khoản khách)
-    async function refreshAdminVisitLogs() {
+async function refreshAdminVisitLogs() {
       const tb = document.getElementById("adminVisitLogsTableBody");
       if (!tb) return;
+
+      // Đổi trạng thái nút bấm và bảng để thấy rõ hiệu ứng đang làm mới
+      const refreshBtn = document.querySelector("button[onclick*='refreshAdminVisitLogs']");
+      if (refreshBtn) {
+        refreshBtn.disabled = true;
+        refreshBtn.innerHTML = "⏳ Đang tải...";
+      }
+      tb.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-pastel-pinkDeep animate-pulse font-bold">🔄 Đang đồng bộ lịch sử tham quan mới nhất...</td></tr>`;
+
       let dbLogs = [];
+      let dbError = null;
+
       if (supabaseClient) {
         try {
           const { data, error } = await supabaseClient
@@ -4436,18 +4447,32 @@ function focusCameraOnDesk(deskId) {
             .select("*")
             .order("visited_at", { ascending: false })
             .limit(200);
-          if (!error && data) dbLogs = data;
-        } catch (e) {}
+          if (error) dbError = error;
+          if (data) dbLogs = data;
+        } catch (e) {
+          dbError = e;
+        }
       }
 
-      if (dbLogs.length > 0) {
-        visitLogsData = dbLogs;
-      } else {
-        visitLogsData = JSON.parse(localStorage.getItem("tx11t2_visit_logs_backup") || "[]");
-      }
+      const localLogs = JSON.parse(localStorage.getItem("tx11t2_visit_logs_backup") || "[]");
+      visitLogsData = dbLogs.length > 0 ? dbLogs : localLogs;
+
+      // Tạo độ trễ 250ms để mắt nhìn thấy bảng được tải lại mượt mà
+      await new Promise(resolve => setTimeout(resolve, 250));
+
       renderAdminVisitLogs();
-    }
 
+      if (refreshBtn) {
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML = "🔄 Làm mới";
+      }
+
+      if (dbError) {
+        showToast(`⚠️ Lỗi tải từ Supabase: ${dbError.message}`, "warning");
+      } else {
+        showToast(`✅ Đã cập nhật! Hiện có ${visitLogsData.length} lượt tham quan.`, "success");
+      }
+    }
     function renderAdminVisitLogs() {
       const tb = document.getElementById("adminVisitLogsTableBody");
       if (!tb) return;
