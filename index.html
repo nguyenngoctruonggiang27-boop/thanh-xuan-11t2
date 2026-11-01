@@ -1025,7 +1025,7 @@
       }
     }
     /* ============================================================================
-       6. TỐI ƯU MOBILE: THU NHỎ SCALE ĐỂ HIỂN THỊ ĐỦ 2 DÃY SONG SONG & GIẢM 20% GPU
+       6. TỐI ƯU GIAO DIỆN TOÀN TRANG TRÊN MOBILE & TÁCH TẦNG SƠ ĐỒ LỚP 3D
        ============================================================================ */
     @media (max-width: 1024px) {
       .wall-side-strip-left,
@@ -1035,101 +1035,127 @@
     }
 
     @media (max-width: 768px) {
-      /* Giảm khoảng 20% độ nặng của bóng đổ (Vẫn giữ đầy đủ khối 3D, quạt quay và gạch bông) */
-      .classroom-viewport-3d {
-        box-shadow: 0 14px 30px -10px rgba(61, 49, 74, 0.22) !important;
-        border-width: 2px !important;
+      /* A. TỐI ƯU CÁC TAB KHÁC TRÊN WEBSITE CHO VỪA MẮT NGƯỜI DÙNG ĐIỆN THOẠI */
+      main {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+        padding-top: 12px !important;
+      }
+      .page-section {
+        space-y: 16px !important;
+      }
+      /* Giảm lề các khung bao quanh ở mọi tab để chữ không bị bóp nghẹt */
+      .bg-white\/90, .bg-white\/95 {
+        padding: 14px 10px !important;
         border-radius: 20px !important;
       }
-      .long-desk-tabletop-3d {
-        box-shadow: 0 4px 9px rgba(0, 0, 0, 0.26) !important;
-        padding: 4px 3px 5px 3px !important;
-        border-bottom-width: 5px !important;
-        border-left-width: 2px !important;
-        border-right-width: 2px !important;
-      }
-      .long-desk-cubbies-box-3d {
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.32) !important;
-        border-left-width: 4px !important;
-        border-right-width: 4px !important;
-        border-bottom-width: 4px !important;
-        padding: 2px 3px !important;
-      }
+      /* Cỡ chữ tiêu đề trên mobile vừa vặn, không bị xuống dòng vụn vặt */
+      h1 { font-size: 1.85rem !important; }
+      h2 { font-size: 1.45rem !important; }
+      h3 { font-size: 1.25rem !important; }
 
-      /* Thu nhỏ Scale toàn bộ bàn ghế trên Mobile để 2 Dãy Trái & Phải luôn nằm song song */
-      .room-ceiling-3d {
-        padding: 16px 8px 10px 8px !important;
-      }
-      .ceiling-fan-spin {
-        width: 36px !important;
-        height: 36px !important;
+      /* B. SƠ ĐỒ LỚP 3D TRÊN MOBILE */
+      .classroom-viewport-3d {
+        box-shadow: 0 10px 24px -6px rgba(61, 49, 74, 0.2) !important;
+        border-width: 2px !important;
+        border-radius: 20px !important;
+        min-height: 480px !important;
       }
       .front-classroom-wall {
-        padding: 10px 8px 12px 8px !important;
-        margin-bottom: 14px !important;
+        padding: 8px 6px 10px 6px !important;
+        margin-bottom: 12px !important;
       }
       .doorway-front-left-3d {
-        height: 92px !important;
-        padding: 4px !important;
+        height: 84px !important;
+        padding: 3px !important;
       }
       .tv-50inch-wrap {
-        max-width: 155px !important;
-        margin-bottom: 4px !important;
+        max-width: 140px !important;
+        margin-bottom: 3px !important;
       }
       .green-chalkboard-3d {
-        padding: 6px 8px 10px 8px !important;
-        border-width: 4px !important;
-        border-bottom-width: 7px !important;
+        padding: 6px 8px !important;
+        border-width: 3px !important;
+        border-bottom-width: 6px !important;
       }
       .classroom-rows-corridor {
-        padding: 0 4px !important;
+        padding: 0 2px !important;
       }
       .perspective-row-wrap {
         width: 100% !important;
       }
       .long-desk-3d-wrapper {
-        padding-top: 14px !important;
+        padding-top: 12px !important;
+      }
+      .long-desk-tabletop-3d {
+        padding: 3px 2px 4px 2px !important;
+        border-bottom-width: 4px !important;
+      }
+      .long-desk-cubbies-box-3d {
+        padding: 2px 2px !important;
+        border-width: 3px !important;
       }
       .seat-slot-3d {
-        margin-top: -15px !important;
+        margin-top: -12px !important;
       }
       .seat-slot-3d.is-empty {
-        margin-top: -8px !important;
+        margin-top: -6px !important;
       }
       .seat-standee-card {
-        min-height: 48px !important;
-        padding: 2px 1px 3px 1px !important;
-        border-radius: 8px 8px 5px 5px !important;
-        border-width: 1.5px !important;
-        border-bottom-width: 3px !important;
-        box-shadow: 0 4px 0 -1px rgba(92, 44, 6, 0.38), 0 6px 10px -2px rgba(15, 23, 42, 0.25) !important;
-      }
-      .seat-slot-3d.is-empty .seat-standee-card {
-        min-height: 40px !important;
+        min-height: 44px !important;
+        padding: 1px !important;
+        border-radius: 6px !important;
+        border-width: 1px !important;
+        border-bottom-width: 2.5px !important;
       }
       .cubby-hole-3d {
-        height: 22px !important;
-        border-left-width: 1.5px !important;
-        border-right-width: 1.5px !important;
+        height: 20px !important;
       }
       .cubby-tray-3d {
-        height: 11px !important;
-        font-size: 7px !important;
+        height: 10px !important;
+        font-size: 6.5px !important;
       }
       .long-desk-underframe-3d {
-        height: 16px !important;
-        padding: 0 4px !important;
+        height: 14px !important;
       }
       .wood-leg-pillar {
-        width: 6px !important;
-        height: 15px !important;
+        width: 5px !important;
+        height: 12px !important;
       }
       .wooden-bench-3d {
-        top: 4px !important;
-        height: 8px !important;
+        top: 3px !important;
+        height: 7px !important;
       }
+
+      /* C. CƠ CHẾ TÁCH TẦNG TRÊN MOBILE: KHÔNG BAO GIỜ BỊ CHE KHUẤT HỘC BÀN */
       .desk-memory-card-backdrop {
-        padding-top: 42px !important;
+        justify-content: center !important;
+        align-items: flex-end !important; /* Đẩy Thẻ Thông Tin trượt lên từ đáy màn hình */
+        padding: 0 8px 68px 8px !important;
+        background: transparent !important;
+      }
+      .desk-card-and-dock-wrap {
+        max-width: 100% !important;
+      }
+      .desk-memory-card-3d {
+        max-height: 46vh !important; /* Giới hạn thẻ chỉ chiếm tối đa 46% màn hình dưới */
+        border-radius: 24px 24px 18px 18px !important;
+        border-width: 2px !important;
+        box-shadow: 0 -8px 25px rgba(15, 23, 42, 0.28) !important;
+      }
+      /* Giữ thẻ phẳng trên điện thoại để đọc chữ to rõ, không bị lóa */
+      .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-left-view,
+      .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-right-view,
+      .desk-memory-card-backdrop.is-open .desk-memory-card-3d.tilt-teacher-view {
+        transform: translateY(0px) scale(1) !important;
+        box-shadow: 0 -6px 20px rgba(15, 23, 42, 0.25) !important;
+      }
+      /* Nút thanh điều khiển cố định sát đáy màn hình điện thoại */
+      .desk-flat-nav-dock {
+        bottom: 8px !important;
+        width: calc(100% - 16px) !important;
+        padding: 6px 10px !important;
+        border-radius: 16px !important;
       }
     }
   </style>
@@ -2968,11 +2994,8 @@ function focusCameraOnDesk(deskId) {
 
         const isMobile = window.innerWidth < 768;
         const info = parseSeatDeskId(deskId);
-
-        // Xác định bàn thuộc bên Trái hay bên Phải (Bàn Giáo Viên và Dãy Phải đều nằm bên Phải)
         const isRightSideTarget = info.isTeacher || info.sectionNum === 2;
 
-        // 1. Lấy tọa độ gốc chính xác của hộc bàn bên trong Stage (không bị sai lệch khi đang zoom)
         const stageW = stage.offsetWidth;
         const stageH = stage.offsetHeight;
         const stageCenterX = stageW / 2;
@@ -2987,33 +3010,30 @@ function focusCameraOnDesk(deskId) {
           curr = curr.offsetParent;
         }
 
-        // Độ lệch của hộc bàn so với tâm Stage
         const relX = localX - stageCenterX;
         const relY = localY - stageCenterY;
 
-        // 2. Góc xoay 3D của Sơ đồ lớp (Dãy Trái và Dãy Phải/Bàn GV xoay ngược chiều nhau)
-        const yawAngle = isRightSideTarget ? -14 : 14;
-        const pitchAngle = info.isTeacher ? 6 : -10;
-        const zoomScale = isMobile ? 1.22 : 1.38;
+        // Góc xoay 3D (Trên PC thì xoay góc, trên Mobile giữ góc nghiêng nhẹ vừa mắt)
+        const yawAngle = isMobile ? (isRightSideTarget ? -4 : 4) : (isRightSideTarget ? -14 : 14);
+        const pitchAngle = isMobile ? -3 : (info.isTeacher ? 6 : -10);
+        const zoomScale = isMobile ? 1.08 : 1.38;
 
-        // 3. Tính vị trí đích trên màn hình:
-        // - Nếu chọn Dãy Trái -> Hộc bàn nằm CHÍNH GIỮA NỬA TRÁI (26% khung nhìn), Thẻ nằm nửa Phải
-        // - Nếu chọn Dãy Phải / Bàn GV -> Hộc bàn nằm CHÍNH GIỮA NỬA PHẢI (74% khung nhìn), Thẻ nằm nửa Trái
         const vpRect = viewport.getBoundingClientRect();
-        const targetRatioX = isMobile ? 0.5 : (isRightSideTarget ? 0.74 : 0.26);
-        const targetScreenX = vpRect.left + vpRect.width * targetRatioX;
 
-        // Căn hộc bàn nằm ngay chính giữa chiều dọc vùng nhìn thấy trên màn hình
-        const visTop = Math.max(70, vpRect.top);
-        const visBottom = Math.min(window.innerHeight, vpRect.bottom);
-        const targetScreenY = (visBottom > visTop + 200)
-          ? (visTop + visBottom) / 2
-          : window.innerHeight * 0.52;
+        // TÍNH TOÁN VỊ TRÍ MÀN HÌNH THEO THIẾT BỊ:
+        // - Trên PC (Màn ngang): Hộc bàn nằm ở nửa Trái/Phải (26% hoặc 74% chiều ngang), Thẻ nằm nửa đối diện
+        // - Trên Mobile (Màn dọc): Hộc bàn nằm CHÍNH GIỮA NỬA TRÊN MÀN HÌNH (25% chiều cao), Thẻ nằm nửa dưới
+        const targetScreenX = isMobile 
+          ? (vpRect.left + vpRect.width * 0.5) 
+          : (vpRect.left + vpRect.width * (isRightSideTarget ? 0.74 : 0.26));
+
+        const targetScreenY = isMobile
+          ? (vpRect.top + vpRect.height * 0.26)
+          : (Math.max(70, vpRect.top) + Math.min(window.innerHeight, vpRect.bottom)) / 2;
 
         const unscaledStageCenterScreenX = vpRect.left + stageCenterX;
         const unscaledStageCenterScreenY = vpRect.top + stage.offsetTop + stageCenterY;
 
-        // Bù trừ chính xác độ phóng đại (zoomScale) để hộc bàn không bao giờ bị văng đi xa
         const radYaw = (yawAngle * Math.PI) / 180;
         const radPitch = (pitchAngle * Math.PI) / 180;
         const scaledRelX = relX * zoomScale * Math.cos(radYaw);
@@ -3025,7 +3045,6 @@ function focusCameraOnDesk(deskId) {
         stage.style.transformOrigin = `50% 50%`;
         stage.style.transform = `perspective(1100px) translate3d(${Math.round(moveX)}px, ${Math.round(moveY)}px, 0px) rotateX(${pitchAngle}deg) rotateY(${yawAngle}deg) scale(${zoomScale})`;
 
-        // 4. Đặt vị trí Trái/Phải và góc nghiêng 20 độ ngược chiều cho Thẻ Ký Ức
         const backdrop = document.getElementById("deskMemoryBackdrop");
         const card3D = document.getElementById("deskMemoryCard3D");
         if (backdrop) {
