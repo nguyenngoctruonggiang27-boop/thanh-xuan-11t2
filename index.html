@@ -1819,7 +1819,8 @@
         <!-- Admin Tabs Menu -->
         <div class="flex flex-wrap gap-2 mb-6">
           <button onclick="switchAdminTab('system')" id="tab-system" class="admin-tab-btn active px-4 py-2 rounded-xl bg-pastel-pinkDeep text-white font-bold text-sm shadow-sm transition">Cài đặt Hệ thống</button>
-          <button onclick="switchAdminTab('users')" id="tab-users" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">Quản lý Thành viên</button>
+          <button onclick="switchAdminTab('users')" id="tab-users" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">Quản lý & Duyệt Thành viên</button>
+          <button onclick="switchAdminTab('visits')" id="tab-visits" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">👣 Lịch sử tham quan</button>
           <button onclick="switchAdminTab('backup')" id="tab-backup" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">Sao lưu & Phục hồi</button>
           <button onclick="switchAdminTab('content')" id="tab-content" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">Quản lý Nội dung</button>
         </div>
@@ -1872,7 +1873,42 @@
             </div>
           </div>
         </div>
+        <!-- TAB 2.5: LỊCH SỬ THAM QUAN WEB (CẢ TÀI KHOẢN ĐĂNG NHẬP & KHÁCH) -->
+        <div id="admin-tab-visits" class="admin-tab-content hidden space-y-6">
+          <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-blue-200 space-y-4">
+            <div class="flex flex-wrap justify-between items-center gap-2">
+              <div>
+                <h3 class="font-hand text-xl font-bold text-pastel-ink">👣 Lịch sử tham quan Website</h3>
+                <p class="text-xs text-pastel-muted">Ghi nhận tất cả tài khoản đã đăng nhập (Admin, Thành viên, Chờ duyệt) và Khách tham quan.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <select id="visitFilterType" onchange="renderAdminVisitLogs()" class="px-3 py-1.5 bg-white border border-blue-200 rounded-xl text-xs font-bold">
+                  <option value="all">Tất cả lượt truy cập</option>
+                  <option value="logged_in">🔐 Tài khoản đã đăng nhập</option>
+                  <option value="guest">👀 Tài khoản Khách</option>
+                </select>
+                <button onclick="refreshAdminVisitLogs()" class="px-3 py-1.5 bg-white border border-blue-200 hover:bg-blue-50 rounded-xl text-xs font-bold">🔄 Làm mới</button>
+              </div>
+            </div>
 
+            <div class="overflow-x-auto bg-white rounded-xl border border-blue-100">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-pastel-blue/40 border-b border-blue-100">
+                    <th class="p-2.5 font-bold">Thời gian</th>
+                    <th class="p-2.5 font-bold">Phân loại</th>
+                    <th class="p-2.5 font-bold">Tên người truy cập</th>
+                    <th class="p-2.5 font-bold">Lớp / Vai trò / Email</th>
+                    <th class="p-2.5 font-bold">Thiết bị</th>
+                  </tr>
+                </thead>
+                <tbody id="adminVisitLogsTableBody" class="divide-y divide-blue-50">
+                  <tr><td colspan="5" class="p-6 text-center text-pastel-muted">Đang tải lịch sử tham quan...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
         <!-- TAB 3: BACKUP -->
         <div id="admin-tab-backup" class="admin-tab-content hidden space-y-6">
           <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-amber-200 space-y-4">
@@ -1883,7 +1919,7 @@
             </div>
           </div>
         </div>
-
+        
         <!-- TAB 4: SHORTCUTS -->
         <div id="admin-tab-content" class="admin-tab-content hidden space-y-6">
           <h3 class="font-hand text-xl font-bold">Chỉnh sửa nội dung trực tiếp trên giao diện:</h3>
@@ -2084,22 +2120,102 @@
       </div>
     </div>
   </div>
-  <!-- AUTHENTICATION MODAL -->
-  <div id="authModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-pastel-cream w-full max-w-md rounded-3xl p-6 border-2 border-blue-200 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="font-hand text-2xl font-bold text-pastel-ink">🔐 Đăng Nhập / Đăng Ký</h3>
-        <button onclick="closeAuthModal()" class="text-pastel-muted hover:text-pastel-ink font-bold text-xl">✕</button>
+  <<!-- AUTHENTICATION & GUEST GATEWAY MODAL -->
+  <div id="authModal" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-pastel-cream w-full max-w-md rounded-3xl p-6 border-2 border-pink-200 shadow-2xl space-y-4 relative">
+      <div class="flex items-center justify-between border-b border-dashed border-pink-200 pb-3">
+        <h3 id="authModalTitle" class="font-hand text-2xl font-bold text-pastel-ink">🌸 Chào mừng đến với 11T2</h3>
+        <button onclick="closeAuthModal()" class="w-8 h-8 rounded-full bg-pink-100 hover:bg-pink-200 text-pastel-ink font-bold text-sm flex items-center justify-center">✕</button>
       </div>
-      <div class="space-y-3">
-        <p class="text-xs text-pastel-muted">Đăng nhập bằng tài khoản lớp để đóng góp kỷ niệm và chỉnh sửa Sơ đồ 3D!</p>
-        <div><label class="block text-xs font-bold mb-1">Email *</label><input id="authEmailInput" type="email" placeholder="mail@gmail.com" class="w-full px-3.5 py-2 rounded-xl border border-blue-200 text-sm"></div>
-        <div><label class="block text-xs font-bold mb-1">Mật khẩu (>= 6 ký tự) *</label><input id="authPasswordInput" type="password" placeholder="••••••••" class="w-full px-3.5 py-2 rounded-xl border border-blue-200 text-sm"></div>
-        <div><label class="block text-xs font-bold mb-1">Họ tên (Chỉ dùng khi Đăng ký mới)</label><input id="authFullNameInput" type="text" placeholder="VD: Nguyễn Văn A" class="w-full px-3.5 py-2 rounded-xl border border-blue-200 text-sm"></div>
-        <div class="flex gap-2 pt-2">
-          <button onclick="handleAuthSignIn()" class="flex-1 py-2.5 rounded-xl bg-pastel-pinkDeep text-white font-bold text-sm">Đăng nhập</button>
-          <button onclick="handleAuthSignUp()" class="flex-1 py-2.5 rounded-xl bg-pastel-blue text-pastel-ink font-bold text-sm">Đăng ký mới</button>
+
+      <!-- KHUNG 1: HỎI ĐĂNG NHẬP / ĐĂNG KÝ / TIẾP TỤC KHÔNG CẦN TÀI KHOẢN -->
+      <div id="authViewChoice" class="space-y-3">
+        <p class="text-xs sm:text-sm text-pastel-muted leading-relaxed">
+          Bạn muốn truy cập sổ lưu niệm trực tuyến <strong>Thanh Xuân T2 2025-2028</strong> theo hình thức nào?
+        </p>
+        <div class="space-y-2.5 pt-1">
+          <button onclick="switchAuthModalView('login')" class="w-full py-3 px-4 rounded-2xl bg-pastel-pinkDeep hover:bg-pink-600 text-white font-bold text-sm shadow-sticker transition flex items-center justify-between">
+            <span class="flex items-center gap-2"><span>🔐</span> Đăng nhập tài khoản</span>
+            <span>→</span>
+          </button>
+          <button onclick="switchAuthModalView('register')" class="w-full py-3 px-4 rounded-2xl bg-pastel-blue hover:bg-sky-200 text-pastel-ink font-bold text-sm border-2 border-sky-300 shadow-xs transition flex items-center justify-between">
+            <span class="flex items-center gap-2"><span>📝</span> Đăng ký tài khoản mới</span>
+            <span>→</span>
+          </button>
+          <button onclick="switchAuthModalView('guest')" class="w-full py-3 px-4 rounded-2xl bg-pastel-butter hover:bg-amber-200 text-amber-950 font-bold text-sm border-2 border-amber-300 shadow-xs transition flex items-center justify-between">
+            <span class="flex items-center gap-2"><span>👀</span> Tiếp tục mà không cần tài khoản</span>
+            <span>→</span>
+          </button>
         </div>
+      </div>
+
+      <!-- KHUNG 2: FORM ĐĂNG NHẬP -->
+      <div id="authViewLogin" class="hidden space-y-3">
+        <button onclick="switchAuthModalView('choice')" class="text-xs font-bold text-pastel-pinkDeep hover:underline flex items-center gap-1">← Quay lại lựa chọn</button>
+        <p class="text-xs text-pastel-muted">Đăng nhập bằng tài khoản đã được phê duyệt của lớp.</p>
+        <div>
+          <label class="block text-xs font-bold mb-1">Email *</label>
+          <input id="authEmailInput" type="email" placeholder="mail@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-pink-200 text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">Mật khẩu *</label>
+          <input id="authPasswordInput" type="password" placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-pink-200 text-sm">
+        </div>
+        <button onclick="handleAuthSignIn()" class="w-full py-2.5 rounded-xl bg-pastel-pinkDeep hover:bg-pink-600 text-white font-bold text-sm shadow-sticker transition">
+          🔐 Đăng nhập ngay
+        </button>
+        <p class="text-center text-xs text-pastel-muted pt-1">
+          Chưa có tài khoản? <button onclick="switchAuthModalView('register')" class="font-bold text-pastel-pinkDeep underline">Đăng ký tại đây</button>
+        </p>
+      </div>
+
+      <!-- KHUNG 3: FORM ĐĂNG KÝ (CẦN ADMIN PHÊ DUYỆT) -->
+      <div id="authViewRegister" class="hidden space-y-3">
+        <button onclick="switchAuthModalView('choice')" class="text-xs font-bold text-pastel-pinkDeep hover:underline flex items-center gap-1">← Quay lại lựa chọn</button>
+        <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-[11px] text-amber-900 font-semibold">
+          ⏳ Lưu ý: Tài khoản đăng ký mới sẽ ở trạng thái <strong>Chờ phê duyệt</strong> cho đến khi Quản trị viên xác nhận.
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">Họ và tên thật *</label>
+          <input id="authFullNameInput" type="text" placeholder="VD: Nguyễn Văn A" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-blue-200 text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">Email *</label>
+          <input id="authRegEmailInput" type="email" placeholder="mail@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-blue-200 text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">Mật khẩu (>= 6 ký tự) *</label>
+          <input id="authRegPasswordInput" type="password" placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-blue-200 text-sm">
+        </div>
+        <button onclick="handleAuthSignUp()" class="w-full py-2.5 rounded-xl bg-pastel-blue hover:bg-sky-300 text-pastel-ink font-bold text-sm border border-sky-300 shadow-sticker transition">
+          📝 Gửi đăng ký & Chờ duyệt
+        </button>
+      </div>
+
+      <!-- KHUNG 4: TAB HỎI VAI TRÒ & TÊN KHI TIẾP TỤC KHÔNG CẦN TÀI KHOẢN -->
+      <div id="authViewGuest" class="hidden space-y-3.5">
+        <button onclick="switchAuthModalView('choice')" class="text-xs font-bold text-pastel-pinkDeep hover:underline flex items-center gap-1">← Quay lại lựa chọn</button>
+        <div class="p-3 rounded-2xl bg-pastel-butter/60 border border-amber-300 text-xs text-amber-950">
+          👋 Chào bạn! Hãy giới thiệu đôi chút về bạn trước khi bắt đầu chuyến tham quan lớp <strong>11T2</strong> nhé!
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-pastel-ink mb-1">Tên hoặc Biệt danh của bạn *</label>
+          <input id="guestVisitorNameInput" type="text" placeholder="VD: Minh Anh, Hoàng Nam..." class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-amber-300 text-sm font-semibold">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-pastel-ink mb-1">Vai trò tham quan / Bạn đến từ lớp nào? *</label>
+          <input id="guestVisitorRoleInput" type="text" placeholder="VD: Lớp 11T1, Giáo viên, Phụ huynh, Bạn bè..." class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-amber-300 text-sm font-semibold">
+        </div>
+        <div class="flex flex-wrap gap-1.5 pt-0.5">
+          <span class="text-[10px] text-pastel-muted w-full">Chọn nhanh vai trò:</span>
+          <button type="button" onclick="fillGuestRolePreset('Học sinh lớp 11T2')" class="px-2.5 py-1 rounded-full bg-white border border-pink-200 text-[11px] font-bold hover:bg-pastel-pink/40">🧑‍🎓 Học sinh 11T2</button>
+          <button type="button" onclick="fillGuestRolePreset('Bạn học lớp bên cạnh')" class="px-2.5 py-1 rounded-full bg-white border border-blue-200 text-[11px] font-bold hover:bg-pastel-blue/40">🏫 Lớp bên cạnh</button>
+          <button type="button" onclick="fillGuestRolePreset('Thầy / Cô giáo')" class="px-2.5 py-1 rounded-full bg-white border border-amber-200 text-[11px] font-bold hover:bg-pastel-butter/60">👩‍🏫 Thầy / Cô giáo</button>
+          <button type="button" onclick="fillGuestRolePreset('Phụ huynh / Khách quý')" class="px-2.5 py-1 rounded-full bg-white border border-purple-200 text-[11px] font-bold hover:bg-pastel-lavender/40">💐 Khách quý</button>
+        </div>
+        <button onclick="handleContinueAsGuest()" class="w-full py-3 rounded-2xl bg-pastel-pinkDeep hover:bg-pink-600 text-white font-bold text-sm shadow-sticker transition">
+          🚀 Vào tham quan ngay
+        </button>
       </div>
     </div>
   </div>
@@ -2256,18 +2372,105 @@
       }
     }
 
+// Danh sách định danh Super Admin tối cao (Tự động khôi phục quyền Admin và không thể bị hạ quyền)
+    const SUPER_ADMIN_IDENTIFIERS = ["cutinoproo"];
+    let currentGuestSession = JSON.parse(sessionStorage.getItem("tx11t2_guest_session") || "null");
+    let hasLoggedCurrentUserVisit = false;
+    let visitLogsData = [];
+
+    function isSuperAdminAccount(email, fullName) {
+      const e = String(email || "").toLowerCase();
+      const n = String(fullName || "").toLowerCase();
+      return SUPER_ADMIN_IDENTIFIERS.some(key => e.includes(key) || n.includes(key));
+    }
+
     async function fetchCurrentUserProfile() {
-      if (!supabaseClient || !currentUser) { currentUserProfile = null; updateAuthUI(); return; }
+      if (!supabaseClient || !currentUser) {
+        currentUserProfile = null;
+        updateAuthUI();
+        return;
+      }
       try {
-        const { data, error } = await supabaseClient.from("profiles").select("*").eq("id", currentUser.id).maybeSingle();
-        currentUserProfile = (!error && data) ? data : { id: currentUser.id, email: currentUser.email, role: "pending", full_name: currentUser.email };
-      } catch (e) {}
+        const metaName = currentUser.user_metadata?.full_name || currentUser.email.split("@")[0];
+        const isSuper = isSuperAdminAccount(currentUser.email, metaName);
+
+        let { data, error } = await supabaseClient
+          .from("profiles")
+          .select("*")
+          .eq("id", currentUser.id)
+          .maybeSingle();
+
+        // Nếu chưa có dòng trong bảng profiles (do mới đăng ký), tự động khởi tạo với trạng thái 'pending' (hoặc 'admin' cho cutinoproo)
+        if (!data && !error) {
+          let initialRole = isSuper ? "admin" : "pending";
+          if (!isSuper) {
+            const { data: wlData } = await supabaseClient
+              .from("allowed_emails")
+              .select("default_role")
+              .ilike("email", currentUser.email)
+              .maybeSingle();
+            if (wlData?.default_role) initialRole = wlData.default_role;
+          }
+          const newProfile = {
+            id: currentUser.id,
+            email: currentUser.email,
+            full_name: metaName,
+            role: initialRole
+          };
+          const { data: inserted } = await supabaseClient
+            .from("profiles")
+            .upsert(newProfile, { onConflict: "id" })
+            .select()
+            .maybeSingle();
+          data = inserted || newProfile;
+        }
+
+        // Tự động khôi phục quyền Admin cho tài khoản cutinoproo nếu lỡ bị hạ về member/pending
+        if (isSuper && (!data || data.role !== "admin")) {
+          const { data: restored } = await supabaseClient
+            .from("profiles")
+            .update({ role: "admin" })
+            .eq("id", currentUser.id)
+            .select()
+            .maybeSingle();
+          data = restored || { ...(data || {}), id: currentUser.id, email: currentUser.email, full_name: metaName, role: "admin" };
+          showToast("👑 Đã tự động khôi phục quyền Quản trị viên cho cutinoproo!", "success");
+        }
+
+        currentUserProfile = data || {
+          id: currentUser.id,
+          email: currentUser.email,
+          role: isSuper ? "admin" : "pending",
+          full_name: metaName
+        };
+
+        // Ghi nhận lịch sử tham quan cho tài khoản đã đăng nhập (1 lần / phiên tải trang)
+        if (!hasLoggedCurrentUserVisit) {
+          hasLoggedCurrentUserVisit = true;
+          await recordWebsiteVisit({
+            visitor_type: currentUserProfile.role || "pending",
+            user_id: currentUser.id,
+            visitor_name: currentUserProfile.full_name || metaName,
+            visitor_class_or_role: currentUserProfile.role === "admin" ? "Quản trị viên (Admin)" : (currentUserProfile.role === "member" ? "Thành viên lớp" : "Tài khoản chờ duyệt"),
+            email: currentUser.email || ""
+          });
+        }
+      } catch (e) {
+        console.warn("Lỗi tải profile:", e);
+      }
       updateAuthUI();
     }
 
-    function canWriteContent() { return isDbConnected && currentUser && currentUserProfile && (currentUserProfile.role === "member" || currentUserProfile.role === "admin"); }
-    function isAdminUser() { return isDbConnected && currentUser && currentUserProfile && currentUserProfile.role === "admin"; }
-    function canModifyItem(ownerId) { if (!isDbConnected || !currentUser) return false; return isAdminUser() || (ownerId === currentUser.id && canWriteContent()); }
+    function canWriteContent() {
+      return isDbConnected && currentUser && currentUserProfile && (currentUserProfile.role === "member" || currentUserProfile.role === "admin");
+    }
+    function isAdminUser() {
+      return isDbConnected && currentUser && currentUserProfile && currentUserProfile.role === "admin";
+    }
+    function canModifyItem(ownerId) {
+      if (!isDbConnected || !currentUser) return false;
+      return isAdminUser() || (ownerId === currentUser.id && canWriteContent());
+    }
 
     async function syncAllDataFromSupabase() {
       if (!supabaseClient) return;
@@ -2277,16 +2480,16 @@
           const mapBySlug = new Map(dbAlbums.map(a => [a.slug, a]));
           const merged = INITIAL_13_ALBUMS.map(i => mapBySlug.get(i.slug) || i);
           const excludedSlugs = [
-            "sinh-nhat", 
-            "giai-bong-chuyen-nu", 
-            "di-choi-cung-lop", 
+            "sinh-nhat",
+            "giai-bong-chuyen-nu",
+            "di-choi-cung-lop",
             "cac-su-kien-moi-do-lop-tu-tao",
             "nhung-ngay-hoc-binh-thuong"
           ];
-          dbAlbums.forEach(d => { 
+          dbAlbums.forEach(d => {
             if (!INITIAL_13_ALBUMS.some(i => i.slug === d.slug) && !excludedSlugs.includes(d.slug)) {
-              merged.push(d); 
-            } 
+              merged.push(d);
+            }
           });
           albumsData = merged;
         } else { albumsData = [...INITIAL_13_ALBUMS]; }
@@ -2296,13 +2499,18 @@
         const { data: dbM } = await supabaseClient.from("class_members").select("*").order("full_name", { ascending: true }); if(dbM) membersData = dbM;
         const { data: dbG } = await supabaseClient.from("guestbook_entries").select("*").order("created_at", { ascending: false }); if(dbG) guestbookData = dbG;
 
-        // Tải dữ liệu Sơ đồ lớp 3D từ bảng classroom_desks
         await syncClassroomDesksFromSupabase();
 
         isDbConnected = true;
         updateConnectionBanner(true, "Đã kết nối trực tuyến với Supabase");
         renderAllSections();
-        if (isAdminUser()) refreshAdminUsersList();
+        if (isAdminUser()) {
+          refreshAdminUsersList();
+          refreshAdminVisitLogs();
+        }
+
+        // Nếu chưa đăng nhập và chưa khai báo thông tin khách tham quan -> Hiện khung hỏi
+        checkInitialVisitorPrompt();
       } catch (err) {
         isDbConnected = false;
         updateConnectionBanner(false, "Kết nối DB thất bại. Có thể do chưa chạy lệnh SQL (schema.sql) hoặc bị Adblock.");
@@ -2344,36 +2552,143 @@
       if (adminBadge) { adminBadge.className = connected ? "text-xs px-2 py-1 rounded bg-emerald-100 text-emerald-800 font-bold" : "text-xs px-2 py-1 rounded bg-amber-100 text-amber-800 font-bold"; adminBadge.textContent = connected ? "✅ Đã kết nối" : "⏳ Lỗi kết nối"; }
     }
 
-    // Modal & Auth Logic
-    function openAuthModal() { document.getElementById("authModal").classList.remove("hidden"); }
-    function closeAuthModal() { document.getElementById("authModal").classList.add("hidden"); }
+    // ============================================================================
+    // CỔNG CHÀO ĐĂNG NHẬP / ĐĂNG KÝ / KHÁCH THAM QUAN & GHI NHẬN LỊCH SỬ
+    // ============================================================================
+    function checkInitialVisitorPrompt() {
+      if (!currentUser && !currentGuestSession) {
+        openAuthModal("choice");
+      }
+    }
+
+    function openAuthModal(defaultView = "choice") {
+      switchAuthModalView(defaultView);
+      document.getElementById("authModal").classList.remove("hidden");
+    }
+
+    function closeAuthModal() {
+      document.getElementById("authModal").classList.add("hidden");
+    }
+
+    function switchAuthModalView(viewName) {
+      const views = {
+        choice: document.getElementById("authViewChoice"),
+        login: document.getElementById("authViewLogin"),
+        register: document.getElementById("authViewRegister"),
+        guest: document.getElementById("authViewGuest")
+      };
+      Object.values(views).forEach(el => { if (el) el.classList.add("hidden"); });
+      if (views[viewName]) views[viewName].classList.remove("hidden");
+
+      const titleEl = document.getElementById("authModalTitle");
+      if (!titleEl) return;
+      if (viewName === "login") titleEl.textContent = "🔐 Đăng Nhập Tài Khoản";
+      else if (viewName === "register") titleEl.textContent = "📝 Đăng Ký (Chờ Phê Duyệt)";
+      else if (viewName === "guest") titleEl.textContent = "👀 Thông Tin Khách Tham Quan";
+      else titleEl.textContent = "🌸 Chào mừng đến với 11T2";
+    }
+
+    function fillGuestRolePreset(presetText) {
+      const roleInput = document.getElementById("guestVisitorRoleInput");
+      if (roleInput) roleInput.value = presetText;
+    }
+
+    async function handleContinueAsGuest() {
+      const nameInput = document.getElementById("guestVisitorNameInput");
+      const roleInput = document.getElementById("guestVisitorRoleInput");
+      const visitorName = (nameInput?.value || "").trim();
+      const visitorRole = (roleInput?.value || "").trim();
+
+      if (!visitorName || !visitorRole) {
+        return showToast("Vui lòng nhập Tên và Lớp / Vai trò tham quan của bạn nhé!", "warning");
+      }
+
+      currentGuestSession = {
+        visitor_name: visitorName,
+        visitor_role: visitorRole,
+        visited_at: new Date().toISOString()
+      };
+      sessionStorage.setItem("tx11t2_guest_session", JSON.stringify(currentGuestSession));
+
+      // Điền sẵn tên vào ô Lưu bút cho tiện
+      const gbAuthor = document.getElementById("gbAuthorInput");
+      if (gbAuthor && !gbAuthor.value) {
+        gbAuthor.value = `${visitorName} (${visitorRole})`;
+      }
+
+      await recordWebsiteVisit({
+        visitor_type: "guest",
+        user_id: null,
+        visitor_name: visitorName,
+        visitor_class_or_role: visitorRole,
+        email: ""
+      });
+
+      updateAuthUI();
+      closeAuthModal();
+      showToast(`Chào mừng ${visitorName} (${visitorRole}) ghé thăm lớp 11T2!`, "success");
+    }
+
+    async function recordWebsiteVisit(visitPayload) {
+      const entry = {
+        visitor_type: visitPayload.visitor_type || "guest",
+        user_id: visitPayload.user_id || null,
+        visitor_name: visitPayload.visitor_name || "Khách",
+        visitor_class_or_role: visitPayload.visitor_class_or_role || "",
+        email: visitPayload.email || "",
+        user_agent: navigator.userAgent.slice(0, 180),
+        visited_at: new Date().toISOString()
+      };
+
+      // Lưu dự phòng vào localStorage
+      try {
+        const localLogs = JSON.parse(localStorage.getItem("tx11t2_visit_logs_backup") || "[]");
+        localLogs.unshift(entry);
+        localStorage.setItem("tx11t2_visit_logs_backup", JSON.stringify(localLogs.slice(0, 200)));
+      } catch (e) {}
+
+      if (!supabaseClient) return;
+      try {
+        await supabaseClient.from("visit_logs").insert(entry);
+      } catch (err) {
+        console.warn("Chưa ghi được visit_logs lên Supabase:", err);
+      }
+    }
 
     function updateAuthUI() {
       const badge = document.getElementById("userRoleBadge");
       const btnAuth = document.getElementById("btnTopAuth"), btnAdmin = document.getElementById("btnTopAdmin"), btnLogout = document.getElementById("btnTopLogout");
 
       if (!currentUser) {
-        badge.textContent = "👀 Khách xem";
-        badge.className = "px-2.5 py-0.5 rounded-full bg-white/80 text-pastel-ink border border-pink-200 text-xs font-bold";
+        if (currentGuestSession) {
+          badge.textContent = `👋 Khách: ${currentGuestSession.visitor_name} (${currentGuestSession.visitor_role})`;
+          badge.className = "px-2.5 py-0.5 rounded-full bg-pastel-butter text-amber-950 border border-amber-300 text-xs font-bold";
+          btnAuth.textContent = "Đăng nhập / Đổi vai trò";
+        } else {
+          badge.textContent = "👀 Khách xem";
+          badge.className = "px-2.5 py-0.5 rounded-full bg-white/80 text-pastel-ink border border-pink-200 text-xs font-bold";
+          btnAuth.textContent = "Đăng nhập";
+        }
         btnAuth.classList.remove("hidden"); btnAdmin.classList.add("hidden"); btnLogout.classList.add("hidden");
       } else {
         btnAuth.classList.add("hidden"); btnLogout.classList.remove("hidden");
         const role = currentUserProfile?.role || "pending";
+        const displayName = currentUserProfile?.full_name || currentUser.email.split('@')[0];
         if (role === "admin") {
-          badge.textContent = "👑 Admin: " + currentUser.email.split('@')[0];
+          badge.textContent = "👑 Admin: " + displayName;
           badge.className = "px-2.5 py-0.5 rounded-full bg-pastel-butter text-amber-950 border border-amber-300 text-xs font-bold";
           btnAdmin.classList.remove("hidden");
         } else if (role === "member") {
-          badge.textContent = "🌟 Member: " + currentUser.email.split('@')[0];
+          badge.textContent = "🌟 Member: " + displayName;
           badge.className = "px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-bold";
           btnAdmin.classList.add("hidden");
         } else {
-          badge.textContent = "⏳ Chờ duyệt: " + currentUser.email.split('@')[0];
+          badge.textContent = "⏳ Chờ Admin duyệt: " + displayName;
           badge.className = "px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold";
           btnAdmin.classList.add("hidden");
         }
       }
-      // Cập nhật thanh công cụ quản lý Sơ đồ lớp 3D
+
       const mapToolbar = document.getElementById("mapAdminToolbar");
       if (mapToolbar) {
         if (canWriteContent()) {
@@ -2390,33 +2705,78 @@
 
     async function handleAuthSignUp() {
       if (!supabaseClient) return showToast("Vui lòng kết nối Supabase!", "warning");
-      const email = document.getElementById("authEmailInput").value.trim(), pwd = document.getElementById("authPasswordInput").value, fn = document.getElementById("authFullNameInput").value.trim() || email.split("@")[0];
-      if (!email || pwd.length < 6) return showToast("Nhập Email và mật khẩu >= 6 ký tự!", "warning");
+      const fn = document.getElementById("authFullNameInput").value.trim();
+      const email = document.getElementById("authRegEmailInput").value.trim();
+      const pwd = document.getElementById("authRegPasswordInput").value;
+
+      if (!fn) return showToast("Vui lòng nhập Họ và tên của bạn!", "warning");
+      if (!email || pwd.length < 6) return showToast("Nhập Email hợp lệ và mật khẩu >= 6 ký tự!", "warning");
+
       try {
-        const { data, error } = await supabaseClient.auth.signUp({ email, password: pwd, options: { data: { full_name: fn } } });
+        const { data, error } = await supabaseClient.auth.signUp({
+          email,
+          password: pwd,
+          options: { data: { full_name: fn } }
+        });
         if (error) throw error;
-        showToast("Đăng ký thành công!", "success"); closeAuthModal();
-        await fetchCurrentUserProfile(); await syncAllDataFromSupabase();
-      } catch (err) { showToast(`Lỗi: ${err.message}`, "error"); }
+
+        // Đảm bảo tạo bản ghi profile với trạng thái 'pending' chờ Admin duyệt
+        const isSuper = isSuperAdminAccount(email, fn);
+        const initialRole = isSuper ? "admin" : "pending";
+        if (data?.user?.id) {
+          await supabaseClient.from("profiles").upsert({
+            id: data.user.id,
+            email: email,
+            full_name: fn,
+            role: initialRole
+          }, { onConflict: "id" });
+        }
+
+        closeAuthModal();
+        if (isSuper) {
+          showToast("👑 Chào mừng Super Admin cutinoproo!", "success");
+        } else {
+          showToast("⏳ Đăng ký thành công! Tài khoản của bạn đang CHỜ QUẢN TRỊ VIÊN PHÊ DUYỆT.", "info");
+        }
+        await fetchCurrentUserProfile();
+        await syncAllDataFromSupabase();
+      } catch (err) {
+        showToast(`Lỗi đăng ký: ${err.message}`, "error");
+      }
     }
 
     async function handleAuthSignIn() {
       if (!supabaseClient) return showToast("Vui lòng kết nối Supabase!", "warning");
-      const email = document.getElementById("authEmailInput").value.trim(), pwd = document.getElementById("authPasswordInput").value;
+      const email = document.getElementById("authEmailInput").value.trim();
+      const pwd = document.getElementById("authPasswordInput").value;
       if (!email || !pwd) return showToast("Nhập Email và Mật khẩu!", "warning");
       try {
+        hasLoggedCurrentUserVisit = false;
         const { error } = await supabaseClient.auth.signInWithPassword({ email, password: pwd });
         if (error) throw error;
-        showToast("Đăng nhập thành công!", "success"); closeAuthModal();
-        await fetchCurrentUserProfile(); await syncAllDataFromSupabase();
-      } catch (err) { showToast(`Lỗi: ${err.message}`, "error"); }
+        closeAuthModal();
+        await fetchCurrentUserProfile();
+        await syncAllDataFromSupabase();
+
+        if (currentUserProfile?.role === "pending") {
+          showToast("⏳ Đăng nhập thành công! Tài khoản của bạn hiện đang chờ Admin phê duyệt quyền Thành viên.", "warning");
+        } else {
+          showToast("🎉 Đăng nhập thành công!", "success");
+        }
+      } catch (err) {
+        showToast(`Lỗi đăng nhập: ${err.message}`, "error");
+      }
     }
 
     async function handleAuthSignOut() {
       if (!supabaseClient) return;
       await supabaseClient.auth.signOut();
-      currentUser = null; currentUserProfile = null; updateAuthUI(); showToast("Đã đăng xuất.", "info");
-      if(currentSection === 'admin') switchSection('home');
+      currentUser = null;
+      currentUserProfile = null;
+      hasLoggedCurrentUserVisit = false;
+      updateAuthUI();
+      showToast("Đã đăng xuất.", "info");
+      if (currentSection === 'admin') switchSection('home');
     }
 
     // Navigation Logic
@@ -2444,9 +2804,10 @@
     function switchAdminTab(tabId) {
       document.querySelectorAll(".admin-tab-content").forEach(el => el.classList.add("hidden"));
       document.querySelectorAll(".admin-tab-btn").forEach(btn => btn.className = "admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition");
-      document.getElementById(`admin-tab-${tabId}`).classList.remove("hidden");
+      document.getElementById(`admin-tab-${tabId}`)?.classList.remove("hidden");
       document.getElementById(`tab-${tabId}`).className = "admin-tab-btn active px-4 py-2 rounded-xl bg-pastel-pinkDeep text-white font-bold text-sm shadow-sm transition";
-      if(tabId === 'users' && isAdminUser()) refreshAdminUsersList();
+      if (tabId === 'users' && isAdminUser()) refreshAdminUsersList();
+      if (tabId === 'visits' && isAdminUser()) refreshAdminVisitLogs();
     }
 
     function toggleMobileDrawer(forceState) {
@@ -3915,15 +4276,154 @@ function focusCameraOnDesk(deskId) {
     }
     function disconnectSupabaseConfig() { localStorage.removeItem("txT2 2025-2028_supabase_url"); localStorage.removeItem("txT2 2025-2028_supabase_anon_key"); location.reload(); }
 
+    let cachedProfilesList = [];
+
     async function refreshAdminUsersList() {
       const tb = document.getElementById("adminProfilesTableBody");
+      if (!tb || !supabaseClient) return;
       try {
-        const { data, error } = await supabaseClient.from("profiles").select("*").order("created_at",{ascending:false});
-        if(error) throw error;
-        tb.innerHTML = data.map(p => `<tr><td class="p-2 border-b"><div class="font-bold">${escapeHtml(p.full_name)}</div><div class="text-xs text-gray-500">${escapeHtml(p.email)}</div></td><td class="p-2 border-b font-bold">${p.role}</td><td class="p-2 border-b text-xs">${formatDateVN(p.created_at)}</td><td class="p-2 border-b text-right"><button onclick="updateUserRole('${p.id}','member')" class="text-xs bg-emerald-100 text-emerald-800 hover:bg-emerald-200 px-2 py-1 rounded mr-1 transition font-bold">Member</button><button onclick="updateUserRole('${p.id}','admin')" class="text-xs bg-amber-100 text-amber-800 hover:bg-amber-200 px-2 py-1 rounded mr-1 transition font-bold">Admin</button><button onclick="updateUserRole('${p.id}','pending')" class="text-xs bg-gray-200 text-gray-800 hover:bg-gray-300 px-2 py-1 rounded transition font-bold">Hủy</button></td></tr>`).join('');
-      } catch(e) {}
+        const { data, error } = await supabaseClient
+          .from("profiles")
+          .select("*")
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        cachedProfilesList = data || [];
+
+        tb.innerHTML = cachedProfilesList.map(p => {
+          const isTargetAdmin = p.role === "admin" || isSuperAdminAccount(p.email, p.full_name);
+          const isSelf = currentUser && p.id === currentUser.id;
+          const isPending = p.role === "pending";
+
+          let roleBadge = `<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold">🌟 Member</span>`;
+          if (isTargetAdmin) {
+            roleBadge = `<span class="px-2 py-0.5 rounded-full bg-pastel-butter text-amber-950 border border-amber-300 text-[11px] font-bold">👑 Admin</span>`;
+          } else if (isPending) {
+            roleBadge = `<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-bold animate-pulse">⏳ Chờ phê duyệt</span>`;
+          }
+
+          // CHỐNG LỖ HỔNG: Nếu tài khoản là Admin (chính mình hoặc Admin khác), khóa các nút hạ quyền
+          let actionsHtml = "";
+          if (isTargetAdmin) {
+            actionsHtml = `<span class="text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg">🔒 Bảo vệ quyền Admin${isSelf ? ' (Bạn)' : ''}</span>`;
+          } else if (isPending) {
+            actionsHtml = `
+              <button onclick="updateUserRole('${p.id}','member')" class="text-xs bg-emerald-500 text-white hover:bg-emerald-600 px-2.5 py-1 rounded-lg mr-1 transition font-bold shadow-2xs">✅ Duyệt Member</button>
+              <button onclick="updateUserRole('${p.id}','admin')" class="text-xs bg-amber-100 text-amber-900 hover:bg-amber-200 px-2 py-1 rounded-lg transition font-bold">👑 Cấp Admin</button>
+            `;
+          } else {
+            actionsHtml = `
+              <button onclick="updateUserRole('${p.id}','admin')" class="text-xs bg-amber-100 text-amber-900 hover:bg-amber-200 px-2 py-1 rounded-lg mr-1 transition font-bold">👑 Lên Admin</button>
+              <button onclick="updateUserRole('${p.id}','pending')" class="text-xs bg-gray-200 text-gray-800 hover:bg-gray-300 px-2 py-1 rounded-lg transition font-bold">⏳ Thu hồi (Chờ duyệt)</button>
+            `;
+          }
+
+          return `
+            <tr class="${isPending ? 'bg-amber-50/60' : ''}">
+              <td class="p-2.5 border-b">
+                <div class="font-bold text-pastel-ink">${escapeHtml(p.full_name || 'Chưa đặt tên')}</div>
+                <div class="text-xs text-gray-500">${escapeHtml(p.email)}</div>
+              </td>
+              <td class="p-2.5 border-b">${roleBadge}</td>
+              <td class="p-2.5 border-b text-xs">${formatDateVN(p.created_at)}</td>
+              <td class="p-2.5 border-b text-right">${actionsHtml}</td>
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {
+        console.warn("Lỗi tải danh sách thành viên:", e);
+      }
     }
-    async function updateUserRole(uid, r) { try { await supabaseClient.from("profiles").update({role:r}).eq("id",uid); refreshAdminUsersList(); showToast(`Đã cấp quyền ${r.toUpperCase()}`,"success"); }catch(e){} }
+
+    async function updateUserRole(uid, newRole) {
+      if (!isAdminUser()) return showToast("Chỉ Admin mới có quyền thực hiện!", "error");
+
+      // Chặn tự hạ quyền của chính mình
+      if (currentUser && uid === currentUser.id && newRole !== "admin") {
+        return showToast("🔒 Bảo mật: Bạn không thể tự xóa quyền Quản trị viên của chính mình!", "error");
+      }
+
+      // Chặn hạ quyền của Admin khác
+      const targetUser = cachedProfilesList.find(u => u.id === uid);
+      if (targetUser && (targetUser.role === "admin" || isSuperAdminAccount(targetUser.email, targetUser.full_name)) && newRole !== "admin") {
+        return showToast("🔒 Bảo mật: Không thể xóa hoặc hạ quyền của Quản trị viên khác!", "error");
+      }
+
+      try {
+        const { error } = await supabaseClient.from("profiles").update({ role: newRole }).eq("id", uid);
+        if (error) throw error;
+        await refreshAdminUsersList();
+        showToast(`✅ Đã cập nhật quyền thành ${newRole.toUpperCase()}!`, "success");
+      } catch (e) {
+        showToast(`Không thể đổi quyền: ${e.message}`, "error");
+      }
+    }
+
+    // Quản lý Lịch sử tham quan Web (Tài khoản đăng nhập + Tài khoản khách)
+    async function refreshAdminVisitLogs() {
+      const tb = document.getElementById("adminVisitLogsTableBody");
+      if (!tb) return;
+      let dbLogs = [];
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient
+            .from("visit_logs")
+            .select("*")
+            .order("visited_at", { ascending: false })
+            .limit(200);
+          if (!error && data) dbLogs = data;
+        } catch (e) {}
+      }
+
+      if (dbLogs.length > 0) {
+        visitLogsData = dbLogs;
+      } else {
+        visitLogsData = JSON.parse(localStorage.getItem("tx11t2_visit_logs_backup") || "[]");
+      }
+      renderAdminVisitLogs();
+    }
+
+    function renderAdminVisitLogs() {
+      const tb = document.getElementById("adminVisitLogsTableBody");
+      if (!tb) return;
+      const filterType = document.getElementById("visitFilterType")?.value || "all";
+
+      const filtered = visitLogsData.filter(item => {
+        if (filterType === "guest") return item.visitor_type === "guest";
+        if (filterType === "logged_in") return item.visitor_type !== "guest";
+        return true;
+      });
+
+      if (!filtered.length) {
+        tb.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-pastel-muted">Chưa có lượt tham quan nào trong mục này.</td></tr>`;
+        return;
+      }
+
+      tb.innerHTML = filtered.map(log => {
+        const isGuest = log.visitor_type === "guest";
+        const typeBadge = isGuest
+          ? `<span class="px-2 py-0.5 rounded-full bg-pastel-butter text-amber-950 border border-amber-300 text-[10px] font-bold">👀 Khách tham quan</span>`
+          : (log.visitor_type === "admin"
+              ? `<span class="px-2 py-0.5 rounded-full bg-pastel-pink text-pastel-ink border border-pink-300 text-[10px] font-bold">👑 Admin</span>`
+              : `<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 text-[10px] font-bold">🔐 Tài khoản (${escapeHtml(log.visitor_type)})</span>`);
+
+        const timeStr = log.visited_at ? new Date(log.visited_at).toLocaleString("vi-VN") : "";
+        const isMobileUA = /Mobile|Android|iPhone|iPad/i.test(log.user_agent || "");
+        const deviceLabel = isMobileUA ? "📱 Điện thoại" : "💻 Máy tính";
+
+        return `
+          <tr class="hover:bg-blue-50/40">
+            <td class="p-2.5 border-b font-mono text-[11px] text-gray-600">${escapeHtml(timeStr)}</td>
+            <td class="p-2.5 border-b">${typeBadge}</td>
+            <td class="p-2.5 border-b font-bold text-pastel-ink">${escapeHtml(log.visitor_name)}</td>
+            <td class="p-2.5 border-b text-xs">
+              <span class="font-semibold text-pastel-pinkDeep">${escapeHtml(log.visitor_class_or_role || '')}</span>
+              ${log.email ? `<div class="text-[10px] text-gray-500">${escapeHtml(log.email)}</div>` : ''}
+            </td>
+            <td class="p-2.5 border-b text-xs text-gray-600">${deviceLabel}</td>
+          </tr>
+        `;
+      }).join("");
+    }
     async function addAllowedEmail() {
       const e = document.getElementById("whitelistEmailInput").value.trim(), r = document.getElementById("whitelistRoleSelect").value;
       if(!e) return;
