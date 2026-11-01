@@ -2120,14 +2120,13 @@
       </div>
     </div>
   </div>
-  <<!-- AUTHENTICATION & GUEST GATEWAY MODAL -->
-  <div id="authModal" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-pastel-cream w-full max-w-md rounded-3xl p-6 border-2 border-pink-200 shadow-2xl space-y-4 relative">
+  <!-- AUTHENTICATION & GUEST GATEWAY MODAL (BẮT BUỘC KHAI BÁO) -->
+  <div id="authModal" onclick="handleAuthBackdropClick(event)" class="fixed inset-0 z-[90] hidden bg-black/75 backdrop-blur-md flex items-center justify-center p-4 select-none">
+    <div id="authModalCard" onclick="event.stopPropagation()" class="bg-pastel-cream w-full max-w-md rounded-3xl p-6 border-2 border-pink-300 shadow-2xl space-y-4 relative transition-transform duration-150">
       <div class="flex items-center justify-between border-b border-dashed border-pink-200 pb-3">
         <h3 id="authModalTitle" class="font-hand text-2xl font-bold text-pastel-ink">🌸 Chào mừng đến với 11T2</h3>
-        <button onclick="closeAuthModal()" class="w-8 h-8 rounded-full bg-pink-100 hover:bg-pink-200 text-pastel-ink font-bold text-sm flex items-center justify-center">✕</button>
+        <button id="btnCloseAuthModal" onclick="closeAuthModal(false)" class="hidden w-8 h-8 rounded-full bg-pink-100 hover:bg-pink-200 text-pastel-ink font-bold text-sm flex items-center justify-center">✕</button>
       </div>
-
       <!-- KHUNG 1: HỎI ĐĂNG NHẬP / ĐĂNG KÝ / TIẾP TỤC KHÔNG CẦN TÀI KHOẢN -->
       <div id="authViewChoice" class="space-y-3">
         <p class="text-xs sm:text-sm text-pastel-muted leading-relaxed">
@@ -2555,19 +2554,72 @@
     // ============================================================================
     // CỔNG CHÀO ĐĂNG NHẬP / ĐĂNG KÝ / KHÁCH THAM QUAN & GHI NHẬN LỊCH SỬ
     // ============================================================================
+    // Kiểm tra xem người dùng đã có tư cách hợp lệ (Đã đăng nhập HOẶC Đã điền vai trò Khách) chưa
+    function hasValidVisitorIdentity() {
+      return Boolean(currentUser || (currentGuestSession && currentGuestSession.visitor_name && currentGuestSession.visitor_role));
+    }
+
     function checkInitialVisitorPrompt() {
-      if (!currentUser && !currentGuestSession) {
+      if (!hasValidVisitorIdentity()) {
         openAuthModal("choice");
       }
     }
 
-    function openAuthModal(defaultView = "choice") {
-      switchAuthModalView(defaultView);
-      document.getElementById("authModal").classList.remove("hidden");
+    // Khi bấm ra ngoài nền đen của khung đăng nhập/khách
+    function handleAuthBackdropClick(event) {
+      if (event) event.stopPropagation();
+      if (!hasValidVisitorIdentity()) {
+        shakeAuthModalCard();
+        showToast("⚠️ Vui lòng Đăng nhập hoặc nhập Tên & Vai trò tham quan để vào web!", "warning");
+        return;
+      }
+      // Kể cả khi đã có tài khoản/vai trò, bấm ra ngoài khi đang gõ ở tab Khách cũng không tự đóng để tránh mất chữ đang gõ
+      const guestView = document.getElementById("authViewGuest");
+      if (guestView && !guestView.classList.contains("hidden")) {
+        shakeAuthModalCard();
+        showToast("💡 Hãy điền xong rồi bấm '🚀 Vào tham quan ngay' hoặc nút ✕ ở góc trên nhé!", "info");
+        return;
+      }
+      closeAuthModal(false);
     }
 
-    function closeAuthModal() {
-      document.getElementById("authModal").classList.add("hidden");
+    function shakeAuthModalCard() {
+      const card = document.getElementById("authModalCard");
+      if (!card) return;
+      card.style.transform = "translateX(-8px)";
+      setTimeout(() => { card.style.transform = "translateX(8px)"; }, 80);
+      setTimeout(() => { card.style.transform = "translateX(-5px)"; }, 160);
+      setTimeout(() => { card.style.transform = "translateX(0px)"; }, 240);
+    }
+
+    function openAuthModal(defaultView = "choice") {
+      switchAuthModalView(defaultView);
+      const modal = document.getElementById("authModal");
+      const closeBtn = document.getElementById("btnCloseAuthModal");
+
+      // Chỉ hiện nút X nếu người dùng ĐÃ đăng nhập hoặc ĐÃ khai báo khách trước đó
+      if (closeBtn) {
+        if (hasValidVisitorIdentity()) {
+          closeBtn.classList.remove("hidden");
+        } else {
+          closeBtn.classList.add("hidden");
+        }
+      }
+
+      if (modal) modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden"; // Khóa cuộn trang phía sau
+    }
+
+    function closeAuthModal(forceClose = false) {
+      // CHẶN ĐÓNG KHUNG nếu chưa đăng nhập và chưa điền thông tin Khách
+      if (!forceClose && !hasValidVisitorIdentity()) {
+        shakeAuthModalCard();
+        showToast("⚠️ Bạn cần chọn Đăng nhập hoặc điền Vai trò tham quan trước khi vào lớp 11T2!", "warning");
+        return;
+      }
+      const modal = document.getElementById("authModal");
+      if (modal) modal.classList.add("hidden");
+      document.body.style.overflow = ""; // Mở lại cuộn trang
     }
 
     function switchAuthModalView(viewName) {
@@ -2600,7 +2652,8 @@
       const visitorRole = (roleInput?.value || "").trim();
 
       if (!visitorName || !visitorRole) {
-        return showToast("Vui lòng nhập Tên và Lớp / Vai trò tham quan của bạn nhé!", "warning");
+        shakeAuthModalCard();
+        return showToast("⚠️ Vui lòng nhập đầy đủ Tên và Lớp / Vai trò tham quan của bạn nhé!", "warning");
       }
 
       currentGuestSession = {
@@ -2610,7 +2663,6 @@
       };
       sessionStorage.setItem("tx11t2_guest_session", JSON.stringify(currentGuestSession));
 
-      // Điền sẵn tên vào ô Lưu bút cho tiện
       const gbAuthor = document.getElementById("gbAuthorInput");
       if (gbAuthor && !gbAuthor.value) {
         gbAuthor.value = `${visitorName} (${visitorRole})`;
@@ -2625,8 +2677,8 @@
       });
 
       updateAuthUI();
-      closeAuthModal();
-      showToast(`Chào mừng ${visitorName} (${visitorRole}) ghé thăm lớp 11T2!`, "success");
+      closeAuthModal(true); // Cho phép đóng khung sau khi đã điền xong
+      showToast(`🎉 Chào mừng ${visitorName} (${visitorRole}) ghé thăm lớp 11T2!`, "success");
     }
 
     async function recordWebsiteVisit(visitPayload) {
@@ -2640,7 +2692,6 @@
         visited_at: new Date().toISOString()
       };
 
-      // Lưu dự phòng vào localStorage
       try {
         const localLogs = JSON.parse(localStorage.getItem("tx11t2_visit_logs_backup") || "[]");
         localLogs.unshift(entry);
@@ -2660,12 +2711,12 @@
       const btnAuth = document.getElementById("btnTopAuth"), btnAdmin = document.getElementById("btnTopAdmin"), btnLogout = document.getElementById("btnTopLogout");
 
       if (!currentUser) {
-        if (currentGuestSession) {
+        if (currentGuestSession && currentGuestSession.visitor_name) {
           badge.textContent = `👋 Khách: ${currentGuestSession.visitor_name} (${currentGuestSession.visitor_role})`;
           badge.className = "px-2.5 py-0.5 rounded-full bg-pastel-butter text-amber-950 border border-amber-300 text-xs font-bold";
           btnAuth.textContent = "Đăng nhập / Đổi vai trò";
         } else {
-          badge.textContent = "👀 Khách xem";
+          badge.textContent = "👀 Chưa khai báo";
           badge.className = "px-2.5 py-0.5 rounded-full bg-white/80 text-pastel-ink border border-pink-200 text-xs font-bold";
           btnAuth.textContent = "Đăng nhập";
         }
@@ -2709,8 +2760,8 @@
       const email = document.getElementById("authRegEmailInput").value.trim();
       const pwd = document.getElementById("authRegPasswordInput").value;
 
-      if (!fn) return showToast("Vui lòng nhập Họ và tên của bạn!", "warning");
-      if (!email || pwd.length < 6) return showToast("Nhập Email hợp lệ và mật khẩu >= 6 ký tự!", "warning");
+      if (!fn) { shakeAuthModalCard(); return showToast("Vui lòng nhập Họ và tên của bạn!", "warning"); }
+      if (!email || pwd.length < 6) { shakeAuthModalCard(); return showToast("Nhập Email hợp lệ và mật khẩu >= 6 ký tự!", "warning"); }
 
       try {
         const { data, error } = await supabaseClient.auth.signUp({
@@ -2720,7 +2771,6 @@
         });
         if (error) throw error;
 
-        // Đảm bảo tạo bản ghi profile với trạng thái 'pending' chờ Admin duyệt
         const isSuper = isSuperAdminAccount(email, fn);
         const initialRole = isSuper ? "admin" : "pending";
         if (data?.user?.id) {
@@ -2732,7 +2782,17 @@
           }, { onConflict: "id" });
         }
 
-        closeAuthModal();
+        // Nếu Supabase yêu cầu xác nhận email nên chưa trả về session, tạo phiên tạm để vào xem web nhưng ở quyền chờ duyệt
+        if (!data?.session) {
+          currentGuestSession = {
+            visitor_name: fn,
+            visitor_role: "Đăng ký mới (Chờ duyệt)",
+            visited_at: new Date().toISOString()
+          };
+          sessionStorage.setItem("tx11t2_guest_session", JSON.stringify(currentGuestSession));
+        }
+
+        closeAuthModal(true);
         if (isSuper) {
           showToast("👑 Chào mừng Super Admin cutinoproo!", "success");
         } else {
@@ -2741,6 +2801,7 @@
         await fetchCurrentUserProfile();
         await syncAllDataFromSupabase();
       } catch (err) {
+        shakeAuthModalCard();
         showToast(`Lỗi đăng ký: ${err.message}`, "error");
       }
     }
@@ -2749,12 +2810,12 @@
       if (!supabaseClient) return showToast("Vui lòng kết nối Supabase!", "warning");
       const email = document.getElementById("authEmailInput").value.trim();
       const pwd = document.getElementById("authPasswordInput").value;
-      if (!email || !pwd) return showToast("Nhập Email và Mật khẩu!", "warning");
+      if (!email || !pwd) { shakeAuthModalCard(); return showToast("Nhập Email và Mật khẩu!", "warning"); }
       try {
         hasLoggedCurrentUserVisit = false;
         const { error } = await supabaseClient.auth.signInWithPassword({ email, password: pwd });
         if (error) throw error;
-        closeAuthModal();
+        closeAuthModal(true);
         await fetchCurrentUserProfile();
         await syncAllDataFromSupabase();
 
@@ -2764,6 +2825,7 @@
           showToast("🎉 Đăng nhập thành công!", "success");
         }
       } catch (err) {
+        shakeAuthModalCard();
         showToast(`Lỗi đăng nhập: ${err.message}`, "error");
       }
     }
@@ -2773,10 +2835,14 @@
       await supabaseClient.auth.signOut();
       currentUser = null;
       currentUserProfile = null;
+      currentGuestSession = null;
+      sessionStorage.removeItem("tx11t2_guest_session");
       hasLoggedCurrentUserVisit = false;
       updateAuthUI();
       showToast("Đã đăng xuất.", "info");
       if (currentSection === 'admin') switchSection('home');
+      // Bật lại khung bắt buộc khai báo ngay khi đăng xuất
+      openAuthModal("choice");
     }
 
     // Navigation Logic
