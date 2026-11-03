@@ -1158,6 +1158,250 @@
         border-radius: 16px !important;
       }
     }
+
+    /* ============================================================================
+       7. WALL PORTAL EXPERIENCE — 3D CAMERA DOLLY-OUT & UNIFIED 3D STAGE
+       ============================================================================ */
+
+    /* VIEWPORT KHÔNG GIAN 3D THỐNG NHẤT */
+    .portal-experience-viewport {
+      position: relative;
+      width: 100%;
+      min-height: calc(100vh - 120px);
+      perspective: 1350px;
+      perspective-origin: 50% 45%;
+      overflow-x: hidden;
+    }
+
+    /* SÂN KHẤU CAMERA 3D */
+    .portal-experience-stage {
+      position: relative;
+      width: 100%;
+      transform-style: preserve-3d;
+      transition: transform 1.85s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+
+    /* TRẠNG THÁI 1: BỨC TƯỜNG KỶ NIỆM (WALL PORTAL LAYER) */
+    .wall-portal-layer {
+      position: relative;
+      width: 100%;
+      transform-style: preserve-3d;
+      transition:
+        transform 1.85s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1),
+        filter 1.1s ease;
+      will-change: transform, opacity, filter;
+      z-index: 30;
+    }
+
+    /* TRẠNG THÁI 2: PHÒNG HỌC 3D (CLASSROOM 3D LAYER) */
+    .classroom-3d-layer {
+      position: relative;
+      width: 100%;
+      transform-style: preserve-3d;
+      transition:
+        transform 1.85s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1),
+        filter 1.1s ease;
+      will-change: transform, opacity, filter;
+      z-index: 20;
+    }
+
+    /* KHI Ở CHẾ ĐỘ BỨC TƯỜNG (MODE-WALL-PORTAL) */
+    .portal-experience-stage.mode-wall-portal .wall-portal-layer {
+      transform: translate3d(0, 0, 0) scale(1) rotateX(0deg);
+      opacity: 1;
+      filter: none;
+      pointer-events: auto;
+    }
+    .portal-experience-stage.mode-wall-portal .classroom-3d-layer {
+      transform: translate3d(0, 90px, -650px) scale(0.62);
+      opacity: 0;
+      filter: blur(6px);
+      pointer-events: none;
+      display: none;
+    }
+
+    /* KHI Ở CHẾ ĐỘ LỚP HỌC 3D (MODE-CLASSROOM-3D) */
+    .portal-experience-stage.mode-classroom-3d .wall-portal-layer {
+      transform: translate3d(0, -65px, -680px) rotateX(16deg) scale(0.62);
+      opacity: 0;
+      filter: blur(6px);
+      pointer-events: none;
+      display: none;
+    }
+    .portal-experience-stage.mode-classroom-3d .classroom-3d-layer {
+      transform: translate3d(0, 0, 0) scale(1) rotateX(0deg);
+      opacity: 1;
+      filter: none;
+      pointer-events: auto;
+      display: block;
+    }
+
+    /* KHI ĐANG CHUYỂN CẢNH (TRANSITIONING ACTIVE): CẢ 2 ĐỀU HIỂN THỊ ĐỂ RENDER CHUYỂN ĐỘNG KHÔNG GIAN */
+    .portal-experience-stage.is-transitioning .wall-portal-layer,
+    .portal-experience-stage.is-transitioning .classroom-3d-layer {
+      display: block !important;
+    }
+
+    /* BỀ MẶT BỨC TƯỜNG KỶ NIỆM (THE MEMORY WALL CANVAS) */
+    .wall-portal-surface {
+      position: relative;
+      background:
+        /* Vệt nắng ban mai chiếu xiên từ cửa sổ góc trái */
+        linear-gradient(118deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.18) 32%, transparent 55%),
+        /* Lưới caro scrapbook tinh tế */
+        linear-gradient(to right, rgba(244, 184, 206, 0.3) 1.5px, transparent 1.5px),
+        linear-gradient(to bottom, rgba(244, 184, 206, 0.3) 1.5px, transparent 1.5px),
+        /* Ánh sáng ấm áp từ giữa bức tường */
+        radial-gradient(ellipse at 50% 12%, rgba(255, 253, 246, 0.98) 0%, rgba(255, 238, 244, 0.94) 55%, rgba(250, 222, 234, 0.9) 100%);
+      background-size: 100% 100%, 32px 32px, 32px 32px, 100% 100%;
+      border-radius: 32px;
+      border: 5px solid #FFFFFF;
+      box-shadow:
+        0 30px 70px -15px rgba(61, 49, 74, 0.28),
+        0 0 0 1px rgba(244, 184, 206, 0.7),
+        inset 0 0 55px rgba(255, 214, 224, 0.45);
+      transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    /* Đèn rọi Gallery ở đỉnh bức tường */
+    .wall-gallery-spotlight-fixture {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 170px;
+      height: 14px;
+      background: linear-gradient(180deg, #E2B258 0%, #B8860B 100%);
+      border-radius: 8px 8px 0 0;
+      border: 2px solid #FFF8DC;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+      z-index: 25;
+      pointer-events: none;
+    }
+    .wall-spotlight-cone {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 520px;
+      height: 290px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255, 250, 230, 0.4) 0%, rgba(255, 240, 245, 0.18) 45%, transparent 75%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Viền phào gỗ trang trí tường trường học (Wall Wainscoting Molding) */
+    .wall-wood-molding-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: linear-gradient(180deg, #FFFFFF, #FBCFE8);
+      border-bottom: 2px solid #F472B6;
+      border-radius: 28px 28px 0 0;
+      pointer-events: none;
+    }
+
+    /* ============================================================================
+       NÚT ĐẶC BIỆT CHÍNH XÁC YÊU CẦU: "SƠ ĐỒ LỚP 11T2" (GÓC TRÊN BÊN PHẢI BỨC TƯỜNG)
+       ============================================================================ */
+    .wall-portal-special-btn {
+      position: relative;
+      border-radius: 9999px;
+      padding: 3px;
+      background: linear-gradient(135deg, #FF6584 0%, #E05780 45%, #9D75DF 100%);
+      box-shadow:
+        0 8px 24px -3px rgba(224, 87, 128, 0.5),
+        0 0 0 2.5px rgba(255, 255, 255, 0.95),
+        0 0 24px rgba(255, 143, 171, 0.5);
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+      z-index: 35;
+      text-align: left;
+    }
+    .wall-portal-special-btn:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow:
+        0 16px 36px -4px rgba(224, 87, 128, 0.68),
+        0 0 0 3.5px #FFFFFF,
+        0 0 35px rgba(224, 87, 128, 0.75);
+    }
+    .wall-portal-special-btn:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+    .wall-portal-btn-inner {
+      background: linear-gradient(135deg, #E05780 0%, #BE185D 50%, #7E22CE 100%);
+      border-radius: 9999px;
+      padding: 7px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    @keyframes portalHaloPulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 0.95; transform: scale(1.09); }
+    }
+    .portal-sparkle-halo {
+      position: absolute;
+      inset: -5px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, rgba(255, 182, 193, 0.85) 0%, rgba(224, 87, 128, 0.3) 55%, transparent 75%);
+      animation: portalHaloPulse 2.4s infinite ease-in-out;
+      pointer-events: none;
+    }
+    .portal-icon-spin {
+      display: inline-block;
+      transition: transform 0.4s ease;
+    }
+    .wall-portal-special-btn:hover .portal-icon-spin {
+      transform: rotate(-12deg) scale(1.15);
+    }
+    .portal-beacon-live {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #4ADE80;
+      box-shadow: 0 0 10px #4ADE80, 0 0 4px #FFFFFF;
+      animation: pulse 1.4s infinite;
+      flex-shrink: 0;
+    }
+
+    /* NÚT QUAY LẠI BỨC TƯỜNG (RETURN TO WALL PORTAL) */
+    .btn-return-wall-portal {
+      background: linear-gradient(135deg, #FFFDF9 0%, #FCE7F3 60%, #E0D4FF 100%);
+      color: #3D314A;
+      border: 2px solid #FFFFFF;
+      border-radius: 9999px;
+      padding: 8px 18px;
+      font-weight: 800;
+      font-size: 12px;
+      box-shadow:
+        0 8px 20px -3px rgba(61, 49, 74, 0.22),
+        0 0 0 2px rgba(244, 184, 206, 0.8);
+      cursor: pointer;
+      transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-return-wall-portal:hover {
+      transform: translateY(-3px) scale(1.05);
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFD6E0 60%, #E5D4FF 100%);
+      box-shadow:
+        0 14px 28px -4px rgba(224, 87, 128, 0.42),
+        0 0 0 2.5px #E05780;
+    }
+    .btn-return-wall-portal:active {
+      transform: translateY(0) scale(0.98);
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-pastel-pink selection:text-pastel-ink">
@@ -1252,12 +1496,66 @@
   </header>
 
   <!-- ============================================================================
-       MAIN CONTENT
+       MAIN CONTENT — WALL PORTAL & UNIFIED 3D CLASSROOM STAGE
        ============================================================================ -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+  <main id="portalExperienceViewport" class="portal-experience-viewport flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+    <div id="portalExperienceStage" class="portal-experience-stage mode-wall-portal">
 
-    <!-- 1. TRANG CHỦ -->
-    <section id="section-home" class="page-section space-y-10 hidden">
+      <!-- ============================================================================
+           PHẦN 1. BỨC TƯỜNG KỶ NIỆM (THE WALL PORTAL) — CLOSE-UP MACRO VIEW
+           Bức tường là trung tâm giao diện mới của website, che chắn toàn bộ không gian lớp học phía sau.
+           ============================================================================ -->
+      <div id="wallPortalLayer" class="wall-portal-layer">
+        <div id="wallPortalSurface" class="wall-portal-surface">
+          
+          <!-- Phào gỗ trang trí đỉnh tường & Đèn rọi Gallery nghệ thuật -->
+          <div class="wall-wood-molding-top"></div>
+          <div class="wall-gallery-spotlight-fixture"></div>
+          <div class="wall-spotlight-cone"></div>
+
+          <!-- HEADER BỨC TƯỜNG: HUY HIỆU THANH XUÂN & NÚT ĐẶC BIỆT "SƠ ĐỒ LỚP 11T2" -->
+          <div class="wall-top-bar flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b-2 border-dashed border-pink-200/80 relative z-10">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-pastel-pink via-pastel-lavender to-pastel-blue flex items-center justify-center shadow-sticker border-2 border-white">
+                <span class="text-xl sm:text-2xl animate-float">🌸</span>
+              </div>
+              <div>
+                <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-pastel-pink text-pastel-pinkDeep text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-pink-300">
+                  <span>✨ Bức Tường Kỷ Niệm 11T2</span>
+                </div>
+                <h2 class="font-hand text-xl sm:text-3xl font-bold text-pastel-ink tracking-tight mt-0.5">
+                  Thanh Xuân T2 <span class="text-pastel-pinkDeep">2025-2028</span>
+                </h2>
+              </div>
+            </div>
+
+            <!-- NÚT ĐẶC BIỆT CHÍNH XÁC YÊU CẦU: "SƠ ĐỒ LỚP 11T2" (GÓC TRÊN BÊN PHẢI BỨC TƯỜNG) -->
+            <button id="btnSpecialClassroomPortal"
+                    onclick="enterClassroom3D()"
+                    class="wall-portal-special-btn group"
+                    title="Bấm để kích hoạt chuyển cảnh 3D bước vào Sơ đồ lớp 11T2!">
+              <div class="portal-sparkle-halo"></div>
+              <div class="wall-portal-btn-inner">
+                <span class="portal-icon-spin text-lg sm:text-xl">🏫</span>
+                <div class="text-left">
+                  <span class="block font-black text-xs sm:text-sm tracking-wider uppercase text-white drop-shadow">
+                    SƠ ĐỒ LỚP 11T2
+                  </span>
+                  <span class="block text-[9.5px] font-bold text-pink-100 flex items-center gap-1">
+                    <span>Khám phá lớp 3D</span>
+                    <span class="group-hover:translate-x-1 transition-transform">➔</span>
+                  </span>
+                </div>
+                <div class="portal-beacon-live" title="3D Live Ready"></div>
+              </div>
+            </button>
+          </div>
+
+          <!-- KHUNG CHỨA CÁC MỤC NỘI DUNG TRÊN BỀ MẶT BỨC TƯỜNG -->
+          <div id="wallSectionsContainer" class="wall-sections-container relative z-10 space-y-8">
+
+            <!-- 1. TRANG CHỦ -->
+            <section id="section-home" class="page-section space-y-10 hidden">
       <div class="relative rounded-3xl bg-gradient-to-br from-pastel-pink/60 via-pastel-cream to-pastel-blue/60 p-6 sm:p-10 lg:p-12 border-2 border-white shadow-polaroid overflow-hidden">
         <div class="grid lg:grid-cols-12 gap-8 items-center">
           <div class="lg:col-span-7 space-y-5">
@@ -1457,6 +1755,142 @@
       </div>
       <div id="guestbookWallGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
     </section>
+
+    <!-- 7. ADMIN DASHBOARD SECTION (CHỈ DÀNH CHO ADMIN - NẰM TRÊN BỨC TƯỜNG) -->
+    <section id="section-admin" class="page-section hidden space-y-8">
+      <div class="bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-pink-200 shadow-soft space-y-6">
+        <div class="border-b border-pink-100 pb-4 mb-4">
+          <h2 class="font-hand text-3xl sm:text-4xl font-bold text-pastel-ink">⚙️ Admin Dashboard</h2>
+          <p class="text-sm text-pastel-muted mt-1">Khu vực quản trị nội bộ dành riêng cho Admin.</p>
+        </div>
+
+        <!-- Admin Tabs Menu -->
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button onclick="switchAdminTab('system')" id="tab-system" class="admin-tab-btn active px-4 py-2 rounded-xl bg-pastel-pinkDeep text-white font-bold text-sm shadow-sm transition">Cài đặt Hệ thống</button>
+          <button onclick="switchAdminTab('users')" id="tab-users" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">Quản lý & Duyệt Thành viên</button>
+          <button onclick="switchAdminTab('visits')" id="tab-visits" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">👣 Lịch sử tham quan</button>
+          <button onclick="switchAdminTab('backup')" id="tab-backup" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">Sao lưu & Phục hồi</button>
+          <button onclick="switchAdminTab('content')" id="tab-content" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">Quản lý Nội dung</button>
+        </div>
+
+        <!-- TAB 1: SYSTEM & DEPLOY -->
+        <div id="admin-tab-system" class="admin-tab-content space-y-6">
+          <div class="flex flex-wrap gap-2 justify-end mb-4">
+            <button onclick="downloadProjectFile('schema.sql')" class="px-3 py-1.5 rounded-lg bg-pastel-blue text-xs font-bold">⬇️ Tải schema.sql</button>
+            <button onclick="downloadProjectFile('README.md')" class="px-3 py-1.5 rounded-lg bg-pastel-butter text-xs font-bold">⬇️ Tải README.md</button>
+            <button onclick="downloadProjectFile('.env.example')" class="px-3 py-1.5 rounded-lg bg-pastel-lavender text-xs font-bold">⬇️ Tải .env & .gitignore</button>
+          </div>
+
+          <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-pink-200 space-y-4">
+            <div class="flex justify-between items-center"><h3 class="font-hand text-xl font-bold">🔌 1. Kết nối Supabase</h3><span id="adminConnectionBadge" class="text-xs px-2 py-1 rounded bg-emerald-100 text-emerald-800 font-bold">✅ Đã kết nối</span></div>
+            <div class="space-y-3">
+              <div><label class="block text-xs font-bold mb-1">Project URL</label><input id="cfgSupabaseUrl" type="url" class="w-full px-3 py-2 rounded bg-white border border-pink-200 text-sm"></div>
+              <div><label class="block text-xs font-bold mb-1">Anon Public Key</label><input id="cfgSupabaseAnonKey" type="text" class="w-full px-3 py-2 rounded bg-white border border-pink-200 text-sm font-mono"></div>
+            </div>
+            <div class="flex flex-wrap gap-2 pt-2">
+              <button onclick="saveSupabaseConnection()" class="px-4 py-2 rounded bg-pastel-pinkDeep text-white text-xs font-bold">💾 Lưu & Kết nối</button>
+              <button onclick="exportReadyToDeployHtml()" class="px-4 py-2 rounded bg-emerald-600 text-white text-xs font-bold">📦 Xuất file index.html cho lớp</button>
+              <button onclick="disconnectSupabaseConfig()" class="px-3 py-2 rounded bg-white border border-gray-300 text-xs font-bold text-gray-600">Xóa cấu hình</button>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border-2 border-pink-200 space-y-4 text-sm text-pastel-ink">
+            <h3 class="font-hand text-xl font-bold">📘 2. Hướng dẫn Đưa lên Vercel & SQL Sơ đồ 3D</h3>
+            <ol class="list-decimal list-inside space-y-1">
+              <li>Sao chép đoạn mã SQL bên dưới vào <strong>Supabase Dashboard → SQL Editor → Run</strong> để tạo bảng <code>classroom_desks</code>.</li>
+              <li>Vào GitHub, cập nhật file <code>index.html</code> mới và Commit để Vercel tự động Deploy.</li>
+            </ol>
+            <div class="pt-2"><label class="block text-xs font-bold mb-1">Mã SQL (Bao gồm bảng classroom_desks cho Sơ đồ lớp 3D):</label><textarea id="sqlSchemaPreviewBox" readonly rows="8" class="w-full p-3 rounded bg-gray-900 text-emerald-300 font-mono text-[11px]"></textarea></div>
+          </div>
+        </div>
+
+        <!-- TAB 2: USERS -->
+        <div id="admin-tab-users" class="admin-tab-content hidden space-y-6">
+          <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-purple-200 space-y-4">
+            <div class="flex justify-between items-center"><h3 class="font-hand text-xl font-bold">🛡️ Quản lý Quyền (Whitelist)</h3><button onclick="refreshAdminUsersList()" class="px-3 py-1 bg-white border border-purple-200 rounded text-xs font-bold">🔄 Làm mới</button></div>
+            <div class="flex flex-wrap gap-2 items-center bg-white p-3 rounded-xl border border-purple-100">
+              <input id="whitelistEmailInput" type="email" placeholder="Email bạn học..." class="flex-1 px-3 py-2 rounded border border-purple-200 text-sm">
+              <select id="whitelistRoleSelect" class="px-3 py-2 rounded border border-purple-200 text-sm font-bold"><option value="member">Thành viên</option><option value="admin">Admin</option></select>
+              <button onclick="addAllowedEmail()" class="px-4 py-2 rounded bg-pastel-lavenderDark text-white text-sm font-bold">Thêm Email</button>
+            </div>
+            <div class="overflow-x-auto bg-white rounded-xl border border-purple-100">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead><tr class="bg-pastel-lavender/40 border-b border-purple-100"><th class="p-2 font-bold">Email</th><th class="p-2 font-bold">Quyền</th><th class="p-2 font-bold">Ngày</th><th class="p-2 font-bold text-right">Hành động</th></tr></thead>
+                <tbody id="adminProfilesTableBody" class="divide-y divide-purple-50"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- TAB 2.5: LỊCH SỬ THAM QUAN WEB (CẢ TÀI KHOẢN ĐĂNG NHẬP & KHÁCH) -->
+        <div id="admin-tab-visits" class="admin-tab-content hidden space-y-6">
+          <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-blue-200 space-y-4">
+            <div class="flex flex-wrap justify-between items-center gap-2">
+              <div>
+                <h3 class="font-hand text-xl font-bold text-pastel-ink">👣 Lịch sử tham quan Website</h3>
+                <p class="text-xs text-pastel-muted">Ghi nhận tất cả tài khoản đã đăng nhập (Admin, Thành viên, Chờ duyệt) và Khách tham quan.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <select id="visitFilterType" onchange="renderAdminVisitLogs()" class="px-3 py-1.5 bg-white border border-blue-200 rounded-xl text-xs font-bold">
+                  <option value="all">Tất cả lượt truy cập</option>
+                  <option value="logged_in">🔐 Tài khoản đã đăng nhập</option>
+                  <option value="guest">👀 Tài khoản Khách</option>
+                </select>
+                <button onclick="refreshAdminVisitLogs()" class="px-3 py-1.5 bg-white border border-blue-200 hover:bg-blue-50 rounded-xl text-xs font-bold">🔄 Làm mới</button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto bg-white rounded-xl border border-blue-100">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-pastel-blue/40 border-b border-blue-100">
+                    <th class="p-2.5 font-bold">Thời gian</th>
+                    <th class="p-2.5 font-bold">Phân loại</th>
+                    <th class="p-2.5 font-bold">Tên người truy cập</th>
+                    <th class="p-2.5 font-bold">Lớp / Vai trò / Email</th>
+                    <th class="p-2.5 font-bold">Thiết bị</th>
+                  </tr>
+                </thead>
+                <tbody id="adminVisitLogsTableBody" class="divide-y divide-blue-50">
+                  <tr><td colspan="5" class="p-6 text-center text-pastel-muted">Đang tải lịch sử tham quan...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- TAB 3: BACKUP -->
+        <div id="admin-tab-backup" class="admin-tab-content hidden space-y-6">
+          <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-amber-200 space-y-4">
+            <h3 class="font-hand text-xl font-bold">💾 Sao lưu Dữ liệu (.JSON)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div class="bg-white p-4 rounded-xl border border-amber-100"><p class="font-bold">Xuất dữ liệu (Bao gồm cả Sơ đồ 3D)</p><button onclick="exportDatabaseBackupJson()" class="mt-2 px-4 py-2 rounded bg-amber-500 text-white font-bold">⬇️ Tải file JSON</button></div>
+              <div class="bg-white p-4 rounded-xl border border-amber-100"><p class="font-bold">Phục hồi dữ liệu</p><input id="restoreJsonInput" type="file" accept="application/json" class="mt-2 block w-full text-xs"><button onclick="restoreDatabaseFromJson()" class="mt-2 px-4 py-2 rounded bg-gray-800 text-white font-bold">⬆️ Phục hồi lên Supabase</button></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- TAB 4: SHORTCUTS -->
+        <div id="admin-tab-content" class="admin-tab-content hidden space-y-6">
+          <h3 class="font-hand text-xl font-bold">Chỉnh sửa nội dung trực tiếp trên giao diện:</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 text-center">
+            <button onclick="switchSection('albums')" class="p-4 rounded-xl bg-white border-2 border-pink-100 hover:border-pastel-pinkDark transition"><div class="text-3xl mb-1">📔</div><div class="font-bold text-sm">Album</div></button>
+            <button onclick="switchSection('gallery')" class="p-4 rounded-xl bg-white border-2 border-blue-100 hover:border-pastel-blueDark transition"><div class="text-3xl mb-1">📸</div><div class="font-bold text-sm">Ảnh</div></button>
+            <button onclick="switchSection('timeline')" class="p-4 rounded-xl bg-white border-2 border-purple-100 hover:border-pastel-lavenderDark transition"><div class="text-3xl mb-1">🗓️</div><div class="font-bold text-sm">Sự kiện</div></button>
+            <button onclick="switchSection('guestbook')" class="p-4 rounded-xl bg-white border-2 border-amber-100 hover:border-pastel-butterDark transition"><div class="text-3xl mb-1">💌</div><div class="font-bold text-sm">Lưu bút</div></button>
+            <button onclick="switchSection('map')" class="p-4 rounded-xl bg-white border-2 border-pink-200 hover:border-pastel-pinkDeep transition"><div class="text-3xl mb-1">🗺️</div><div class="font-bold text-sm">Sơ đồ 3D</div></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+          </div> <!-- đóng #wallSectionsContainer -->
+        </div> <!-- đóng #wallPortalSurface -->
+      </div> <!-- đóng #wallPortalLayer -->
+
+      <!-- ============================================================================
+           PHẦN 2. KHÔNG GIAN PHÒNG HỌC 3D (CLASSROOM 3D) — TOÀN CẢNH LỚP HỌC 11T2
+           ============================================================================ -->
+      <div id="classroom3DLayer" class="classroom-3d-layer">
+
 <!-- ============================================================================
          6.5 MÔ HÌNH PHÒNG HỌC 11T2 3D (DYNAMIC ISLAND • 2 DÃY SONG SONG CẢ PC & MOBILE)
          ============================================================================ -->
@@ -1477,6 +1911,10 @@
 
           <!-- Cụm nút điều khiển Camera & Quản lý Sơ đồ -->
           <div class="flex flex-wrap items-center justify-center gap-2 pt-1">
+            <!-- NÚT QUAY LẠI BỨC TƯỜNG (RETURN TO WALL PORTAL) -->
+            <button id="btnReturnToWallPortal" onclick="returnToWallPortal('home')" class="btn-return-wall-portal" title="Quay lại Bức Tường Kỷ Niệm (Trang chủ)">
+              <span>🏠</span> <span>QUAY LẠI BỨC TƯỜNG</span>
+            </button>
             <button onclick="resetClassroomCamera()" class="px-3.5 py-2 rounded-full bg-white hover:bg-pastel-pink/40 text-pastel-ink font-bold text-xs border-2 border-pink-200 shadow-sm transition flex items-center gap-1.5">
               <span>👁️</span> Toàn cảnh 2 dãy
             </button>
@@ -1808,132 +2246,9 @@
         </div>
       </div>
     </section>
-    <!-- 7. ADMIN DASHBOARD SECTION (CHỈ DÀNH CHO ADMIN) -->
-    <section id="section-admin" class="page-section hidden space-y-8">
-      <div class="bg-white/95 rounded-3xl p-6 sm:p-8 border-2 border-pink-200 shadow-soft space-y-6">
-        <div class="border-b border-pink-100 pb-4 mb-4">
-          <h2 class="font-hand text-3xl sm:text-4xl font-bold text-pastel-ink">⚙️ Admin Dashboard</h2>
-          <p class="text-sm text-pastel-muted mt-1">Khu vực quản trị nội bộ dành riêng cho Admin.</p>
-        </div>
+      </div> <!-- đóng #classroom3DLayer -->
 
-        <!-- Admin Tabs Menu -->
-        <div class="flex flex-wrap gap-2 mb-6">
-          <button onclick="switchAdminTab('system')" id="tab-system" class="admin-tab-btn active px-4 py-2 rounded-xl bg-pastel-pinkDeep text-white font-bold text-sm shadow-sm transition">Cài đặt Hệ thống</button>
-          <button onclick="switchAdminTab('users')" id="tab-users" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">Quản lý & Duyệt Thành viên</button>
-          <button onclick="switchAdminTab('visits')" id="tab-visits" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">👣 Lịch sử tham quan</button>
-          <button onclick="switchAdminTab('backup')" id="tab-backup" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">Sao lưu & Phục hồi</button>
-          <button onclick="switchAdminTab('content')" id="tab-content" class="admin-tab-btn px-4 py-2 rounded-xl bg-pastel-cream text-pastel-ink font-bold text-sm border border-pink-200 hover:bg-pastel-pink/40 transition">Quản lý Nội dung</button>
-        </div>
-
-        <!-- TAB 1: SYSTEM & DEPLOY -->
-        <div id="admin-tab-system" class="admin-tab-content space-y-6">
-          <div class="flex flex-wrap gap-2 justify-end mb-4">
-            <button onclick="downloadProjectFile('schema.sql')" class="px-3 py-1.5 rounded-lg bg-pastel-blue text-xs font-bold">⬇️ Tải schema.sql</button>
-            <button onclick="downloadProjectFile('README.md')" class="px-3 py-1.5 rounded-lg bg-pastel-butter text-xs font-bold">⬇️ Tải README.md</button>
-            <button onclick="downloadProjectFile('.env.example')" class="px-3 py-1.5 rounded-lg bg-pastel-lavender text-xs font-bold">⬇️ Tải .env & .gitignore</button>
-          </div>
-
-          <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-pink-200 space-y-4">
-            <div class="flex justify-between items-center"><h3 class="font-hand text-xl font-bold">🔌 1. Kết nối Supabase</h3><span id="adminConnectionBadge" class="text-xs px-2 py-1 rounded bg-emerald-100 text-emerald-800 font-bold">✅ Đã kết nối</span></div>
-            <div class="space-y-3">
-              <div><label class="block text-xs font-bold mb-1">Project URL</label><input id="cfgSupabaseUrl" type="url" class="w-full px-3 py-2 rounded bg-white border border-pink-200 text-sm"></div>
-              <div><label class="block text-xs font-bold mb-1">Anon Public Key</label><input id="cfgSupabaseAnonKey" type="text" class="w-full px-3 py-2 rounded bg-white border border-pink-200 text-sm font-mono"></div>
-            </div>
-            <div class="flex flex-wrap gap-2 pt-2">
-              <button onclick="saveSupabaseConnection()" class="px-4 py-2 rounded bg-pastel-pinkDeep text-white text-xs font-bold">💾 Lưu & Kết nối</button>
-              <button onclick="exportReadyToDeployHtml()" class="px-4 py-2 rounded bg-emerald-600 text-white text-xs font-bold">📦 Xuất file index.html cho lớp</button>
-              <button onclick="disconnectSupabaseConfig()" class="px-3 py-2 rounded bg-white border border-gray-300 text-xs font-bold text-gray-600">Xóa cấu hình</button>
-            </div>
-          </div>
-
-          <div class="bg-white p-5 rounded-2xl border-2 border-pink-200 space-y-4 text-sm text-pastel-ink">
-            <h3 class="font-hand text-xl font-bold">📘 2. Hướng dẫn Đưa lên Vercel & SQL Sơ đồ 3D</h3>
-            <ol class="list-decimal list-inside space-y-1">
-              <li>Sao chép đoạn mã SQL bên dưới vào <strong>Supabase Dashboard → SQL Editor → Run</strong> để tạo bảng <code>classroom_desks</code>.</li>
-              <li>Vào GitHub, cập nhật file <code>index.html</code> mới và Commit để Vercel tự động Deploy.</li>
-            </ol>
-            <div class="pt-2"><label class="block text-xs font-bold mb-1">Mã SQL (Bao gồm bảng classroom_desks cho Sơ đồ lớp 3D):</label><textarea id="sqlSchemaPreviewBox" readonly rows="8" class="w-full p-3 rounded bg-gray-900 text-emerald-300 font-mono text-[11px]"></textarea></div>
-          </div>
-        </div>
-
-        <!-- TAB 2: USERS -->
-        <div id="admin-tab-users" class="admin-tab-content hidden space-y-6">
-          <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-purple-200 space-y-4">
-            <div class="flex justify-between items-center"><h3 class="font-hand text-xl font-bold">🛡️ Quản lý Quyền (Whitelist)</h3><button onclick="refreshAdminUsersList()" class="px-3 py-1 bg-white border border-purple-200 rounded text-xs font-bold">🔄 Làm mới</button></div>
-            <div class="flex flex-wrap gap-2 items-center bg-white p-3 rounded-xl border border-purple-100">
-              <input id="whitelistEmailInput" type="email" placeholder="Email bạn học..." class="flex-1 px-3 py-2 rounded border border-purple-200 text-sm">
-              <select id="whitelistRoleSelect" class="px-3 py-2 rounded border border-purple-200 text-sm font-bold"><option value="member">Thành viên</option><option value="admin">Admin</option></select>
-              <button onclick="addAllowedEmail()" class="px-4 py-2 rounded bg-pastel-lavenderDark text-white text-sm font-bold">Thêm Email</button>
-            </div>
-            <div class="overflow-x-auto bg-white rounded-xl border border-purple-100">
-              <table class="w-full text-left border-collapse text-xs">
-                <thead><tr class="bg-pastel-lavender/40 border-b border-purple-100"><th class="p-2 font-bold">Email</th><th class="p-2 font-bold">Quyền</th><th class="p-2 font-bold">Ngày</th><th class="p-2 font-bold text-right">Hành động</th></tr></thead>
-                <tbody id="adminProfilesTableBody" class="divide-y divide-purple-50"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <!-- TAB 2.5: LỊCH SỬ THAM QUAN WEB (CẢ TÀI KHOẢN ĐĂNG NHẬP & KHÁCH) -->
-        <div id="admin-tab-visits" class="admin-tab-content hidden space-y-6">
-          <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-blue-200 space-y-4">
-            <div class="flex flex-wrap justify-between items-center gap-2">
-              <div>
-                <h3 class="font-hand text-xl font-bold text-pastel-ink">👣 Lịch sử tham quan Website</h3>
-                <p class="text-xs text-pastel-muted">Ghi nhận tất cả tài khoản đã đăng nhập (Admin, Thành viên, Chờ duyệt) và Khách tham quan.</p>
-              </div>
-              <div class="flex items-center gap-2">
-                <select id="visitFilterType" onchange="renderAdminVisitLogs()" class="px-3 py-1.5 bg-white border border-blue-200 rounded-xl text-xs font-bold">
-                  <option value="all">Tất cả lượt truy cập</option>
-                  <option value="logged_in">🔐 Tài khoản đã đăng nhập</option>
-                  <option value="guest">👀 Tài khoản Khách</option>
-                </select>
-                <button onclick="refreshAdminVisitLogs()" class="px-3 py-1.5 bg-white border border-blue-200 hover:bg-blue-50 rounded-xl text-xs font-bold">🔄 Làm mới</button>
-              </div>
-            </div>
-
-            <div class="overflow-x-auto bg-white rounded-xl border border-blue-100">
-              <table class="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr class="bg-pastel-blue/40 border-b border-blue-100">
-                    <th class="p-2.5 font-bold">Thời gian</th>
-                    <th class="p-2.5 font-bold">Phân loại</th>
-                    <th class="p-2.5 font-bold">Tên người truy cập</th>
-                    <th class="p-2.5 font-bold">Lớp / Vai trò / Email</th>
-                    <th class="p-2.5 font-bold">Thiết bị</th>
-                  </tr>
-                </thead>
-                <tbody id="adminVisitLogsTableBody" class="divide-y divide-blue-50">
-                  <tr><td colspan="5" class="p-6 text-center text-pastel-muted">Đang tải lịch sử tham quan...</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <!-- TAB 3: BACKUP -->
-        <div id="admin-tab-backup" class="admin-tab-content hidden space-y-6">
-          <div class="bg-pastel-cream p-5 rounded-2xl border-2 border-amber-200 space-y-4">
-            <h3 class="font-hand text-xl font-bold">💾 Sao lưu Dữ liệu (.JSON)</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div class="bg-white p-4 rounded-xl border border-amber-100"><p class="font-bold">Xuất dữ liệu (Bao gồm cả Sơ đồ 3D)</p><button onclick="exportDatabaseBackupJson()" class="mt-2 px-4 py-2 rounded bg-amber-500 text-white font-bold">⬇️ Tải file JSON</button></div>
-              <div class="bg-white p-4 rounded-xl border border-amber-100"><p class="font-bold">Phục hồi dữ liệu</p><input id="restoreJsonInput" type="file" accept="application/json" class="mt-2 block w-full text-xs"><button onclick="restoreDatabaseFromJson()" class="mt-2 px-4 py-2 rounded bg-gray-800 text-white font-bold">⬆️ Phục hồi lên Supabase</button></div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- TAB 4: SHORTCUTS -->
-        <div id="admin-tab-content" class="admin-tab-content hidden space-y-6">
-          <h3 class="font-hand text-xl font-bold">Chỉnh sửa nội dung trực tiếp trên giao diện:</h3>
-          <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 text-center">
-            <button onclick="switchSection('albums')" class="p-4 rounded-xl bg-white border-2 border-pink-100 hover:border-pastel-pinkDark transition"><div class="text-3xl mb-1">📔</div><div class="font-bold text-sm">Album</div></button>
-            <button onclick="switchSection('gallery')" class="p-4 rounded-xl bg-white border-2 border-blue-100 hover:border-pastel-blueDark transition"><div class="text-3xl mb-1">📸</div><div class="font-bold text-sm">Ảnh</div></button>
-            <button onclick="switchSection('timeline')" class="p-4 rounded-xl bg-white border-2 border-purple-100 hover:border-pastel-lavenderDark transition"><div class="text-3xl mb-1">🗓️</div><div class="font-bold text-sm">Sự kiện</div></button>
-            <button onclick="switchSection('guestbook')" class="p-4 rounded-xl bg-white border-2 border-amber-100 hover:border-pastel-butterDark transition"><div class="text-3xl mb-1">💌</div><div class="font-bold text-sm">Lưu bút</div></button>
-            <button onclick="switchSection('map')" class="p-4 rounded-xl bg-white border-2 border-pink-200 hover:border-pastel-pinkDeep transition"><div class="text-3xl mb-1">🗺️</div><div class="font-bold text-sm">Sơ đồ 3D</div></button>
-          </div>
-        </div>
-      </div>
-    </section>
-
+    </div> <!-- đóng #portalExperienceStage -->
   </main>
 
   <footer class="mt-16 border-t-2 border-dashed border-pink-200 bg-white/70 py-6 px-4 text-center">
@@ -2317,6 +2632,12 @@
     let currentSection = "home"; let activeAlbumSlug = null;
     let selectedUploadFiles = []; let galleryVisibleLimit = 12;
     let currentLightboxPhoto = null; let lastGuestbookSubmitTime = 0;
+
+    // ============================================================================
+    // BIẾN TRẠNG THÁI CHO TRẢI NGHIỆM WALL PORTAL & KHÔNG GIAN 3D THỐNG NHẤT
+    // ============================================================================
+    let currentAppMode = "wall"; // "wall" (Bức Tường Kỷ Niệm) hoặc "classroom" (Sơ đồ Lớp 3D)
+    let isTransitioningPortal = false;
 
     // ============================================================================
     // BIẾN TRẠNG THÁI CHO MÔ HÌNH LỚP HỌC 3D (SƠ ĐỒ LỚP ĐỘC LẬP TỪNG BÀN)
@@ -2845,14 +3166,35 @@
       openAuthModal("choice");
     }
 
-    // Navigation Logic
+    // Navigation Logic — Phối hợp hoàn hảo giữa Bức Tường và Sơ đồ Lớp 3D
     function switchSection(sectionId) {
+      if (sectionId === 'map') {
+        if (currentAppMode === 'classroom') {
+          resetClassroomCamera();
+          return;
+        }
+        enterClassroom3D();
+        return;
+      }
+
+      // Nếu đang ở trong Sơ đồ lớp 3D mà chọn tab khác -> quay lại Bức Tường và mở tab đó
+      if (currentAppMode === 'classroom') {
+        returnToWallPortal(sectionId);
+        return;
+      }
+
+      // Nếu đang ở Bức Tường -> chuyển tab trên Bức Tường
+      switchWallSection(sectionId);
+    }
+
+    function switchWallSection(sectionId) {
       if (sectionId === 'admin') {
         if (isDbConnected && (!currentUser || !isAdminUser())) {
           showToast("Khu vực Quản trị chỉ dành riêng cho Admin!", "error");
-          switchSection('home'); return;
+          switchWallSection('home');
+          return;
         }
-        if(!isDbConnected) switchAdminTab('system');
+        if (!isDbConnected) switchAdminTab('system');
       }
 
       currentSection = sectionId;
@@ -2861,10 +3203,179 @@
       if (target) target.classList.remove("hidden");
 
       document.querySelectorAll(".nav-btn").forEach(btn => {
-        if (btn.getAttribute("data-nav") === sectionId) btn.className = "nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 bg-pastel-pink text-pastel-ink shadow-sm";
-        else btn.className = "nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted hover:bg-pastel-pink/30 hover:text-pastel-ink";
+        if (btn.getAttribute("data-nav") === sectionId) {
+          btn.className = "nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 bg-pastel-pink text-pastel-ink shadow-sm";
+        } else {
+          btn.className = "nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted hover:bg-pastel-pink/30 hover:text-pastel-ink";
+        }
       });
-      window.scrollTo({ top: 0, behavior: "smooth" }); renderAllSections();
+
+      if (sectionId !== 'home') {
+        document.getElementById("wallSectionsContainer")?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      renderAllSections();
+    }
+
+    // ============================================================================
+    // ANIMATION CHUYỂN CẢNH ĐIỆN ẢNH 3D: TỪ BỨC TƯỜNG BƯỚC VÀO LỚP HỌC 3D (DOLLY-OUT)
+    // ============================================================================
+    function enterClassroom3D() {
+      if (isTransitioningPortal || currentAppMode === "classroom") return;
+      isTransitioningPortal = true;
+
+      // 1. Âm thanh Web Audio API mở cổng không gian (Portal Whoosh & Chime lấp lánh)
+      playClassroomSynthesizedSfx("portal_pullout");
+
+      const stage = document.getElementById("portalExperienceStage");
+      const wallLayer = document.getElementById("wallPortalLayer");
+      const classLayer = document.getElementById("classroom3DLayer");
+      const mapSection = document.getElementById("section-map");
+
+      // Đảm bảo cả hai layer đều sẵn sàng render chuyển động 3D
+      if (stage) {
+        stage.classList.add("is-transitioning");
+      }
+      if (classLayer) {
+        classLayer.style.display = "block";
+        classLayer.style.pointerEvents = "none";
+      }
+      if (mapSection) {
+        mapSection.classList.remove("hidden");
+      }
+
+      // Render lại Sơ đồ lớp để đảm bảo dữ liệu mới nhất
+      renderMapSection();
+
+      // Cuộn mượt lên đỉnh để đón nhận cú dolly-out toàn cảnh
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // 2. Kích hoạt chuyển cảnh camera 3D Dolly-out có quán tính điện ảnh
+      requestAnimationFrame(() => {
+        if (stage) {
+          stage.classList.remove("mode-wall-portal");
+          stage.classList.add("mode-classroom-3d");
+        }
+      });
+
+      // Cập nhật nút điều hướng trên navbar
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        if (btn.getAttribute("data-nav") === "map") {
+          btn.className = "nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 bg-pastel-pink text-pastel-ink shadow-sm";
+        } else {
+          btn.className = "nav-btn px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-pastel-muted hover:bg-pastel-pink/30 hover:text-pastel-ink";
+        }
+      });
+
+      // 3. Kết thúc chuyển cảnh sau 1.85s (đồng bộ với CSS transition)
+      setTimeout(() => {
+        currentAppMode = "classroom";
+        currentSection = "map";
+        isTransitioningPortal = false;
+        if (stage) {
+          stage.classList.remove("is-transitioning");
+        }
+        if (classLayer) {
+          classLayer.style.pointerEvents = "auto";
+        }
+        if (wallLayer) {
+          wallLayer.style.display = "none";
+        }
+        updateClassroomDynamicIsland(null, "✨ Đã bước vào Không gian Lớp học 11T2");
+        showToast("🏛️ Chào mừng bạn bước vào Không gian Lớp học 11T2!", "info");
+      }, 1900);
+    }
+
+    // ============================================================================
+    // ANIMATION CHUYỂN CẢNH ĐIỆN ẢNH 3D: TỪ LỚP HỌC QUAY VỀ BỨC TƯỜNG (DOLLY-IN)
+    // ============================================================================
+    function returnToWallPortal(targetSection = "home") {
+      if (isTransitioningPortal || currentAppMode === "wall") {
+        if (currentSection !== targetSection) {
+          switchWallSection(targetSection);
+        }
+        return;
+      }
+      isTransitioningPortal = true;
+
+      // Đóng Thẻ Ký Ức nếu đang mở
+      if (currentFocusedDeskId) {
+        resetClassroomCamera();
+      }
+
+      // 1. Âm thanh Web Audio API trở về tổ ấm Bức Tường
+      playClassroomSynthesizedSfx("portal_pushin");
+
+      const stage = document.getElementById("portalExperienceStage");
+      const wallLayer = document.getElementById("wallPortalLayer");
+      const classLayer = document.getElementById("classroom3DLayer");
+
+      if (stage) {
+        stage.classList.add("is-transitioning");
+      }
+      if (wallLayer) {
+        wallLayer.style.display = "block";
+        wallLayer.style.pointerEvents = "none";
+      }
+      if (classLayer) {
+        classLayer.style.pointerEvents = "none";
+      }
+
+      // Chuyển tab nội dung trên Bức Tường
+      switchWallSection(targetSection);
+
+      // Cuộn lên đỉnh
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // 2. Kích hoạt camera 3D Dolly-in tiến sát bức tường
+      requestAnimationFrame(() => {
+        if (stage) {
+          stage.classList.remove("mode-classroom-3d");
+          stage.classList.add("mode-wall-portal");
+        }
+      });
+
+      // 3. Kết thúc chuyển cảnh sau 1.85s
+      setTimeout(() => {
+        currentAppMode = "wall";
+        currentSection = targetSection;
+        isTransitioningPortal = false;
+        if (stage) {
+          stage.classList.remove("is-transitioning");
+        }
+        if (wallLayer) {
+          wallLayer.style.pointerEvents = "auto";
+        }
+        if (classLayer) {
+          classLayer.style.display = "none";
+        }
+        showToast("🏠 Đã quay trở lại Bức Tường Kỷ Niệm!", "info");
+      }, 1900);
+    }
+
+    // Hiệu ứng Parallax 3D nhẹ nhàng khi rê chuột trên Bức Tường Kỷ Niệm
+    function initWallParallaxMouse() {
+      const surface = document.getElementById("wallPortalSurface");
+      if (!surface) return;
+      if (window.matchMedia("(max-width: 768px)").matches || !window.matchMedia("(hover: hover)").matches) return;
+
+      surface.addEventListener("mousemove", (e) => {
+        if (currentAppMode !== "wall" || isTransitioningPortal) return;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        const rect = surface.getBoundingClientRect();
+        const relX = (e.clientX - rect.left) / rect.width - 0.5;
+        const relY = (e.clientY - rect.top) / rect.height - 0.5;
+        const rotY = (relX * 3.8).toFixed(2);
+        const rotX = (-relY * 2.8).toFixed(2);
+        surface.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+      });
+
+      surface.addEventListener("mouseleave", () => {
+        if (currentAppMode === "wall") {
+          surface.style.transform = "none";
+        }
+      });
     }
 
     function switchAdminTab(tabId) {
@@ -3155,6 +3666,38 @@ let currentTvChannelIndex = 0;
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
           osc.start(now);
           osc.stop(now + 0.09);
+        } else if (type === "portal_pullout") {
+          const freqs = [360, 520, 780, 1140];
+          freqs.forEach((freq, idx) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = "sine";
+            o.frequency.setValueAtTime(freq, now + idx * 0.08);
+            o.frequency.exponentialRampToValueAtTime(freq * 1.5, now + idx * 0.08 + 0.35);
+            g.gain.setValueAtTime(0.06, now + idx * 0.08);
+            g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.4);
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start(now + idx * 0.08);
+            o.stop(now + idx * 0.08 + 0.42);
+          });
+          return;
+        } else if (type === "portal_pushin") {
+          const freqs = [1080, 840, 560, 360];
+          freqs.forEach((freq, idx) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = "sine";
+            o.frequency.setValueAtTime(freq, now + idx * 0.07);
+            o.frequency.exponentialRampToValueAtTime(freq * 0.7, now + idx * 0.07 + 0.3);
+            g.gain.setValueAtTime(0.05, now + idx * 0.07);
+            g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.35);
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start(now + idx * 0.07);
+            o.stop(now + idx * 0.07 + 0.37);
+          });
+          return;
         }
       } catch (e) {}
     }
@@ -4969,6 +5512,7 @@ CREATE POLICY "Member va Admin duoc them cap nhat ban hoc"
     window.addEventListener("DOMContentLoaded", () => {
       switchSection("home");
       initClassroomParallaxMouse();
+      initWallParallaxMouse();
       initSupabaseApp();
       initRadioStation();
     });
