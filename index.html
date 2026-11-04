@@ -1163,93 +1163,203 @@
     }
 
     /* ============================================================================
-       7. CLASSROOM WALL PORTAL 2.0 — ARCHITECTURAL 3D WALL & FULLSCREEN CLASSROOM
+       7. ZERO-REFLOW 3D DRONE CAMERA SYSTEM (60 FPS HARDWARE ACCELERATED)
+       Tọa độ không gian 3D thống nhất: Zero Reflow • Zero Layout Shift • Zero Blur
        ============================================================================ */
 
-    /* UNIFIED 3D CLASSROOM & WALL DRONE VIEWPORT */
-    .classroom-viewport-3d.mode-wall {
-      height: calc(100vh - 120px);
-      min-height: 560px;
-      max-height: 840px;
-      transition: height 0.6s ease;
-    }
-    .classroom-viewport-3d.mode-classroom {
-      height: auto;
-      min-height: 700px;
-      max-height: none;
-      transition: height 0.6s ease;
+    /* VIEWPORT 3D: CỐ ĐỊNH CHIỀU CAO (ZERO REFLOW) */
+    .classroom-viewport-3d {
+      position: relative;
+      perspective: 1200px;
+      overflow: hidden;
+      height: 820px;
+      max-height: 88vh;
+      min-height: 600px;
+      border-radius: 28px;
+      background: radial-gradient(circle at 50% 30%, #FDFBF7 0%, #F5EFEB 100%);
+      box-shadow: 0 16px 40px -10px rgba(61, 49, 74, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+      contain: layout style;
     }
     @media (max-width: 768px) {
-      .classroom-viewport-3d.mode-wall {
-        height: calc(100vh - 90px);
-        min-height: 500px;
-        max-height: 720px;
+      .classroom-viewport-3d {
+        height: 720px;
+        max-height: 88vh;
+        min-height: 520px;
+        border-radius: 20px;
       }
     }
 
-    /* DRONE CAMERA RIG TRANSFORMS (60 FPS HARDWARE ACCELERATED • ZERO BLUR • ZERO OPACITY SWAP) */
-    .classroom-camera-rig.camera-drone-board {
-      transform-origin: 50% 180px;
-      transform: perspective(1200px) translate3d(0, 240px, 0) scale(2.15);
-    }
-    @media (max-width: 768px) {
-      .classroom-camera-rig.camera-drone-board {
-        transform-origin: 50% 160px;
-        transform: perspective(1200px) translate3d(0, 180px, 0) scale(1.75);
-      }
-    }
-    .classroom-camera-rig.camera-drone-overview {
-      transform-origin: 50% 50%;
-      transform: perspective(1100px) translate3d(0, 0, 0) rotateX(0deg) scale(1);
+    /* STAGE RIG 3D */
+    .classroom-camera-rig {
+      transform-style: preserve-3d;
+      position: relative;
+      width: 100%;
+      height: 100%;
     }
 
-    /* DESK ROWS IN DRONE CAMERA FLIGHT */
+    /* 1. TRẦN NHÀ (CEILING 3D): DI CHUYỂN BẰNG TRANSFORM DUY NHẤT */
+    .room-ceiling-3d {
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .classroom-viewport-3d.mode-wall .room-ceiling-3d {
+      transform: translate3d(0, -180px, 200px);
+    }
+    .classroom-viewport-3d.mode-classroom .room-ceiling-3d {
+      transform: translate3d(0, 0, 0);
+    }
+
+    /* 2. BỨC TƯỜNG ĐẦU LỚP (FRONT WALL 3D): CẬN CẢNH TRÊN TƯỜNG VS TOÀN CẢNH LỚP */
+    .front-classroom-wall {
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .classroom-viewport-3d.mode-wall .front-classroom-wall {
+      transform: translate3d(0, 40px, 260px) scale(1.35);
+    }
+    @media (max-width: 768px) {
+      .classroom-viewport-3d.mode-wall .front-classroom-wall {
+        transform: translate3d(0, 20px, 140px) scale(1.15);
+      }
+    }
+    .classroom-viewport-3d.mode-classroom .front-classroom-wall {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    /* 3. CÁC HÀNG BÀN HỌC (OPACITY 1 100% SUỐT TOÀN BỘ QUÁ TRÌNH • ZERO OPACITY ANIMATION) */
     .classroom-rows-corridor {
-      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s;
+      opacity: 1 !important;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .classroom-camera-rig.camera-drone-board .classroom-rows-corridor {
-      opacity: 0;
+    .classroom-viewport-3d.mode-wall .classroom-rows-corridor {
+      transform: translate3d(0, 520px, 420px) rotateX(18deg) scale(1.45);
       pointer-events: none;
     }
-    .classroom-camera-rig.camera-drone-overview .classroom-rows-corridor {
-      opacity: 1;
+    .classroom-viewport-3d.mode-classroom .classroom-rows-corridor {
+      transform: translate3d(0, 0, 0) rotateX(0deg) scale(1);
       pointer-events: auto;
     }
 
-    /* GRAND INTERACTIVE BUTTON / PLAQUE ON CHALKBOARD */
+    /* 4. CÁNH GÀ THẺ GHIM TRÊN TƯỜNG (SLIDE RA MẶT NGOÀI TRONG 1.2S) */
+    .wall-pinned-wing-left {
+      will-change: transform, opacity;
+      transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease;
+    }
+    .classroom-viewport-3d.mode-wall .wall-pinned-wing-left {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .classroom-viewport-3d.mode-classroom .wall-pinned-wing-left {
+      transform: translate3d(-120vw, 0, 0);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .wall-pinned-wing-right {
+      will-change: transform, opacity;
+      transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease;
+    }
+    .classroom-viewport-3d.mode-wall .wall-pinned-wing-right {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .classroom-viewport-3d.mode-classroom .wall-pinned-wing-right {
+      transform: translate3d(120vw, 0, 0);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 5. NÚT ĐIỀU HƯỚNG NHANH DƯỚI BẢNG */
+    .board-quick-nav-pills {
+      will-change: transform, opacity;
+      transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
+    }
+    .classroom-viewport-3d.mode-wall .board-quick-nav-pills {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .classroom-viewport-3d.mode-classroom .board-quick-nav-pills {
+      transform: translate3d(0, 60px, 0);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 6. HAI TƯỜNG BÊN (QUẠT TREO CÁNH CAM & CỬA SỔ) */
+    .wall-side-strip-left, .wall-side-strip-right {
+      will-change: transform, opacity;
+      transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease;
+    }
+    .classroom-viewport-3d.mode-wall .wall-side-strip-left {
+      transform: translate3d(-80px, 0, 160px);
+      opacity: 0.2;
+    }
+    .classroom-viewport-3d.mode-wall .wall-side-strip-right {
+      transform: translate3d(80px, 0, 160px);
+      opacity: 0.2;
+    }
+    .classroom-viewport-3d.mode-classroom .wall-side-strip-left,
+    .classroom-viewport-3d.mode-classroom .wall-side-strip-right {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+
+    /* 7. BẢNG XANH CỐ ĐỊNH CHIỀU CAO (ZERO LAYOUT SHIFT • ZERO REFLOW) */
+    .green-chalkboard-3d {
+      position: relative !important;
+      height: 220px !important;
+      min-height: 220px !important;
+      max-height: 220px !important;
+      background: linear-gradient(165deg, #1B4D3E 0%, #13382C 60%, #0D291E 100%);
+      border: 6px solid #CBD5E1;
+      outline: 3px solid #64748B;
+      border-bottom: 11px solid #94A3B8;
+      border-radius: 8px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.32), inset 0 2px 18px rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    @media (max-width: 768px) {
+      .green-chalkboard-3d {
+        height: 190px !important;
+        min-height: 190px !important;
+        max-height: 190px !important;
+      }
+    }
+
+    /* NÚT GRAND TRIGGER OVERLAY TRÊN BẢNG (CHỈ THU NHỎ & ẨN OPACITY, ZERO REFLOW) */
     .board-portal-grand-trigger {
-      position: relative;
-      background: rgba(15, 23, 42, 0.45);
-      border-radius: 16px;
-      padding: 14px 12px 12px;
-      border: 2px dashed rgba(255, 255, 255, 0.35);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.2);
-      transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-      overflow: visible;
-      max-height: 280px;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      border-radius: 8px;
+      border: 2px dashed rgba(255, 255, 255, 0.4);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.25);
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+      will-change: transform, opacity;
     }
     .board-portal-grand-trigger:hover {
-      background: rgba(15, 23, 42, 0.65);
+      background: rgba(15, 23, 42, 0.82);
       border-color: #F472B6;
-      box-shadow: 0 14px 32px rgba(224, 87, 128, 0.35), inset 0 1px 3px rgba(255, 255, 255, 0.3);
-      transform: translateY(-2px) scale(1.015);
+      box-shadow: 0 12px 28px rgba(224, 87, 128, 0.35);
+      transform: scale(1.015);
     }
-    .board-portal-grand-trigger.frame-collapsed {
-      max-height: 0 !important;
+    .board-portal-grand-trigger.trigger-hidden {
       opacity: 0 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      border-width: 0 !important;
+      transform: scale(0.92) !important;
       pointer-events: none !important;
-      transform: scale(0.85) !important;
-      overflow: hidden !important;
     }
 
     .board-portal-cta-pill {
       background: linear-gradient(135deg, #EC4899 0%, #DB2777 50%, #BE185D 100%);
       color: #FFFFFF;
       border-radius: 9999px;
-      padding: 7px 18px;
+      padding: 6px 16px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -1261,76 +1371,25 @@
       transform: scale(1.05);
       box-shadow: 0 8px 24px rgba(219, 39, 119, 0.65), 0 0 0 3px #FFFFFF;
     }
-    @media (max-width: 768px) {
-      .board-portal-grand-trigger {
-        padding: 8px 6px 8px;
-        border-radius: 12px;
-      }
-      .board-portal-cta-pill {
-        padding: 5px 12px;
-        font-size: 11px;
-        gap: 5px;
-      }
-    }
-
-    /* TRADITIONAL CHALKBOARD TEXT */
-    .traditional-chalkboard-text {
-      transition: opacity 0.5s ease 0.2s;
-    }
-    .board-portal-grand-trigger:not(.frame-collapsed) ~ .traditional-chalkboard-text {
-      display: none;
-    }
-
-    /* SIDE PINNED WINGS FOLDING */
-    .front-wall-pinned-wing {
-      transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-      transform-origin: 50% 50%;
-    }
-    .classroom-camera-rig.camera-drone-overview .front-wall-pinned-wing {
-      opacity: 0.15;
-      transform: scale(0.78);
-      pointer-events: none;
-    }
-    .classroom-camera-rig.camera-drone-board .front-wall-pinned-wing {
-      opacity: 1;
-      transform: scale(1);
-      pointer-events: auto;
-    }
-
-    /* BOARD QUICK NAV PILLS */
-    .board-quick-nav-pills {
-      transition: opacity 0.5s ease;
-    }
-    .classroom-camera-rig.camera-drone-overview .board-quick-nav-pills {
-      opacity: 0;
-      pointer-events: none;
-      max-height: 0;
-      margin: 0;
-      overflow: hidden;
-    }
-    .classroom-camera-rig.camera-drone-board .board-quick-nav-pills {
-      opacity: 1;
-      pointer-events: auto;
-    }
 
     /* HEADER / TOOLBAR TOGGLE */
     .mode-wall #classroomToolbar {
-      display: none;
+      display: none !important;
     }
     .mode-wall #wallPortalHeader {
-      display: flex;
+      display: flex !important;
     }
     .mode-wall #wallHandwrittenQuote {
-      display: block;
+      display: block !important;
     }
     .mode-classroom #classroomToolbar {
-      display: block;
+      display: block !important;
     }
     .mode-classroom #wallPortalHeader {
-      display: none;
+      display: none !important;
     }
     .mode-classroom #wallHandwrittenQuote {
-      display: none;
+      display: none !important;
     }
 
     /* BỀ MẶT TƯỜNG TRẮNG TINH TẾ (WARM WHITE PLASTER WALL SURFACE) */
@@ -2339,18 +2398,18 @@
               <div class="wall-louver-window"></div>
             </div>
 
-            <!-- 4. BỨC TƯỜNG ĐẦU LỚP (UNIFIED 3D FRONT WALL & CHALKBOARD) -->
+            <!-- 4. BỨC TƯỜNG ĐẦU LỚP (ZERO-REFLOW UNIFIED 3D FRONT WALL & CHALKBOARD) -->
             <div id="frontWall3DLayer" class="front-classroom-wall relative">
               <!-- Đèn rọi Gallery rọi xuống mặt bảng / tường -->
               <div class="wall-gallery-light-fixture"></div>
               <div class="wall-gallery-light-cone"></div>
 
-              <div class="grid grid-cols-12 gap-2 sm:gap-4 items-end relative z-10">
+              <div class="grid grid-cols-12 gap-2 sm:gap-4 items-end relative z-10 w-full">
 
-                <!-- CỘT TRÁI (3/12): CÁNH GÀ TRÁI (POLAROID, COUNTDOWN, LƯU BÚT & CỬA LỚP) -->
-                <div class="col-span-3 flex flex-col items-center justify-end space-y-2.5">
-                  <!-- CÁC THẺ GHIM CÁNH GÀ TRÁI (TỰ ĐỘNG THU GỌN KHI DRONE LÙI) -->
-                  <div class="front-wall-pinned-wing w-full space-y-2 hidden sm:block">
+                <!-- CỘT TRÁI (3/12): CÁNH GÀ TRÁI & CỬA LỚP -->
+                <div class="col-span-12 lg:col-span-3 order-2 lg:order-1 flex flex-col items-center justify-end space-y-2.5">
+                  <!-- CÁNH GÀ THẺ GHIM TRÁI (SLIDE TRƯỢT SANG TRÁI KHI DRONE LÙI) -->
+                  <div id="wallWingLeft" class="wall-pinned-wing-left w-full space-y-2">
                     <!-- 1. Khung ảnh Polaroid ghim tường -->
                     <div id="heroFeaturedPolaroid" onclick="openScrapbookSection('gallery')" class="wall-pinned-card group text-center cursor-pointer p-2 rounded-xl" title="Bấm để mở Thư viện ảnh">
                       <div class="wall-pin-washi"></div>
@@ -2405,7 +2464,7 @@
                     </div>
                   </div>
 
-                  <!-- CỬA LỚP HỌC -->
+                  <!-- CỬA LỚP HỌC (LUÔN CỐ ĐỊNH Ở ĐẦU LỚP) -->
                   <div class="w-full max-w-[132px] doorway-front-left-3d" title="Cửa lớp bên trái nằm ngay bàn đầu">
                     <div class="doorway-leaf-open"></div>
                     <div class="relative z-10 bg-teal-900/85 text-amber-100 text-[7px] sm:text-[9px] font-bold px-1 sm:px-2 py-0.5 rounded-full text-center truncate">
@@ -2419,8 +2478,8 @@
                   </div>
                 </div>
 
-                <!-- CỘT GIỮA (6/12): SMART TV 50 INCH & CHIẾC BẢNG XANH ĐÍNH GRAND TRIGGER CỦA WALL PORTAL -->
-                <div class="col-span-6 flex flex-col items-center">
+                <!-- CỘT GIỮA (6/12): SMART TV 50 INCH & CHIẾC BẢNG XANH CỐ ĐỊNH CHIỀU CAO (ZERO LAYOUT SHIFT) -->
+                <div class="col-span-12 lg:col-span-6 order-1 lg:order-2 flex flex-col items-center">
                   <!-- TIVI 50 INCH TREO TRÊN BẢNG -->
                   <div class="tv-50inch-wrap" onclick="cycleClassroomTvChannel()" title="Bấm vào TV 50 inch để đổi nội dung trình chiếu!">
                     <div class="tv-50inch-frame">
@@ -2437,49 +2496,57 @@
                     <div class="tv-mount-pole"></div>
                   </div>
 
-                  <!-- CHIẾC BẢNG XANH PHẤN TRẮNG 3D DUY NHẤT VÀ XUYÊN SUỐT CỦA CẢ 2 TRẠNG THÁI -->
+                  <!-- BẢNG XANH CỐ ĐỊNH CHIỀU CAO (ZERO REFLOW • KHÔNG ĐỔI 1PX KÍCH THƯỚC) -->
                   <div class="green-chalkboard-3d w-full text-center relative overflow-hidden">
                     
-                    <!-- NÚT BẤM / KHUNG TRANH GRAND TRIGGER TRÊN BẢNG (HIỂN THỊ KHI CẬN CẢNH TRÊN TƯỜNG) -->
-                    <div id="classroomWallFrame"
-                         onclick="enterClassroom3D()"
-                         class="board-portal-grand-trigger cursor-pointer select-none"
-                         title="Bấm để bước vào Không Gian Lớp Học 3D!">
-                      <div class="flex items-center justify-between px-2 mb-2">
-                        <span class="text-xs sm:text-sm">🏫</span>
-                        <span class="font-black text-[11px] sm:text-xs text-amber-200 tracking-wider uppercase font-mono">SƠ ĐỒ LỚP 11T2</span>
-                        <div class="frame-beacon-live" title="3D Engine Ready"></div>
+                    <!-- NỘI DUNG PHẤN TRẮNG CỐ ĐỊNH NẰM SẴN BÊN DƯỚI -->
+                    <div id="chalkboardTraditionalContent" class="traditional-chalkboard-content absolute inset-0 flex flex-col justify-between p-2.5 sm:p-3.5 text-center select-none z-10">
+                      <div class="flex items-center justify-between text-[8px] sm:text-[10px] text-emerald-200/85 font-mono px-1">
+                        <span>Thứ Hai, Niên khóa 2025–2028</span>
+                        <span>Sĩ số: 11T2 Đủ ♥</span>
                       </div>
-                      
-                      <div class="py-2.5 px-3 rounded-xl bg-black/40 border border-white/10 shadow-inner my-1">
-                        <div class="board-portal-cta-pill cursor-pointer shadow-lg hover:shadow-pink-500/50">
-                          <span class="text-base sm:text-lg animate-bounce">🚪</span>
-                          <span class="text-xs sm:text-sm font-black tracking-wide">BƯỚC VÀO LỚP HỌC 3D</span>
-                          <span class="text-xs font-bold">➔</span>
-                        </div>
-                        <p class="text-[10px] sm:text-[11px] text-pink-200/90 font-medium mt-2 leading-relaxed">
-                          Chuyến bay drone lùi dọc hành lang lớp học • Khám phá 48 vị trí ngồi
+                      <div class="my-auto py-1">
+                        <h3 class="font-hand text-base sm:text-2xl font-bold text-white tracking-wider uppercase drop-shadow">
+                          LỚP 11T2 — 2025–2028
+                        </h3>
+                        <p id="blackboardQuoteText" class="text-[9px] sm:text-xs text-amber-200 font-hand mt-0.5 line-clamp-1">
+                          “Đoàn kết - Tự tin - Cháy hết mình cùng Thanh Xuân!”
                         </p>
                       </div>
-
-                      <div class="flex items-center justify-between text-[9px] text-emerald-200/70 font-mono mt-1 px-1">
-                        <span>Niên khóa 2025–2028</span>
-                        <span>48 Chỗ Ngồi (12 Bàn Dài)</span>
+                      <div class="flex items-center justify-between text-[8px] sm:text-[9.5px] text-emerald-300/60 font-mono px-1">
+                        <span>🏛️ Thanh Xuân Rực Rỡ</span>
+                        <span>48 Thành Viên 11T2</span>
                       </div>
                     </div>
 
-                    <!-- NỘI DUNG BẢNG XANH TRUYỀN THỐNG (HIỂN THỊ RÕ RÀNG KHI DRONE LÙI RA TOÀN CẢNH) -->
-                    <div id="chalkboardTraditionalContent" class="traditional-chalkboard-text py-2">
-                      <div class="hidden sm:flex items-center justify-between text-[10px] text-emerald-200/85 font-mono mb-1 px-1">
-                        <span>Thứ Hai, Niên khóa 2025-2028</span>
-                        <span>Sĩ số: 11T2 Đủ ♥</span>
+                    <!-- NÚT BẤM GRAND TRIGGER ĐÈ LÊN MẶT BẢNG (POSITION ABSOLUTE • ẨN CHỈ BẰNG OPACITY VÀ SCALE) -->
+                    <div id="classroomWallFrame"
+                         onclick="enterClassroom3D()"
+                         class="board-portal-grand-trigger absolute inset-1.5 sm:inset-2 z-20 cursor-pointer select-none flex flex-col justify-between p-2 sm:p-3"
+                         title="Bấm để bước vào Không Gian Lớp Học 3D!">
+                      <div class="flex items-center justify-between px-1">
+                        <div class="flex items-center gap-1.5">
+                          <span class="text-xs sm:text-sm">🏫</span>
+                          <span class="font-black text-[10px] sm:text-xs text-amber-200 tracking-wider uppercase font-mono">SƠ ĐỒ LỚP 11T2</span>
+                        </div>
+                        <div class="frame-beacon-live" title="3D Engine Ready"></div>
                       </div>
-                      <h3 class="font-hand text-sm sm:text-2xl font-bold text-white tracking-wider uppercase drop-shadow">
-                        LỚP 11T2 — 2025-2028
-                      </h3>
-                      <p id="blackboardQuoteText" class="text-[9px] sm:text-xs text-amber-200 font-hand mt-0.5 line-clamp-1">
-                        “Đoàn kết - Tự tin - Cháy hết mình cùng Thanh Xuân!”
-                      </p>
+                      
+                      <div class="my-auto py-1.5 px-2.5 rounded-xl bg-black/45 border border-white/15 shadow-inner">
+                        <div class="board-portal-cta-pill cursor-pointer shadow-lg hover:shadow-pink-500/50">
+                          <span class="text-sm sm:text-base animate-bounce">🚪</span>
+                          <span class="text-[11px] sm:text-xs font-black tracking-wide uppercase">BƯỚC VÀO LỚP HỌC 3D</span>
+                          <span class="text-xs font-bold">➔</span>
+                        </div>
+                        <p class="text-[8.5px] sm:text-[10px] text-pink-200/90 font-medium mt-1 leading-tight">
+                          Drone lướt dọc hành lang • Khám phá 48 vị trí ngồi
+                        </p>
+                      </div>
+
+                      <div class="flex items-center justify-between text-[8px] sm:text-[9px] text-emerald-200/70 font-mono px-1">
+                        <span>Niên khóa 2025–2028</span>
+                        <span>48 Chỗ Ngồi (12 Bàn Dài)</span>
+                      </div>
                     </div>
 
                   </div>
@@ -2502,10 +2569,10 @@
 
                 </div>
 
-                <!-- CỘT PHẢI (3/12): CÁNH GÀ PHẢI (ALBUM, THÀNH VIÊN, TIMELINE, ADMIN & BÀN GIÁO VIÊN) -->
-                <div class="col-span-3 flex flex-col items-center justify-end space-y-2.5">
-                  <!-- CÁC THẺ GHIM CÁNH GÀ PHẢI (TỰ ĐỘNG THU GỌN KHI DRONE LÙI) -->
-                  <div class="front-wall-pinned-wing w-full space-y-2 hidden sm:block">
+                <!-- CỘT PHẢI (3/12): CÁNH GÀ PHẢI & BÀN GIÁO VIÊN -->
+                <div class="col-span-12 lg:col-span-3 order-3 lg:order-3 flex flex-col items-center justify-end space-y-2.5">
+                  <!-- CÁNH GÀ THẺ GHIM PHẢI (SLIDE TRƯỢT SANG PHẢI KHI DRONE LÙI) -->
+                  <div id="wallWingRight" class="wall-pinned-wing-right w-full space-y-2">
                     <!-- 1. Cuốn sổ Album -->
                     <div onclick="openScrapbookSection('albums')" class="wall-pinned-card bg-amber-50/70 border-amber-200 p-2 rounded-xl cursor-pointer group" title="Bấm để xem Album">
                       <div class="wall-pin-washi"></div>
@@ -2550,7 +2617,7 @@
                     </div>
                   </div>
 
-                  <!-- BÀN GIÁO VIÊN GÓC PHẢI ĐẦU LỚP -->
+                  <!-- BÀN GIÁO VIÊN GÓC PHẢI ĐẦU LỚP (LUÔN CỐ ĐỊNH Ở ĐẦU LỚP) -->
                   <div id="desk-el-teacher-desk"
                        data-desk-id="teacher-desk"
                        onclick="handleDeskClick('teacher-desk', event)"
@@ -3734,7 +3801,7 @@
     }
 
     // ============================================================================
-    // CINEMATIC DRONE CAMERA PULL-BACK: TỪ CẬN CẢNH BẢNG BAY LÙI RA TOÀN CẢNH LỚP HỌC
+    // CINEMATIC DRONE CAMERA PULL-BACK: ZERO-REFLOW TỪ CẬN CẢNH BẢNG RA TOÀN CẢNH LỚP
     // ============================================================================
     function enterClassroom3D() {
       if (isTransitioningPortal || currentAppMode === "classroom") return;
@@ -3747,53 +3814,38 @@
       playClassroomSynthesizedSfx("portal_pullout");
 
       const viewport = document.getElementById("classroomViewport3D");
-      const stage = document.getElementById("classroomStage3D");
       const wallFrame = document.getElementById("classroomWallFrame");
 
-      // Cuộn mượt màn hình lên đầu section sơ đồ lớp
-      const mapSection = document.getElementById("section-map");
-      if (mapSection) {
-        mapSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      // Cuộn tức thì (instant) lên đầu TRƯỚC KHI chạy animation để tránh xung đột render
+      window.scrollTo({ top: 0, behavior: "instant" });
 
-      // Thu gọn nút grand trigger trên bảng để trả lại nguyên vẹn chiếc bảng đen phấn trắng
+      // Ẩn nút Grand Trigger overlay trên bảng (Zero Reflow: chỉ opacity & scale, kích thước bảng không đổi 1px)
       if (wallFrame) {
-        wallFrame.classList.add("frame-collapsed");
+        wallFrame.classList.add("trigger-hidden");
       }
 
-      // Chuyển viewport sang mode-classroom
+      // Chuyển viewport sang mode-classroom:
+      // Kích hoạt đồng loạt các transform GPU 1.5s trên Bức tường, Trần nhà, Các dãy bàn học và Cánh gà
       if (viewport) {
         viewport.classList.remove("mode-wall");
         viewport.classList.add("mode-classroom");
       }
 
-      // Kích hoạt chuyến bay drone lùi dọc hành lang lớp học (Pull-Back shot)
-      if (stage) {
-        stage.classList.remove("camera-drone-board");
-        stage.classList.add("camera-drone-overview");
-        stage.style.transition = "transform 1.6s cubic-bezier(0.22, 1, 0.36, 1)";
-        stage.style.transformOrigin = "50% 50%";
-        stage.style.transform = "perspective(1100px) translate3d(0, 0, 0) rotateX(0deg) scale(1)";
-      }
-
       // Đảm bảo dữ liệu ghế ngồi được render đầy đủ
       renderMapSection();
 
-      // Kết thúc chuyến bay sau 1600ms
+      // Kết thúc chuyến bay sau 1500ms (đồng bộ 1.5s cubic-bezier(0.16, 1, 0.3, 1))
       setTimeout(() => {
         currentAppMode = "classroom";
         currentSection = "map";
         isTransitioningPortal = false;
-        if (stage) {
-          stage.style.transition = "";
-        }
         updateClassroomDynamicIsland(null, "✨ Đã bước vào Không gian Lớp học 11T2");
         showToast("🏛️ Chào mừng bạn bước vào Không gian Lớp học 11T2!", "info");
-      }, 1600);
+      }, 1500);
     }
 
     // ============================================================================
-    // CINEMATIC DRONE CAMERA FLY-IN: TỪ CUỐI LỚP BAY THẲNG VÀO CẬN CẢNH BẢNG
+    // CINEMATIC DRONE CAMERA FLY-IN: ZERO-REFLOW TỪ CUỐI LỚP BAY THẲNG VÀO CẬN CẢNH BẢNG
     // ============================================================================
     function returnToWallPortal(targetSection = "home") {
       if (isTransitioningPortal || currentAppMode === "wall") {
@@ -3809,58 +3861,40 @@
         resetClassroomCamera();
       }
 
-      // 1. Âm thanh Web Audio API lướt camera tiến thẳng vào mặt bảng
+      // Âm thanh Web Audio API lướt camera tiến thẳng vào mặt bảng
       playClassroomSynthesizedSfx("portal_pushin");
 
       const viewport = document.getElementById("classroomViewport3D");
-      const stage = document.getElementById("classroomStage3D");
       const wallFrame = document.getElementById("classroomWallFrame");
 
-      // Cuộn lên phần bảng
-      const mapSection = document.getElementById("section-map");
-      if (mapSection) {
-        mapSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      // Cuộn tức thì TRƯỚC khi chạy animation
+      window.scrollTo({ top: 0, behavior: "instant" });
 
-      // Chuyển viewport sang mode-wall
+      // Chuyển viewport sang mode-wall:
+      // Kích hoạt đồng loạt các transform GPU 1.5s ngược lại: Bàn trượt xuống dưới, Bảng phóng gần lại, Cánh gà trượt vào
       if (viewport) {
         viewport.classList.remove("mode-classroom");
         viewport.classList.add("mode-wall");
       }
 
-      // Kích hoạt chuyến bay drone tiến sát vào mặt bảng (Dolly-in to Board)
-      const isMobile = window.innerWidth < 768;
-      if (stage) {
-        stage.classList.remove("camera-drone-overview");
-        stage.classList.add("camera-drone-board");
-        stage.style.transition = "transform 1.6s cubic-bezier(0.22, 1, 0.36, 1)";
-        stage.style.transformOrigin = isMobile ? "50% 160px" : "50% 180px";
-        stage.style.transform = isMobile 
-          ? "perspective(1200px) translate3d(0, 180px, 0) scale(1.75)" 
-          : "perspective(1200px) translate3d(0, 240px, 0) scale(2.15)";
-      }
-
-      // Mở lại nút Grand Trigger trên bảng sau khi drone lướt vào
+      // Hiện lại nút Grand Trigger trên mặt bảng
       if (wallFrame) {
         setTimeout(() => {
-          wallFrame.classList.remove("frame-collapsed");
-        }, 300);
+          wallFrame.classList.remove("trigger-hidden");
+        }, 400);
       }
 
-      // Kết thúc chuyển cảnh sau 1600ms
+      // Kết thúc chuyển cảnh sau 1500ms
       setTimeout(() => {
         currentAppMode = "wall";
         currentSection = "home";
         isTransitioningPortal = false;
-        if (stage) {
-          stage.style.transition = "";
-        }
         updateClassroomDynamicIsland(null, "🌸 Bức Tường Kỷ Niệm 11T2");
         showToast("🏠 Đã quay trở lại Bức Tường Kỷ Niệm!", "info");
         if (targetSection && targetSection !== "home") {
           openScrapbookSection(targetSection);
         }
-      }, 1600);
+      }, 1500);
     }
 
     // Khởi tạo vị trí Camera Drone tại mặt Bảng & Tường đầu lớp khi vừa vào web
@@ -3868,40 +3902,16 @@
       currentAppMode = "wall";
       currentSection = "home";
       const viewport = document.getElementById("classroomViewport3D");
-      const stage = document.getElementById("classroomStage3D");
       const wallFrame = document.getElementById("classroomWallFrame");
 
       if (viewport) {
         viewport.classList.remove("mode-classroom");
         viewport.classList.add("mode-wall");
       }
-      if (stage) {
-        stage.classList.remove("camera-drone-overview");
-        stage.classList.add("camera-drone-board");
-        stage.style.transition = "none";
-        const isMobile = window.innerWidth < 768;
-        stage.style.transformOrigin = isMobile ? "50% 160px" : "50% 180px";
-        stage.style.transform = isMobile 
-          ? "perspective(1200px) translate3d(0, 180px, 0) scale(1.75)" 
-          : "perspective(1200px) translate3d(0, 240px, 0) scale(2.15)";
-      }
       if (wallFrame) {
-        wallFrame.classList.remove("frame-collapsed");
+        wallFrame.classList.remove("trigger-hidden");
       }
     }
-
-    window.addEventListener("resize", () => {
-      if (currentAppMode === "wall" && !isTransitioningPortal) {
-        const stage = document.getElementById("classroomStage3D");
-        if (stage) {
-          const isMobile = window.innerWidth < 768;
-          stage.style.transformOrigin = isMobile ? "50% 160px" : "50% 180px";
-          stage.style.transform = isMobile 
-            ? "perspective(1200px) translate3d(0, 180px, 0) scale(1.75)" 
-            : "perspective(1200px) translate3d(0, 240px, 0) scale(2.15)";
-        }
-      }
-    });
 
     // Hiệu ứng Parallax 3D tinh tế khi rê chuột trên Bức Tường Kỷ Niệm
     function initWallParallaxMouse() {
@@ -4613,16 +4623,8 @@ function focusCameraOnDesk(deskId) {
 
       if (stage) {
         stage.classList.remove("has-focused-desk");
-        const isMobile = window.innerWidth < 768;
-        if (currentAppMode === "wall") {
-          stage.style.transformOrigin = isMobile ? "50% 160px" : "50% 180px";
-          stage.style.transform = isMobile 
-            ? "perspective(1200px) translate3d(0, 180px, 0) scale(1.75)" 
-            : "perspective(1200px) translate3d(0, 240px, 0) scale(2.15)";
-        } else {
-          stage.style.transformOrigin = "50% 50%";
-          stage.style.transform = "perspective(1100px) translate3d(0, 0, 0) scale(1)";
-        }
+        stage.style.transformOrigin = "";
+        stage.style.transform = "none";
         document.querySelectorAll(".perspective-row-wrap").forEach(rowEl => {
           rowEl.style.transform = `none`;
         });
@@ -4837,11 +4839,6 @@ function focusCameraOnDesk(deskId) {
             const shiftY = (-relY * depth * 1.8).toFixed(1);
             rowEl.style.transform = `translate3d(${shiftX}px, ${shiftY}px, 0)`;
           });
-
-          const frontWall = document.getElementById("frontWall3DLayer");
-          if (frontWall) {
-            frontWall.style.transform = `translate3d(${(relX * 6).toFixed(1)}px, ${(relY * 3).toFixed(1)}px, 0)`;
-          }
         });
 
         viewport.addEventListener("mouseleave", () => {
@@ -4849,8 +4846,6 @@ function focusCameraOnDesk(deskId) {
             document.querySelectorAll(".perspective-row-wrap").forEach(rowEl => {
               rowEl.style.transform = `none`;
             });
-            const frontWall = document.getElementById("frontWall3DLayer");
-            if (frontWall) frontWall.style.transform = `none`;
           }
         });
       }
