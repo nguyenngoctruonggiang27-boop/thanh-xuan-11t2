@@ -1172,11 +1172,11 @@
     }
 
 /* ============================================================================
-       7. TRUE 3D DRONE CAMERA & LOCKED 100VH PC WORKSPACE (RESPONSIVE ALL SCREENS)
+       7. TRUE 3D DRONE CAMERA & ADAPTIVE WORKSPACE (MƯỢT MỌI KÍCH THƯỚC CỬA SỔ)
        ============================================================================ */
 
-    /* KHÓA CUỘN TRANG NGOÀI TRÊN PC: Biến toàn trang thành khung App 100vh cố định */
-    @media (min-width: 769px) {
+    /* A. KHI CỬA SỔ ĐỦ RỘNG (>= 1024px) VÀ ĐỦ CAO (>= 620px): Khóa chuẩn 100vh không cuộn trang ngoài */
+    @media (min-width: 1024px) and (min-height: 620px) {
       html, body {
         height: 100vh !important;
         max-height: 100vh !important;
@@ -1226,7 +1226,6 @@
       #wallHandwrittenQuote {
         flex-shrink: 0 !important;
       }
-      /* Thu gọn Header & Quote theo chiều cao màn hình để nhường tối đa chỗ cho khung 3D */
       #wallPortalHeader {
         padding-bottom: clamp(4px, 0.8vh, 10px) !important;
         margin-bottom: 0 !important;
@@ -1242,7 +1241,7 @@
         line-height: 1.2 !important;
       }
       #classroomToolbar p {
-        display: none !important; /* Ẩn dòng mô tả phụ trên PC để khung lớp học rộng tối đa */
+        display: none !important;
       }
       #wallHandwrittenQuote {
         margin-top: 0 !important;
@@ -1253,7 +1252,29 @@
       }
     }
 
-    /* KHUNG VIEWPORT 3D: Co giãn linh hoạt lấp đầy phần màn hình còn lại */
+    /* B. KHI THU NHỎ CỬA SỔ (< 1024px chiều ngang HOẶC < 620px chiều cao):
+          Tự động mở khóa cuộn mượt mà, chống đè chữ & giữ cố định thanh công cụ lớp học */
+    @media (max-width: 1023px), (max-height: 619px) {
+      html, body {
+        height: auto !important;
+        max-height: none !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+      }
+      /* Khi vào lớp học ở cửa sổ nhỏ: Khóa cuộn trang ngoài, chỉ cho cuộn bên trong lòng lớp học */
+      body:has(#section-map.mode-classroom) {
+        height: 100vh !important;
+        overflow: hidden !important;
+      }
+      #section-map.mode-classroom #classroomToolbar h2 {
+        font-size: 1.25rem !important;
+      }
+      #section-map.mode-classroom #classroomToolbar p {
+        display: none !important;
+      }
+    }
+
+    /* KHUNG VIEWPORT 3D */
     .classroom-viewport-3d {
       position: relative;
       perspective: 1200px;
@@ -1266,33 +1287,35 @@
       min-height: 0;
     }
 
-    /* Ở Màn Bảng (mode-wall): Khóa chết cuộn 100% */
+    /* Ở Màn Bảng (mode-wall) */
     #section-map.mode-wall .classroom-viewport-3d {
       overflow: hidden !important;
       background: #13382C;
     }
+    /* Nếu cửa sổ rộng >= 1024px nhưng bị kéo lùn chiều cao (< 620px), giữ chiều cao tối thiểu để 6 ô không đè nhau */
+    @media (min-width: 1024px) and (max-height: 619px) {
+      #section-map.mode-wall .classroom-viewport-3d {
+        min-height: 540px !important;
+      }
+    }
 
-    /* Ở Màn Lớp Học (mode-classroom): Chỉ cuộn nội bộ bên trong lớp học, thanh công cụ ở trên đứng im */
+    /* Ở Màn Lớp Học (mode-classroom): Chỉ cuộn riêng lòng lớp học trên MỌI độ phân giải */
     #section-map.mode-classroom .classroom-viewport-3d {
       overflow-y: auto !important;
       overflow-x: hidden !important;
       background: #EFECE6;
       scroll-behavior: smooth;
+      max-height: calc(100vh - 155px) !important;
     }
+    @media (min-width: 1024px) and (min-height: 620px) {
+      #section-map.mode-classroom .classroom-viewport-3d {
+        max-height: none !important;
+      }
+    }
+
     /* Khi Drone đang bay chuyển cảnh thì khóa thanh cuộn để không bị giật */
     #section-map.is-flying .classroom-viewport-3d {
       overflow: hidden !important;
-    }
-
-    @media (max-width: 768px) {
-      #section-map.mode-wall .classroom-viewport-3d {
-        height: auto;
-        min-height: 620px;
-      }
-      #section-map.mode-classroom .classroom-viewport-3d {
-        height: 75vh;
-        min-height: 480px;
-      }
     }
 
     /* Tạm dừng quạt quay khi ở mode-wall để tiết kiệm 100% GPU */
@@ -1312,20 +1335,18 @@
       transform-origin: 45.83% 305px;
     }
 
-    /* TRẠNG THÁI 1 (mode-wall): Phóng đại 4.1x ngay từ tâm bảng xanh để che kín 100% mọi độ phân giải */
+    /* TRẠNG THÁI 1 (mode-wall): Phóng đại từ tâm bảng xanh */
     #section-map.mode-wall .classroom-camera-rig {
       transform: perspective(1200px) translate3d(4.17%, 0px, 0) scale(4.1);
     }
-    @media (max-width: 1024px) {
+    /* Khi cửa sổ thu hẹp dưới 1024px (1 cột dọc): Đặt khối phòng học gọn phía dưới để không phá các thẻ ghim */
+    @media (max-width: 1023px) {
       #section-map.mode-wall .classroom-camera-rig {
-        transform-origin: 45.83% 280px;
-        transform: perspective(1200px) translate3d(4.17%, 20px, 0) scale(3.5);
-      }
-    }
-    @media (max-width: 768px) {
-      #section-map.mode-wall .classroom-camera-rig {
-        transform-origin: 46% 190px;
-        transform: perspective(1200px) translate3d(4%, 80px, 0) scale(3.4);
+        position: absolute !important;
+        inset: 0 !important;
+        pointer-events: none !important;
+        transform-origin: 45.83% 240px;
+        transform: perspective(1200px) translate3d(4.17%, 40px, 0) scale(4.2);
       }
     }
 
@@ -1334,7 +1355,7 @@
       transform: perspective(1200px) translate3d(0, 0, 0) scale(1);
     }
 
-    /* NỘI DUNG PHẤN TRẮNG TRÊN BẢNG: Thu nhỏ bù trừ khi bảng đang phóng 4.1x */
+    /* NỘI DUNG PHẤN TRẮNG TRÊN BẢNG */
     .traditional-chalkboard-content {
       will-change: transform;
       backface-visibility: hidden;
@@ -1343,11 +1364,6 @@
     }
     #section-map.mode-wall .traditional-chalkboard-content {
       transform: scale(0.32);
-    }
-    @media (max-width: 768px) {
-      #section-map.mode-wall .traditional-chalkboard-content {
-        transform: scale(0.32);
-      }
     }
     #section-map.mode-classroom .traditional-chalkboard-content {
       transform: scale(1);
@@ -1379,7 +1395,7 @@
       pointer-events: auto;
     }
 
-    /* LỚP GIAO DIỆN GHIM TRÊN TƯỜNG (CO GIÃN LINH HOẠT THEO VH ĐỂ KHÔNG BAO GIỜ BỊ CHÈN MẤT Ô) */
+    /* LỚP GIAO DIỆN GHIM TRÊN TƯỜNG (TỰ ĐỘNG CHUYỂN CHẾ ĐỘ KHI CỬA SỔ < 1024PX) */
     .wall-hud-overlay {
       position: absolute;
       inset: 0;
@@ -1391,10 +1407,16 @@
       padding: clamp(36px, 5vh, 48px) clamp(12px, 1.5vw, 20px) clamp(10px, 1.5vh, 16px);
       overflow: hidden;
     }
-    @media (max-width: 768px) {
-      .wall-hud-overlay {
-        position: relative;
-        padding: 12px 8px 52px 8px;
+    /* Fix dứt điểm lỗi thu nhỏ cửa sổ < 1024px: Cho phép HUD mở rộng chiều cao tự nhiên và cuộn mượt */
+    @media (max-width: 1023px) {
+      #section-map.mode-wall .wall-hud-overlay {
+        position: relative !important;
+        inset: auto !important;
+        overflow: visible !important;
+        padding: 28px 12px 54px 12px !important;
+      }
+      #section-map.mode-classroom .wall-hud-overlay {
+        display: none !important;
       }
     }
 
@@ -1412,8 +1434,7 @@
       margin-top: 0 !important;
     }
 
-    /* Tự động ép gọn chiều cao các thẻ ghim trên màn hình thấp để không bao giờ tràn khung */
-    @media (min-width: 769px) {
+    @media (min-width: 1024px) {
       .wall-hud-overlay .wall-pinned-card {
         padding: clamp(6px, 1.1vh, 12px) clamp(10px, 1.1vw, 14px) !important;
         border-radius: 16px !important;
