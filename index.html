@@ -1163,40 +1163,126 @@
     }
 
 /* ============================================================================
-       7. TRUE 3D DRONE CAMERA PULL-BACK SYSTEM (FULL-BLEED CHALKBOARD ILLUSION)
+       7. TRUE 3D DRONE CAMERA & LOCKED 100VH PC WORKSPACE (RESPONSIVE ALL SCREENS)
        ============================================================================ */
 
+    /* KHÓA CUỘN TRANG NGOÀI TRÊN PC: Biến toàn trang thành khung App 100vh cố định */
+    @media (min-width: 769px) {
+      html, body {
+        height: 100vh !important;
+        max-height: 100vh !important;
+        overflow: hidden !important;
+      }
+      footer {
+        display: none !important;
+      }
+      #classroomFullScreenScene {
+        height: calc(100vh - 37px) !important;
+        min-height: 0 !important;
+        max-height: calc(100vh - 37px) !important;
+        padding-bottom: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+      }
+      #classroomFullScreenScene > div {
+        flex: 1 1 0% !important;
+        min-height: 0 !important;
+        width: 100% !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+      #section-map {
+        flex: 1 1 0% !important;
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        margin: 0 !important;
+      }
+      #section-map > .map-shell-no-blur {
+        flex: 1 1 0% !important;
+        min-height: 0 !important;
+        padding: clamp(8px, 1.2vh, 16px) clamp(12px, 1.5vw, 22px) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: clamp(6px, 1vh, 12px) !important;
+      }
+      #section-map > .map-shell-no-blur > * {
+        margin-top: 0 !important;
+      }
+      #wallPortalHeader,
+      #classroomToolbar,
+      #wallHandwrittenQuote {
+        flex-shrink: 0 !important;
+      }
+      /* Thu gọn Header & Quote theo chiều cao màn hình để nhường tối đa chỗ cho khung 3D */
+      #wallPortalHeader {
+        padding-bottom: clamp(4px, 0.8vh, 10px) !important;
+        margin-bottom: 0 !important;
+      }
+      #classroomToolbar {
+        display: flex;
+        flex-direction: column;
+        gap: 4px !important;
+        padding-bottom: 2px !important;
+      }
+      #classroomToolbar h2 {
+        font-size: clamp(1.25rem, 2.2vh, 1.75rem) !important;
+        line-height: 1.2 !important;
+      }
+      #classroomToolbar p {
+        display: none !important; /* Ẩn dòng mô tả phụ trên PC để khung lớp học rộng tối đa */
+      }
+      #wallHandwrittenQuote {
+        margin-top: 0 !important;
+        padding: clamp(4px, 0.7vh, 10px) 16px !important;
+      }
+      #wallHandwrittenQuote p {
+        font-size: clamp(0.8rem, 1.5vh, 1rem) !important;
+      }
+    }
+
+    /* KHUNG VIEWPORT 3D: Co giãn linh hoạt lấp đầy phần màn hình còn lại */
     .classroom-viewport-3d {
       position: relative;
       perspective: 1200px;
-      overflow: hidden;
-      border-radius: 28px;
+      border-radius: 24px;
       background: #13382C;
       border: 4px solid #FFFFFF;
-      box-shadow: 0 22px 50px -12px rgba(61, 49, 74, 0.28);
+      box-shadow: 0 18px 42px -12px rgba(61, 49, 74, 0.25);
       user-select: none;
-      contain: layout paint;
+      flex: 1 1 0%;
+      min-height: 0;
     }
+
+    /* Ở Màn Bảng (mode-wall): Khóa chết cuộn 100% */
     #section-map.mode-wall .classroom-viewport-3d {
-      height: 660px;
-      max-height: 85vh;
-      min-height: 550px;
+      overflow: hidden !important;
+      background: #13382C;
     }
+
+    /* Ở Màn Lớp Học (mode-classroom): Chỉ cuộn nội bộ bên trong lớp học, thanh công cụ ở trên đứng im */
     #section-map.mode-classroom .classroom-viewport-3d {
-      height: auto;
-      min-height: 760px;
-      max-height: none;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
       background: #EFECE6;
+      scroll-behavior: smooth;
     }
+    /* Khi Drone đang bay chuyển cảnh thì khóa thanh cuộn để không bị giật */
+    #section-map.is-flying .classroom-viewport-3d {
+      overflow: hidden !important;
+    }
+
     @media (max-width: 768px) {
       #section-map.mode-wall .classroom-viewport-3d {
         height: auto;
-        min-height: 640px;
-        max-height: none;
+        min-height: 620px;
       }
       #section-map.mode-classroom .classroom-viewport-3d {
-        height: auto;
-        min-height: 520px;
+        height: 75vh;
+        min-height: 480px;
       }
     }
 
@@ -1214,17 +1300,17 @@
       backface-visibility: hidden;
       will-change: transform;
       transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
-      transform-origin: 45.8% 285px;
+      transform-origin: 45.83% 305px;
     }
 
-    /* TRẠNG THÁI 1 (mode-wall): Phóng đại 3.65x để lòng bảng xanh tràn kín 100% khung hình */
+    /* TRẠNG THÁI 1 (mode-wall): Phóng đại 4.1x ngay từ tâm bảng xanh để che kín 100% mọi độ phân giải */
     #section-map.mode-wall .classroom-camera-rig {
-      transform: perspective(1200px) translate3d(4.2%, 45px, 0) scale(3.65);
+      transform: perspective(1200px) translate3d(4.17%, 0px, 0) scale(4.1);
     }
     @media (max-width: 1024px) {
       #section-map.mode-wall .classroom-camera-rig {
-        transform-origin: 45.8% 270px;
-        transform: perspective(1200px) translate3d(4.2%, 35px, 0) scale(3.2);
+        transform-origin: 45.83% 280px;
+        transform: perspective(1200px) translate3d(4.17%, 20px, 0) scale(3.5);
       }
     }
     @media (max-width: 768px) {
@@ -1239,7 +1325,7 @@
       transform: perspective(1200px) translate3d(0, 0, 0) scale(1);
     }
 
-    /* NỘI DUNG PHẤN TRẮNG TRÊN BẢNG: Thu nhỏ bù trừ khi bảng đang phóng 3.65x */
+    /* NỘI DUNG PHẤN TRẮNG TRÊN BẢNG: Thu nhỏ bù trừ khi bảng đang phóng 4.1x */
     .traditional-chalkboard-content {
       will-change: transform;
       backface-visibility: hidden;
@@ -1247,7 +1333,7 @@
       transform-origin: 50% 50%;
     }
     #section-map.mode-wall .traditional-chalkboard-content {
-      transform: scale(0.36);
+      transform: scale(0.32);
     }
     @media (max-width: 768px) {
       #section-map.mode-wall .traditional-chalkboard-content {
@@ -1284,7 +1370,7 @@
       pointer-events: auto;
     }
 
-    /* LỚP GIAO DIỆN GHIM TRÊN TƯỜNG (WALL HUD LAYER) */
+    /* LỚP GIAO DIỆN GHIM TRÊN TƯỜNG (CO GIÃN LINH HOẠT THEO VH ĐỂ KHÔNG BAO GIỜ BỊ CHÈN MẤT Ô) */
     .wall-hud-overlay {
       position: absolute;
       inset: 0;
@@ -1293,7 +1379,8 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 46px 18px 16px 18px;
+      padding: clamp(36px, 5vh, 48px) clamp(12px, 1.5vw, 20px) clamp(10px, 1.5vh, 16px);
+      overflow: hidden;
     }
     @media (max-width: 768px) {
       .wall-hud-overlay {
@@ -1307,7 +1394,27 @@
       pointer-events: auto;
       will-change: transform, opacity;
       transition: transform 1.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.65s ease;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(6px, 1.2vh, 12px) !important;
     }
+    .wall-pinned-wing-left > *,
+    .wall-pinned-wing-right > * {
+      margin-top: 0 !important;
+    }
+
+    /* Tự động ép gọn chiều cao các thẻ ghim trên màn hình thấp để không bao giờ tràn khung */
+    @media (min-width: 769px) {
+      .wall-hud-overlay .wall-pinned-card {
+        padding: clamp(6px, 1.1vh, 12px) clamp(10px, 1.1vw, 14px) !important;
+        border-radius: 16px !important;
+      }
+      .wall-hud-overlay #heroPolaroidContent {
+        aspect-ratio: auto !important;
+        height: clamp(78px, 13.5vh, 145px) !important;
+      }
+    }
+
     #section-map.mode-wall .wall-pinned-wing-left,
     #section-map.mode-wall .wall-pinned-wing-right {
       transform: translate3d(0, 0, 0);
@@ -1343,7 +1450,7 @@
     /* NÚT MÀU TÍM NHỎ GỌN Ở GÓC DƯỚI BÊN TRÁI KHUNG HÌNH */
     .corner-portal-trigger-btn {
       position: absolute;
-      bottom: 14px;
+      bottom: clamp(10px, 1.5vh, 16px);
       left: 18px;
       z-index: 45;
       pointer-events: auto;
@@ -1408,7 +1515,7 @@
       display: block !important;
     }
     #section-map.mode-classroom #classroomToolbar {
-      display: block !important;
+      display: flex !important;
     }
     #section-map.mode-classroom #wallPortalHeader {
       display: none !important;
@@ -1416,7 +1523,6 @@
     #section-map.mode-classroom #wallHandwrittenQuote {
       display: none !important;
     }
-
     /* BỀ MẶT TƯỜNG TRẮNG TINH TẾ (WARM WHITE PLASTER WALL SURFACE) */
     .wall-portal-surface {
       position: relative;
@@ -3791,7 +3897,7 @@ function enterClassroom3D() {
       const stage = document.getElementById("classroomStage3D");
       const wallFrame = document.getElementById("classroomWallFrame");
 
-      window.scrollTo({ top: 0, behavior: "instant" });
+      if (viewport) viewport.scrollTop = 0;
 
       if (stage) {
         stage.style.transform = "";
@@ -3801,6 +3907,7 @@ function enterClassroom3D() {
         wallFrame.classList.add("trigger-hidden");
       }
       if (mapSection) {
+        mapSection.classList.add("is-flying");
         mapSection.classList.remove("mode-wall");
         mapSection.classList.add("mode-classroom");
       }
@@ -3815,6 +3922,7 @@ function enterClassroom3D() {
         currentAppMode = "classroom";
         currentSection = "map";
         isTransitioningPortal = false;
+        if (mapSection) mapSection.classList.remove("is-flying");
       }, 1600);
     }
 
@@ -3841,15 +3949,16 @@ function enterClassroom3D() {
       const stage = document.getElementById("classroomStage3D");
       const wallFrame = document.getElementById("classroomWallFrame");
 
-      window.scrollTo({ top: 0, behavior: "instant" });
+      // Đưa vị trí cuộn của lòng lớp học về 0 trước khi bay vào bảng
+      if (viewport) viewport.scrollTop = 0;
 
-      // Xóa inline style trên stage để CSS Drone bay về bảng hoạt động chuẩn
       if (stage) {
         stage.style.transform = "";
         stage.style.transformOrigin = "";
       }
 
       if (mapSection) {
+        mapSection.classList.add("is-flying");
         mapSection.classList.remove("mode-classroom");
         mapSection.classList.add("mode-wall");
       }
@@ -3870,6 +3979,7 @@ function enterClassroom3D() {
         currentAppMode = "wall";
         currentSection = "home";
         isTransitioningPortal = false;
+        if (mapSection) mapSection.classList.remove("is-flying");
         updateClassroomDynamicIsland(null, "11T2 • Bức Tường Kỷ Niệm & Bảng Lớp");
         showToast("🏠 Đã quay trở lại Bức Tường Kỷ Niệm!", "info");
         if (targetSection && targetSection !== "home") {
@@ -4557,7 +4667,7 @@ function focusCameraOnDesk(deskId) {
           : (Math.max(70, vpRect.top) + Math.min(window.innerHeight, vpRect.bottom)) / 2;
 
         const unscaledStageCenterScreenX = vpRect.left + stageCenterX;
-        const unscaledStageCenterScreenY = vpRect.top + stage.offsetTop + stageCenterY;
+        const unscaledStageCenterScreenY = vpRect.top + stage.offsetTop - viewport.scrollTop + stageCenterY;
 
         const radYaw = (yawAngle * Math.PI) / 180;
         const radPitch = (pitchAngle * Math.PI) / 180;
