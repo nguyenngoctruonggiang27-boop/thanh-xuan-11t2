@@ -777,7 +777,17 @@
    /* ============================================================================
        HIỆU ỨNG SPOTLIGHT LÀM NỔI BẬT NGĂN BÀN & CHỖ NGỒI ĐANG CHỌN (100% RÕ NÉT)
        ============================================================================ */
-    /* 1. Làm dịu nhẹ các bàn khác VÀ 3 chỗ ngồi không được chọn trong cùng bàn để tôn chỗ đang chọn lên */
+   /* 1. Làm dịu nhẹ mượt mà các bàn khác VÀ 3 chỗ ngồi không được chọn trong cùng bàn */
+    .long-desk-3d-wrapper,
+    .teacher-desk-3d-box,
+    .seat-slot-3d,
+    .cubby-hole-3d {
+      transition:
+        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.45s ease,
+        filter 0.45s ease,
+        box-shadow 0.45s ease !important;
+    }
     .classroom-camera-rig.has-focused-desk .long-desk-3d-wrapper:not(.has-active-seat),
     .classroom-camera-rig.has-focused-desk .teacher-desk-3d-box:not(.is-focused) {
       opacity: 0.38;
@@ -788,7 +798,6 @@
       opacity: 0.45;
       filter: brightness(0.85);
     }
-
     /* 2. Thẻ tên (Standee) của chỗ đang chọn: Sáng nét 100%, viền hồng đậm & nhô cao */
     .seat-slot-3d.is-focused {
       z-index: 50 !important;
@@ -4610,91 +4619,115 @@ let currentTvChannelIndex = 0;
     }
 
 // Điều khiển Camera bay 3D tới đúng hộc bàn & Cấp lệnh xoay Thẻ Ký Ức ngược lại
-function focusCameraOnDesk(deskId) {
+// Hàm đổi class trực tiếp trên DOM (KHÔNG gọi renderMapSection để tránh phá hủy hiệu ứng đóng mở ngăn bàn)
+    function syncFocusedDeskClasses(activeDeskId) {
+      const stage = document.getElementById("classroomStage3D");
+      if (stage) {
+        stage.classList.toggle("has-focused-desk", Boolean(activeDeskId));
+      }
+      document.querySelectorAll(".long-desk-3d-wrapper.has-active-seat").forEach(el => {
+        el.classList.remove("has-active-seat");
+      });
+      document.querySelectorAll(".seat-slot-3d.is-focused, .cubby-hole-3d.is-focused, .teacher-desk-3d-box.is-focused").forEach(el => {
+        el.classList.remove("is-focused");
+      });
+
+      if (!activeDeskId) return;
+
+      if (activeDeskId === "teacher-desk") {
+        document.getElementById("desk-el-teacher-desk")?.classList.add("is-focused");
+      } else {
+        const info = parseSeatDeskId(activeDeskId);
+        document.getElementById(`bench-wrap-${info.sectionNum}-${info.rowNum}`)?.classList.add("has-active-seat");
+        document.getElementById(`desk-el-${activeDeskId}`)?.classList.add("is-focused");
+        document.getElementById(`cubby-el-${activeDeskId}`)?.classList.add("is-focused");
+      }
+    }
+
+    function focusCameraOnDesk(deskId) {
       const viewport = document.getElementById("classroomViewport3D");
       const stage = document.getElementById("classroomStage3D");
-      const deskEl = document.getElementById(`desk-el-${deskId}`);
-      if (!viewport || !stage || !deskEl) return;
+      if (!viewport || !stage) return;
+
+      let updatedDeskEl = document.getElementById(`desk-el-${deskId}`);
+      if (!updatedDeskEl) {
+        renderMapSection();
+        updatedDeskEl = document.getElementById(`desk-el-${deskId}`);
+      }
+      if (!updatedDeskEl) return;
 
       currentFocusedDeskId = deskId;
       currentJokeLineIndex = 0;
       playClassroomSynthesizedSfx("open");
 
-      renderMapSection();
+      // Chỉ bật/tắt class CSS để ngăn bàn trượt ra mượt mà, tuyệt đối không vẽ lại innerHTML
+      syncFocusedDeskClasses(deskId);
       updateClassroomDynamicIsland(deskId);
 
-      const updatedDeskEl = document.getElementById(`desk-el-${deskId}`);
-      if (updatedDeskEl) {
-        stage.classList.add("has-focused-desk");
+      const isMobile = window.innerWidth < 768;
+      const info = parseSeatDeskId(deskId);
+      const isRightSideTarget = info.isTeacher || info.sectionNum === 2;
 
-        const isMobile = window.innerWidth < 768;
-        const info = parseSeatDeskId(deskId);
-        const isRightSideTarget = info.isTeacher || info.sectionNum === 2;
+      const stageW = stage.offsetWidth;
+      const stageH = stage.offsetHeight;
+      const stageCenterX = stageW / 2;
+      const stageCenterY = stageH / 2;
 
-        const stageW = stage.offsetWidth;
-        const stageH = stage.offsetHeight;
-        const stageCenterX = stageW / 2;
-        const stageCenterY = stageH / 2;
+      let localX = updatedDeskEl.offsetWidth / 2;
+      let localY = updatedDeskEl.offsetHeight / 2;
+      let curr = updatedDeskEl;
+      while (curr && curr !== stage) {
+        localX += curr.offsetLeft;
+        localY += curr.offsetTop;
+        curr = curr.offsetParent;
+      }
 
-        let localX = updatedDeskEl.offsetWidth / 2;
-        let localY = updatedDeskEl.offsetHeight / 2;
-        let curr = updatedDeskEl;
-        while (curr && curr !== stage) {
-          localX += curr.offsetLeft;
-          localY += curr.offsetTop;
-          curr = curr.offsetParent;
-        }
+      const relX = localX - stageCenterX;
+      const relY = localY - stageCenterY;
 
-        const relX = localX - stageCenterX;
-        const relY = localY - stageCenterY;
+      const yawAngle = isMobile ? (isRightSideTarget ? -4 : 4) : (isRightSideTarget ? -14 : 14);
+      const pitchAngle = isMobile ? -3 : (info.isTeacher ? 6 : -10);
+      const zoomScale = isMobile ? 1.08 : 1.38;
 
-        // Góc xoay 3D (Trên PC thì xoay góc, trên Mobile giữ góc nghiêng nhẹ vừa mắt)
-        const yawAngle = isMobile ? (isRightSideTarget ? -4 : 4) : (isRightSideTarget ? -14 : 14);
-        const pitchAngle = isMobile ? -3 : (info.isTeacher ? 6 : -10);
-        const zoomScale = isMobile ? 1.08 : 1.38;
+      const vpRect = viewport.getBoundingClientRect();
 
-        const vpRect = viewport.getBoundingClientRect();
+      const targetScreenX = isMobile 
+        ? (vpRect.left + vpRect.width * 0.5) 
+        : (vpRect.left + vpRect.width * (isRightSideTarget ? 0.74 : 0.26));
 
-        // TÍNH TOÁN VỊ TRÍ MÀN HÌNH THEO THIẾT BỊ:
-        // - Trên PC (Màn ngang): Hộc bàn nằm ở nửa Trái/Phải (26% hoặc 74% chiều ngang), Thẻ nằm nửa đối diện
-        // - Trên Mobile (Màn dọc): Hộc bàn nằm CHÍNH GIỮA NỬA TRÊN MÀN HÌNH (25% chiều cao), Thẻ nằm nửa dưới
-        const targetScreenX = isMobile 
-          ? (vpRect.left + vpRect.width * 0.5) 
-          : (vpRect.left + vpRect.width * (isRightSideTarget ? 0.74 : 0.26));
+      const targetScreenY = isMobile
+        ? (vpRect.top + vpRect.height * 0.26)
+        : (Math.max(70, vpRect.top) + Math.min(window.innerHeight, vpRect.bottom)) / 2;
 
-        const targetScreenY = isMobile
-          ? (vpRect.top + vpRect.height * 0.26)
-          : (Math.max(70, vpRect.top) + Math.min(window.innerHeight, vpRect.bottom)) / 2;
+      const unscaledStageCenterScreenX = vpRect.left + stageCenterX;
+      const unscaledStageCenterScreenY = vpRect.top + stage.offsetTop - viewport.scrollTop + stageCenterY;
 
-        const unscaledStageCenterScreenX = vpRect.left + stageCenterX;
-        const unscaledStageCenterScreenY = vpRect.top + stage.offsetTop - viewport.scrollTop + stageCenterY;
+      const radYaw = (yawAngle * Math.PI) / 180;
+      const radPitch = (pitchAngle * Math.PI) / 180;
+      const scaledRelX = relX * zoomScale * Math.cos(radYaw);
+      const scaledRelY = relY * zoomScale * Math.cos(radPitch);
 
-        const radYaw = (yawAngle * Math.PI) / 180;
-        const radPitch = (pitchAngle * Math.PI) / 180;
-        const scaledRelX = relX * zoomScale * Math.cos(radYaw);
-        const scaledRelY = relY * zoomScale * Math.cos(radPitch);
+      const moveX = targetScreenX - unscaledStageCenterScreenX - scaledRelX;
+      const moveY = targetScreenY - unscaledStageCenterScreenY - scaledRelY;
 
-        const moveX = targetScreenX - unscaledStageCenterScreenX - scaledRelX;
-        const moveY = targetScreenY - unscaledStageCenterScreenY - scaledRelY;
+      stage.style.transition = "transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)";
+      stage.style.transformOrigin = "50% 50%";
+      stage.style.transform = `perspective(1200px) translate3d(${Math.round(moveX)}px, ${Math.round(moveY)}px, 0px) rotateX(${pitchAngle}deg) rotateY(${yawAngle}deg) scale(${zoomScale})`;
 
-        stage.style.transformOrigin = `50% 50%`;
-        stage.style.transform = `perspective(1100px) translate3d(${Math.round(moveX)}px, ${Math.round(moveY)}px, 0px) rotateX(${pitchAngle}deg) rotateY(${yawAngle}deg) scale(${zoomScale})`;
-
-        const backdrop = document.getElementById("deskMemoryBackdrop");
-        const card3D = document.getElementById("deskMemoryCard3D");
-        if (backdrop) {
-          backdrop.classList.remove("card-on-left", "card-on-right");
-          backdrop.classList.add(isRightSideTarget ? "card-on-left" : "card-on-right");
-        }
-        if (card3D) {
-          card3D.classList.remove("tilt-left-view", "tilt-right-view", "tilt-teacher-view");
-          if (info.isTeacher) {
-            card3D.classList.add("tilt-teacher-view");
-          } else if (info.sectionNum === 1) {
-            card3D.classList.add("tilt-left-view");
-          } else {
-            card3D.classList.add("tilt-right-view");
-          }
+      const backdrop = document.getElementById("deskMemoryBackdrop");
+      const card3D = document.getElementById("deskMemoryCard3D");
+      if (backdrop) {
+        backdrop.classList.remove("card-on-left", "card-on-right");
+        backdrop.classList.add(isRightSideTarget ? "card-on-left" : "card-on-right");
+      }
+      if (card3D) {
+        card3D.classList.remove("tilt-left-view", "tilt-right-view", "tilt-teacher-view");
+        if (info.isTeacher) {
+          card3D.classList.add("tilt-teacher-view");
+        } else if (info.sectionNum === 1) {
+          card3D.classList.add("tilt-left-view");
+        } else {
+          card3D.classList.add("tilt-right-view");
         }
       }
 
@@ -4703,8 +4736,9 @@ function focusCameraOnDesk(deskId) {
         if (currentFocusedDeskId === deskId) {
           document.getElementById("deskMemoryBackdrop")?.classList.add("is-open");
         }
-      }, 220);
+      }, 160);
     }
+
     function resetClassroomCamera() {
       const stage = document.getElementById("classroomStage3D");
       const backdrop = document.getElementById("deskMemoryBackdrop");
@@ -4714,21 +4748,44 @@ function focusCameraOnDesk(deskId) {
       currentFocusedDeskId = null;
       updateClassroomDynamicIsland(null);
 
-      // Xóa class xoay của Thẻ Ký Ức để nó gập gọn lại bình thường
+      // Thu ngăn bàn, tấm ảnh Polaroid và trả độ sáng các bàn khác về bình thường một cách mượt mà
+      syncFocusedDeskClasses(null);
+
+      // Giữ góc nghiêng 3D của thẻ trong 320ms lúc thẻ đang thu nhỏ dần rồi mới gỡ class
       const card3D = document.getElementById("deskMemoryCard3D");
       if (card3D) {
-        card3D.classList.remove("tilt-left-view", "tilt-right-view", "tilt-teacher-view");
+        setTimeout(() => {
+          if (!currentFocusedDeskId) {
+            card3D.classList.remove("tilt-left-view", "tilt-right-view", "tilt-teacher-view");
+          }
+        }, 320);
       }
 
       if (stage) {
-        stage.classList.remove("has-focused-desk");
-        stage.style.transformOrigin = "";
-        stage.style.transform = "";
+        if (currentAppMode === "classroom" && !isTransitioningPortal) {
+          // Giữ nguyên transformOrigin 50% 50% và bay lùi mượt mà về góc nhìn toàn cảnh
+          stage.style.transition = "transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)";
+          stage.style.transformOrigin = "50% 50%";
+          stage.style.transform = "perspective(1200px) translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg) scale(1)";
+
+          // Sau khi camera đã hạ cánh êm ái về scale(1) mới dọn inline style để trả quyền cho Drone
+          setTimeout(() => {
+            if (!currentFocusedDeskId && !isTransitioningPortal && currentAppMode === "classroom") {
+              stage.style.transition = "";
+              stage.style.transformOrigin = "";
+              stage.style.transform = "";
+            }
+          }, 820);
+        } else {
+          stage.style.transition = "";
+          stage.style.transformOrigin = "";
+          stage.style.transform = "";
+        }
+
         document.querySelectorAll(".perspective-row-wrap").forEach(rowEl => {
-          rowEl.style.transform = `none`;
+          rowEl.style.transform = "none";
         });
       }
-      renderMapSection();
     }
 
     function handleBackdropCloseDesk(e) {
