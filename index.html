@@ -3429,7 +3429,35 @@
 
         const { data: dbP } = await supabaseClient.from("photos").select("*").order("created_at", { ascending: false }); if(dbP) photosData = dbP;
         const { data: dbE } = await supabaseClient.from("events").select("*").order("event_date", { ascending: false, nullsFirst: true }); if(dbE) eventsData = dbE;
-        const { data: dbM } = await supabaseClient.from("class_members").select("*").order("full_name", { ascending: true }); if(dbM) membersData = dbM;
+        const { data: dbM } = await supabaseClient.from("class_members").select("*");
+        if (dbM) {
+          const splitVNName = (fullName) => {
+            const parts = String(fullName || "").trim().split(/\s+/).filter(Boolean);
+            if (parts.length === 0) return { ten: "", dem: "", ho: "" };
+            if (parts.length === 1) return { ten: parts[0], dem: "", ho: "" };
+            return {
+              ten: parts[parts.length - 1],               // Từ cuối cùng là Tên
+              dem: parts.slice(1, -1).join(" "),          // Các từ ở giữa là Tên đệm
+              ho: parts[0]                                // Từ đầu tiên là Họ
+            };
+          };
+
+          membersData = dbM.sort((a, b) => {
+            const nameA = splitVNName(a.full_name);
+            const nameB = splitVNName(b.full_name);
+
+            // 1. So sánh TÊN trước (chuẩn bảng chữ cái Tiếng Việt A, Ă, Â, B, C, D, Đ...)
+            const cmpTen = nameA.ten.localeCompare(nameB.ten, "vi");
+            if (cmpTen !== 0) return cmpTen;
+
+            // 2. Nếu trùng Tên thì so sánh tới TÊN ĐỆM
+            const cmpDem = nameA.dem.localeCompare(nameB.dem, "vi");
+            if (cmpDem !== 0) return cmpDem;
+
+            // 3. Nếu trùng cả Tên và Tên đệm thì so sánh tới HỌ
+            return nameA.ho.localeCompare(nameB.ho, "vi");
+          });
+        }
         const { data: dbG } = await supabaseClient.from("guestbook_entries").select("*").order("created_at", { ascending: false }); if(dbG) guestbookData = dbG;
 
         await syncClassroomDesksFromSupabase();
