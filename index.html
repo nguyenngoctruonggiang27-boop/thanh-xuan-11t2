@@ -3147,34 +3147,53 @@
     </div>
   </div>
 
-  <!-- LIGHTBOX MODAL -->
-  <div id="lightboxModal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm flex items-center justify-center p-3">
-    <div class="relative w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[92vh]">
-      <button onclick="closeLightbox()" class="absolute top-3 right-3 z-20 w-10 h-10 rounded-full bg-white/90 font-bold hover:bg-pastel-pinkDeep hover:text-white transition">✕</button>
+<!-- LIGHTBOX MODAL (Z-INDEX 120 NỔI TRÊN MỌI CỬA SỔ • BẤM NỀN ĐEN HOẶC NÚT ĐÓNG ĐỂ THOÁT) -->
+  <div id="lightboxModal" onclick="closeLightbox()" class="fixed inset-0 z-[120] hidden bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 cursor-pointer">
+    <div onclick="event.stopPropagation()" class="relative w-full max-w-4xl bg-[#FFFDF9] rounded-3xl overflow-hidden shadow-2xl border-2 border-white flex flex-col md:flex-row max-h-[90vh] cursor-default">
+      <!-- Nút X nổi bật ở góc trên bên phải -->
+      <button type="button" onclick="closeLightbox()" title="Đóng ảnh (ESC)" class="absolute top-3 right-3 z-30 w-10 h-10 rounded-full bg-pastel-pinkDeep text-white font-black text-base border-2 border-white shadow-lg hover:bg-pink-600 hover:scale-105 transition flex items-center justify-center">
+        ✕
+      </button>
 
-      <div class="md:w-2/3 bg-gray-950 flex items-center justify-center p-2 min-h-[280px]">
-        <img id="lightboxImg" src="" class="max-h-[84vh] object-contain rounded-lg">
-        <video id="lightboxVid" src="" controls class="max-h-[84vh] w-full object-contain rounded-lg hidden"></video>
+      <div class="md:w-2/3 bg-slate-950 flex items-center justify-center p-2 sm:p-4 min-h-[260px] max-h-[60vh] md:max-h-[88vh] relative">
+        <img id="lightboxImg" src="" alt="Kỷ niệm 11T2" class="max-h-[56vh] md:max-h-[82vh] w-auto max-w-full object-contain rounded-lg select-none">
+        <video id="lightboxVid" src="" controls class="max-h-[56vh] md:max-h-[82vh] w-full object-contain rounded-lg hidden"></video>
       </div>
 
-      <div class="md:w-1/3 p-5 bg-pastel-cream overflow-y-auto space-y-4 flex flex-col justify-between">
-        <div class="space-y-3">
-          <span id="lightboxAlbumBadge" class="inline-block px-3 py-1 rounded-full bg-pastel-pink text-xs font-bold">Album</span>
-          <h4 id="lightboxCaption" class="font-hand text-2xl font-bold"></h4>
-          <div class="text-xs text-pastel-muted pt-2 border-t border-pink-100"><p id="lightboxUploader"></p><p id="lightboxDate"></p></div>
+      <div class="md:w-1/3 p-5 bg-[#FFFDF9] overflow-y-auto space-y-4 flex flex-col justify-between border-t md:border-t-0 md:border-l border-pink-100">
+        <div class="space-y-3 pr-8">
+          <span id="lightboxAlbumBadge" class="inline-block px-3 py-1 rounded-full bg-pastel-pink text-pastel-ink text-xs font-bold">Album</span>
+          <h4 id="lightboxCaption" class="font-hand text-xl sm:text-2xl font-bold text-pastel-ink break-words"></h4>
+          <div class="text-xs text-pastel-muted pt-2 border-t border-pink-100 space-y-1">
+            <p id="lightboxUploader"></p>
+            <p id="lightboxDate"></p>
+          </div>
         </div>
+
         <div class="space-y-2 border-t border-pink-200 pt-4">
-          <div class="flex gap-2"><a id="lightboxDownloadBtn" href="#" target="_blank" download class="flex-1 py-2.5 rounded-xl bg-pastel-blue font-bold text-xs text-center hover:bg-blue-300 transition">⬇️ Tải về</a><button id="lightboxSetCoverBtn" class="flex-1 py-2.5 rounded-xl bg-pastel-butter font-bold text-xs hover:bg-amber-200 transition">⭐ Đặt làm bìa</button></div>
-          <button id="lightboxDeleteBtn" class="w-full py-2.5 rounded-xl bg-red-50 text-red-600 border border-red-200 font-bold text-xs hover:bg-red-100 transition">🗑️ Xóa hình này</button>
+          <div class="flex gap-2">
+            <button id="lightboxDownloadBtn" type="button" class="flex-1 py-2.5 px-3 rounded-xl bg-pastel-blue hover:bg-sky-300 text-pastel-ink font-bold text-xs text-center transition">
+              ⬇️ Tải về máy
+            </button>
+            <button id="lightboxSetCoverBtn" type="button" class="flex-1 py-2.5 px-3 rounded-xl bg-pastel-butter hover:bg-amber-200 text-amber-950 font-bold text-xs transition">
+              ⭐ Đặt làm bìa
+            </button>
+          </div>
+          <button id="lightboxDeleteBtn" type="button" class="w-full py-2.5 rounded-xl bg-red-50 text-red-600 border border-red-200 font-bold text-xs hover:bg-red-100 transition">
+            🗑️ Xóa hình này
+          </button>
+          <button type="button" onclick="closeLightbox()" class="w-full py-2.5 rounded-xl bg-stone-200 hover:bg-stone-300 text-pastel-ink font-bold text-xs transition">
+            ← Đóng cửa sổ xem ảnh
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- OTHER MODALS (CREATE ALBUM, EVENT, MEMBER, CONFIRM) -->
-  <div id="createAlbumModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-pastel-cream w-full max-w-md rounded-3xl p-6 border-2 border-pink-200 shadow-2xl space-y-4">
-      <div class="flex justify-between"><h3 class="font-hand text-2xl font-bold">📔 Tạo Album Mới</h3><button onclick="closeCreateAlbumModal()" class="font-bold text-xl">✕</button></div>
+  <!-- OTHER MODALS (Z-INDEX 110 & 130 ĐỂ LUÔN NỔI TRÊN SỔ LƯU NIỆM) -->
+  <div id="createAlbumModal" onclick="closeCreateAlbumModal()" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div onclick="event.stopPropagation()" class="bg-[#FFFDF9] w-full max-w-md rounded-3xl p-6 border-2 border-pink-200 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center"><h3 class="font-hand text-2xl font-bold">📔 Tạo Album Mới</h3><button onclick="closeCreateAlbumModal()" class="w-8 h-8 rounded-full bg-pink-100 hover:bg-pink-200 font-bold text-sm">✕</button></div>
       <div><label class="block text-xs font-bold mb-1">Tên Album *</label><input id="newAlbumTitleInput" type="text" class="w-full px-3 py-2.5 rounded-xl border border-pink-200 text-sm"></div>
       <div><label class="block text-xs font-bold mb-1">Emoji</label><input id="newAlbumIconInput" type="text" value="📸" class="w-full px-3 py-2.5 rounded-xl border border-pink-200 text-sm"></div>
       <div><label class="block text-xs font-bold mb-1">Mô tả</label><textarea id="newAlbumDescInput" rows="2" class="w-full p-3 rounded-xl border border-pink-200 text-sm"></textarea></div>
@@ -3182,9 +3201,9 @@
     </div>
   </div>
 
-  <div id="eventModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-pastel-cream w-full max-w-lg rounded-3xl p-6 border-2 border-blue-200 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between"><h3 id="eventModalHeader" class="font-hand text-2xl font-bold">🗓️ Thêm Sự Kiện</h3><button onclick="closeEventModal()" class="font-bold text-xl">✕</button></div>
+  <div id="eventModal" onclick="closeEventModal()" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div onclick="event.stopPropagation()" class="bg-[#FFFDF9] w-full max-w-lg rounded-3xl p-6 border-2 border-blue-200 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center"><h3 id="eventModalHeader" class="font-hand text-2xl font-bold">🗓️ Thêm Sự Kiện</h3><button onclick="closeEventModal()" class="w-8 h-8 rounded-full bg-blue-100 hover:bg-blue-200 font-bold text-sm">✕</button></div>
       <input id="eventEditId" type="hidden">
       <div><label class="block text-xs font-bold mb-1">Tên sự kiện *</label><input id="eventTitleInput" type="text" class="w-full px-3 py-2 border border-blue-200 rounded-xl text-sm"></div>
       <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-bold mb-1">Ngày</label><input id="eventDateInput" type="date" class="w-full px-3 py-2 border border-blue-200 rounded-xl text-sm"></div><div><label class="block text-xs font-bold mb-1">Album liên kết</label><select id="eventAlbumSelect" class="w-full px-3 py-2 border border-blue-200 rounded-xl text-sm"></select></div></div>
@@ -3194,9 +3213,9 @@
     </div>
   </div>
 
-  <div id="memberModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-pastel-cream w-full max-w-lg rounded-3xl p-6 border-2 border-amber-200 shadow-2xl space-y-4">
-      <div class="flex justify-between"><h3 id="memberModalHeader" class="font-hand text-2xl font-bold">🧑‍🎓 Hồ Sơ Thành Viên</h3><button onclick="closeMemberModal()" class="font-bold text-xl">✕</button></div>
+  <div id="memberModal" onclick="closeMemberModal()" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div onclick="event.stopPropagation()" class="bg-[#FFFDF9] w-full max-w-lg rounded-3xl p-6 border-2 border-amber-200 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center"><h3 id="memberModalHeader" class="font-hand text-2xl font-bold">🧑‍🎓 Hồ Sơ Thành Viên</h3><button onclick="closeMemberModal()" class="w-8 h-8 rounded-full bg-amber-100 hover:bg-amber-200 font-bold text-sm">✕</button></div>
       <input id="memberEditId" type="hidden">
       <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-bold mb-1">Họ tên thật *</label><input id="memberNameInput" type="text" class="w-full px-3 py-2 border border-amber-200 rounded-xl text-sm"></div><div><label class="block text-xs font-bold mb-1">Biệt danh</label><input id="memberNicknameInput" type="text" class="w-full px-3 py-2 border border-amber-200 rounded-xl text-sm"></div></div>
       <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-bold mb-1">Chức vụ</label><input id="memberRoleInput" type="text" placeholder="Thành viên / Lớp trưởng..." class="w-full px-3 py-2 border border-amber-200 rounded-xl text-sm"></div><div><label class="block text-xs font-bold mb-1">Ngày sinh</label><input id="memberBirthdayInput" type="date" class="w-full px-3 py-2 border border-amber-200 rounded-xl text-sm"></div></div>
@@ -3205,8 +3224,8 @@
     </div>
   </div>
 
-  <div id="confirmModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-md rounded-3xl p-6 border-2 border-pink-200 shadow-2xl space-y-4">
+  <div id="confirmModal" onclick="closeConfirmModal()" class="fixed inset-0 z-[130] hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div onclick="event.stopPropagation()" class="bg-white w-full max-w-md rounded-3xl p-6 border-2 border-pink-200 shadow-2xl space-y-4">
       <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center font-bold text-xl">⚠️</div><h3 id="confirmModalTitle" class="font-hand text-xl font-bold text-pastel-ink">Xác nhận</h3></div>
       <p id="confirmModalMessage" class="text-sm text-pastel-muted"></p>
       <div class="flex justify-end gap-2"><button onclick="closeConfirmModal()" class="px-4 py-2 rounded-xl bg-gray-100 font-bold text-sm text-gray-700">Hủy bỏ</button><button id="confirmModalActionBtn" class="px-5 py-2 rounded-xl bg-red-600 text-white font-bold text-sm shadow-sm hover:bg-red-700">Đồng ý Xóa</button></div>
@@ -4127,7 +4146,15 @@
       if (typeof forceState === "boolean") drawer.classList.toggle("hidden", !forceState);
       else drawer.classList.toggle("hidden");
     }
-    function openQuickUpload(preSlug) { switchSection("gallery"); if(preSlug) { const sel = document.getElementById("uploadAlbumSelect"); if(sel) sel.value = preSlug; } document.getElementById("uploadPanelCard")?.scrollIntoView({ behavior: "smooth" }); }
+function openQuickUpload(preSlug) {
+      openScrapbookSection("gallery");
+      if (preSlug) {
+        const sel = document.getElementById("uploadAlbumSelect");
+        if (sel) sel.value = preSlug;
+      }
+      const drawerBody = document.getElementById("scrapbookDrawerBody");
+      if (drawerBody) drawerBody.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
     // Renders
     function renderAllSections() {
@@ -4148,10 +4175,22 @@
       document.querySelectorAll("#statEventsCount").forEach(el => el.textContent = eventsData.length);
       document.querySelectorAll("#statMembersCount").forEach(el => el.textContent = membersData.length);
       document.querySelectorAll("#statGuestbookCount").forEach(el => el.textContent = guestbookData.length);
+
       if (photosData.length > 0) {
         const p = photosData[0];
+        const safeUrl = String(p.public_url || "");
+        const isVid = safeUrl.match(/\.(mp4|webm|mov|ogg)$/i) || safeUrl.includes("video");
+
         document.querySelectorAll("#heroPolaroidContent").forEach(el => {
-          el.innerHTML = `<img src="${escapeHtml(p.public_url)}" class="w-full h-full object-cover rounded-lg cursor-pointer" onclick="openLightboxById('${escapeHtml(p.id)}')"/>`;
+          const isInsideWall = Boolean(el.closest("#wallHudOverlay"));
+          // Ở trên Bức Tường bấm vào sẽ mở Thư viện, còn trong tab Tổng quan bấm vào sẽ mở phóng to ảnh
+          const clickAttr = isInsideWall
+            ? ""
+            : `onclick="openLightboxById('${escapeHtml(p.id)}', event)"`;
+
+          el.innerHTML = isVid
+            ? `<video src="${escapeHtml(safeUrl)}" class="w-full h-full object-cover rounded-lg cursor-pointer" muted ${clickAttr}></video>`
+            : `<img src="${escapeHtml(safeUrl)}" class="w-full h-full object-cover rounded-lg cursor-pointer" ${clickAttr}/>`;
           el.className = "aspect-[4/3] rounded-xl overflow-hidden bg-gray-100";
         });
         document.querySelectorAll("#heroPolaroidCaption").forEach(el => el.textContent = p.caption || "Khoảnh khắc T2 2025-2028");
@@ -4161,7 +4200,7 @@
       if (grid) grid.innerHTML = albumsData.map((a, i) => buildAlbumCardHtml(a, i)).join("");
     }
 
-   function buildAlbumCardHtml(a, i) {
+    function buildAlbumCardHtml(a, i) {
       const pts = photosData.filter(p => p.album_slug === a.slug), count = pts.length, cover = a.cover_url || (pts[0]?.public_url || "");
       const wc = ["", "washi-blue", "washi-lavender", "washi-butter"], tc = ["tilt-left", "tilt-right", "tilt-slight", ""];
       return `
@@ -4173,34 +4212,55 @@
           <div class="pt-2 sm:pt-3 mt-2 sm:mt-3 border-t border-pink-100 text-[10px] sm:text-xs font-bold text-pastel-pinkDeep flex justify-between"><span>${count>0?`Xem ${count} ảnh`:'Bổ sung ngay'}</span><span>→</span></div>
         </div>`;
     }
+
     function renderAlbumsSection() {
       const q = (document.getElementById("albumSearchInput")?.value||"").trim().toLowerCase(), s = document.getElementById("albumFilterStatus")?.value||"all";
       const f = albumsData.filter(a => { const c = photosData.filter(p=>p.album_slug===a.slug).length; return (!q || a.title.toLowerCase().includes(q)) && (s==='all' || (s==='has_photos'&&c>0) || (s==='empty'&&c===0)); });
       document.getElementById("albumsGrid").innerHTML = f.length ? f.map((a,i)=>buildAlbumCardHtml(a,i)).join("") : '<div class="col-span-full p-10 text-center text-pastel-muted">Không tìm thấy album.</div>';
-      if(activeAlbumSlug) renderActiveAlbumDetail();
+      if (activeAlbumSlug) renderActiveAlbumDetail();
     }
 
-    function openAlbumDetail(slug) { activeAlbumSlug = slug; switchSection("albums"); document.getElementById("albumDetailContainer").classList.remove("hidden"); renderActiveAlbumDetail(); document.getElementById("albumDetailContainer").scrollIntoView({ behavior: "smooth" }); }
-    function closeAlbumDetail() { activeAlbumSlug = null; document.getElementById("albumDetailContainer").classList.add("hidden"); }
+    function openAlbumDetail(slug) {
+      activeAlbumSlug = slug;
+      openScrapbookSection("albums");
+      const detailBox = document.getElementById("albumDetailContainer");
+      if (detailBox) {
+        detailBox.classList.remove("hidden");
+        renderActiveAlbumDetail();
+        const drawerBody = document.getElementById("scrapbookDrawerBody");
+        if (drawerBody) {
+          drawerBody.scrollTo({ top: Math.max(0, detailBox.offsetTop - 16), behavior: "smooth" });
+        }
+      }
+    }
+
+    function closeAlbumDetail() {
+      activeAlbumSlug = null;
+      document.getElementById("albumDetailContainer")?.classList.add("hidden");
+    }
+
     function renderActiveAlbumDetail() {
       const a = albumsData.find(x => x.slug === activeAlbumSlug); if(!a) return;
-      document.getElementById("detailAlbumTitle").textContent = `${a.icon} ${a.title}`; document.getElementById("detailAlbumDesc").textContent = a.description||""; document.getElementById("btnUploadToThisAlbum").onclick = () => openQuickUpload(a.slug);
+      document.getElementById("detailAlbumTitle").textContent = `${a.icon} ${a.title}`;
+      document.getElementById("detailAlbumDesc").textContent = a.description || "";
+      document.getElementById("btnUploadToThisAlbum").onclick = () => openQuickUpload(a.slug);
       const pts = photosData.filter(p => p.album_slug === a.slug);
-      document.getElementById("detailAlbumPhotosGrid").innerHTML = pts.length ? pts.map((p,i)=>buildPhotoPolaroidHtml(p,i)).join("") : '<div class="col-span-full p-10 text-center">Chưa có bức ảnh nào trong danh mục này.</div>';
+      document.getElementById("detailAlbumPhotosGrid").innerHTML = pts.length ? pts.map((p,i)=>buildPhotoPolaroidHtml(p,i)).join("") : '<div class="col-span-full p-10 text-center text-pastel-muted">Chưa có bức ảnh nào trong danh mục này.</div>';
     }
 
     function buildPhotoPolaroidHtml(p, i) {
+      const safeUrl = String(p.public_url || "");
       const a = albumsData.find(x => x.slug === p.album_slug), wc = ["", "washi-blue", "washi-lavender", "washi-butter"], tc = ["tilt-left", "tilt-right", "tilt-slight", ""];
-      const isVideo = p.public_url.match(/\.(mp4|webm|mov|ogg)$/i) || p.public_url.includes("video");
+      const isVideo = safeUrl.match(/\.(mp4|webm|mov|ogg)$/i) || safeUrl.includes("video");
       const mediaTag = isVideo 
-        ? `<video src="${escapeHtml(p.public_url)}" class="w-full h-full object-cover transition hover:scale-105" muted></video><div class="absolute inset-0 flex items-center justify-center pointer-events-none"><div class="w-10 h-10 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white text-xl shadow-lg">▶</div></div>` 
-        : `<img src="${escapeHtml(p.public_url)}" loading="lazy" class="w-full h-full object-cover transition hover:scale-105"/>`;
+        ? `<video src="${escapeHtml(safeUrl)}" class="w-full h-full object-cover transition hover:scale-105" muted preload="metadata"></video><div class="absolute inset-0 flex items-center justify-center pointer-events-none"><div class="w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-white text-xl shadow-lg">▶</div></div>` 
+        : `<img src="${escapeHtml(safeUrl)}" loading="lazy" class="w-full h-full object-cover transition hover:scale-105"/>`;
       return `
-        <div onclick="openLightboxById('${escapeHtml(p.id)}')" class="polaroid-card ${tc[i%4]} cursor-pointer flex flex-col justify-between">
+        <div onclick="openLightboxById('${escapeHtml(p.id)}', event)" class="polaroid-card ${tc[i%4]} cursor-pointer flex flex-col justify-between">
           <div class="washi-tape ${wc[i%4]}"></div>
-          <div><div class="aspect-square rounded-xl overflow-hidden relative">${mediaTag}</div>
+          <div><div class="aspect-square rounded-xl overflow-hidden relative bg-stone-100">${mediaTag}</div>
           <div class="pt-3 px-1"><p class="font-hand text-base font-bold line-clamp-2">${escapeHtml(p.caption||'')}</p></div></div>
-          <div class="pt-2 mt-2 border-t border-pink-100 flex justify-between text-[11px] text-pastel-muted"><span class="truncate max-w-[60%]">${a?a.icon:''} ${formatDateVN(p.created_at)}</span></div>
+          <div class="pt-2 mt-2 border-t border-pink-100 flex justify-between text-[11px] text-pastel-muted"><span class="truncate max-w-[85%]">${a?a.icon:''} ${formatDateVN(p.created_at)}</span><span>🔍</span></div>
         </div>`;
     }
 
@@ -4209,19 +4269,63 @@
       let list = eventsData.filter(e => (!q || (e.title||'').toLowerCase().includes(q) || (e.location||'').toLowerCase().includes(q)) && (a==='all' || e.album_slug===a) && (t==='all' || (t==='upcoming' && e.event_date>=today) || (t==='past' && e.event_date<today) || (t==='unscheduled' && !e.event_date)));
       list.sort((x, y) => { const dx = x.event_date||(o==="newest"?"9999-12-31":"0000-01-01"), dy = y.event_date||(o==="newest"?"9999-12-31":"0000-01-01"); return o==="newest"?dy.localeCompare(dx):dx.localeCompare(dy); });
       const c = document.getElementById("timelineContainer");
-      if(!list.length) { c.innerHTML = '<div class="p-10 text-center">Chưa có sự kiện nào.</div>'; return; }
+      if (!c) return;
+      if (!list.length) { c.innerHTML = '<div class="p-10 text-center text-pastel-muted">Chưa có sự kiện nào.</div>'; return; }
+
       c.innerHTML = '<div class="border-l-4 border-dashed border-pastel-pinkDark ml-4 pl-6 space-y-6">' + list.map(e => {
-        const alb = albumsData.find(x=>x.slug===e.album_slug), pts = photosData.filter(p=>p.event_id===e.id), upc = e.event_date && e.event_date>=today;
-        const bdg = !e.event_date ? '<span class="px-2 py-0.5 rounded bg-gray-100 text-xs font-bold">Chưa chốt ngày</span>' : upc ? `<span class="px-2 py-0.5 rounded bg-pastel-butter text-xs font-bold">Sắp diễn ra (${formatDateVN(e.event_date)})</span>` : `<span class="px-2 py-0.5 rounded bg-pastel-blue text-xs font-bold">Đã qua (${formatDateVN(e.event_date)})</span>`;
+        const alb = albumsData.find(x => x.slug === e.album_slug);
+        // Lấy cả ảnh gắn trực tiếp event_id lẫn ảnh nằm trong Album của sự kiện đó
+        const directPts = photosData.filter(p => p.event_id && String(p.event_id) === String(e.id));
+        const albumPts = e.album_slug ? photosData.filter(p => p.album_slug === e.album_slug) : [];
+        const pts = directPts.length > 0 ? directPts : albumPts;
+
+        const upc = e.event_date && e.event_date >= today;
+        const bdg = !e.event_date
+          ? '<span class="px-2.5 py-0.5 rounded-full bg-gray-100 text-xs font-bold">📌 Chưa chốt ngày</span>'
+          : upc
+            ? `<span class="px-2.5 py-0.5 rounded-full bg-pastel-butter text-xs font-bold">🌟 Sắp diễn ra (${formatDateVN(e.event_date)})</span>`
+            : `<span class="px-2.5 py-0.5 rounded-full bg-pastel-blue text-xs font-bold">⏪ Đã qua (${formatDateVN(e.event_date)})</span>`;
+
+        const mediaStripHtml = pts.length ? `
+          <div class="mt-4 pt-3 border-t border-dashed border-pink-100">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-pastel-muted">📸 ${pts.length} khoảnh khắc trong sự kiện (Bấm vào ảnh để xem rõ):</span>
+              ${alb ? `<button type="button" onclick="openAlbumDetail('${escapeHtml(alb.slug)}')" class="text-xs font-bold text-pastel-pinkDeep hover:underline">Mở Album (${pts.length}) ➔</button>` : ''}
+            </div>
+            <div class="flex gap-3 overflow-x-auto pb-2">
+              ${pts.map(p => {
+                const sUrl = String(p.public_url || "");
+                const isVid = sUrl.match(/\.(mp4|webm|mov|ogg)$/i) || sUrl.includes("video");
+                return `
+                  <div onclick="openLightboxById('${escapeHtml(p.id)}', event)"
+                       title="${escapeHtml(p.caption || 'Bấm để phóng to ảnh')}"
+                       class="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-pink-200 shadow-xs shrink-0 cursor-pointer group bg-stone-100">
+                    ${isVid
+                      ? `<video src="${escapeHtml(sUrl)}" class="w-full h-full object-cover group-hover:scale-110 transition" muted preload="metadata"></video><span class="absolute inset-0 flex items-center justify-center bg-black/35 text-white text-lg">▶</span>`
+                      : `<img src="${escapeHtml(sUrl)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition">`}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        ` : '';
+
         return `
           <div class="relative bg-white/95 rounded-3xl p-6 border-2 border-pink-100 shadow-soft">
             <div class="absolute -left-[38px] top-6 w-6 h-6 rounded-full bg-pastel-pinkDeep border-4 border-white"></div>
-            <div class="flex justify-between items-start gap-2">
-              <div class="space-y-1"><div class="flex gap-2">${bdg} ${alb?`<span class="text-xs bg-pink-100 px-2 rounded">${alb.icon} ${alb.title}</span>`:''}</div><h3 class="font-hand text-2xl font-bold">${escapeHtml(e.title)}</h3>${e.location?`<p class="text-xs">📍 ${escapeHtml(e.location)}</p>`:''}</div>
-              ${canModifyItem(e.created_by) ? `<div class="flex gap-2"><button onclick="openEventModal('${e.id}')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded transition font-bold">Sửa</button><button onclick="confirmDeleteEvent('${e.id}')" class="text-xs text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded transition font-bold">Xóa</button></div>` : ''}
+            <div class="flex flex-wrap justify-between items-start gap-2">
+              <div class="space-y-1.5">
+                <div class="flex flex-wrap items-center gap-2">
+                  ${bdg}
+                  ${alb ? `<button type="button" onclick="openAlbumDetail('${escapeHtml(alb.slug)}')" class="text-xs bg-pink-100 hover:bg-pink-200 text-pastel-ink font-bold px-2.5 py-0.5 rounded-full transition">${escapeHtml(alb.icon)} ${escapeHtml(alb.title)}</button>` : ''}
+                </div>
+                <h3 class="font-hand text-2xl font-bold text-pastel-ink">${escapeHtml(e.title)}</h3>
+                ${e.location ? `<p class="text-xs font-semibold text-pastel-muted">📍 ${escapeHtml(e.location)}</p>` : ''}
+              </div>
+              ${canModifyItem(e.created_by) ? `<div class="flex gap-2"><button onclick="openEventModal('${e.id}')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-xl transition font-bold">✏️ Sửa</button><button onclick="confirmDeleteEvent('${e.id}')" class="text-xs text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-xl transition font-bold">🗑️ Xóa</button></div>` : ''}
             </div>
-            ${e.description ? `<p class="text-sm mt-3">${escapeHtml(e.description)}</p>` : ''}
-            ${pts.length ? `<div class="mt-4 pt-3 flex gap-2 overflow-x-auto">${pts.slice(0,5).map(p=>`<img src="${p.public_url}" onclick="openLightboxById('${p.id}')" class="w-12 h-12 rounded object-cover cursor-pointer hover:opacity-80 transition">`).join('')}</div>` : ''}
+            ${e.description ? `<p class="text-sm mt-3 text-pastel-ink leading-relaxed">${escapeHtml(e.description)}</p>` : ''}
+            ${mediaStripHtml}
           </div>`;
       }).join('') + '</div>';
     }
@@ -4239,7 +4343,6 @@
       grid.innerHTML = f.slice(0, galleryVisibleLimit).map((p, i) => buildPhotoPolaroidHtml(p, i)).join("");
       if(f.length > galleryVisibleLimit) wrap.classList.remove("hidden"); else wrap.classList.add("hidden");
     }
-
     function renderMembersSection() {
       const q = (document.getElementById("memberSearchInput")?.value||"").trim().toLowerCase();
       const f = membersData.filter(m => !q || (m.full_name||'').toLowerCase().includes(q) || (m.nickname||'').toLowerCase().includes(q));
@@ -4939,14 +5042,15 @@ let currentTvChannelIndex = 0;
           roleBadge.classList.add("hidden");
         }
 
-        if (record.photo_url && record.photo_url.trim()) {
+       if (record.photo_url && record.photo_url.trim()) {
           photoBox.innerHTML = `
             <img src="${escapeHtml(record.photo_url)}"
                  alt="${escapeHtml(displayName)}"
                  class="w-full h-full object-cover cursor-pointer transition hover:scale-105"
-                 onclick="window.open('${escapeHtml(record.photo_url)}', '_blank')"
+                 onclick="openDirectPhotoLightbox('${escapeHtml(record.photo_url)}', '${escapeHtml(displayName)}', '${escapeHtml(getDeskLabel(deskId))}', event)"
                  title="Bấm để xem ảnh kích thước gốc">
           `;
+        }
         } else {
           photoBox.innerHTML = `
             <div class="flex flex-col items-center justify-center p-4 text-center">
@@ -5893,23 +5997,66 @@ async function refreshAdminVisitLogs() {
       } catch(e){}
     }
 
-    // Lightbox & BỌC THÉP NÚT BẤM CHỐNG KẸT
-    function openLightboxById(id) { 
-      const p = photosData.find(x=>x.id===id); if(!p) return; 
+// Lightbox & BỌC THÉP NÚT BẤM CHỐNG KẸT
+    function openDirectPhotoLightbox(url, titleText, badgeText, event) {
+      if (event) event.stopPropagation();
+      if (!url) return;
+      currentLightboxPhoto = null;
+
+      const imgEl = document.getElementById("lightboxImg");
+      const vidEl = document.getElementById("lightboxVid");
+      if (vidEl) { vidEl.classList.add("hidden"); vidEl.pause(); vidEl.src = ""; }
+      if (imgEl) { imgEl.classList.remove("hidden"); imgEl.src = url; }
+
+      document.getElementById("lightboxAlbumBadge").textContent = badgeText || "Hồ sơ 11T2";
+      document.getElementById("lightboxCaption").textContent = titleText || "Ảnh thành viên";
+      document.getElementById("lightboxUploader").textContent = "Lớp 11T2 (2025–2028)";
+      document.getElementById("lightboxDate").textContent = "";
+
+      document.getElementById("lightboxSetCoverBtn")?.classList.add("hidden");
+      document.getElementById("lightboxDeleteBtn")?.classList.add("hidden");
+
+      const dlBtn = document.getElementById("lightboxDownloadBtn");
+      if (dlBtn) {
+        dlBtn.onclick = () => downloadMediaUrlToDevice(url, `${slugifyVietnamese(titleText || 'anh-11t2')}.jpg`);
+      }
+
+      document.getElementById("lightboxModal")?.classList.remove("hidden");
+    }
+
+    async function downloadMediaUrlToDevice(url, fallbackFilename) {
+      if (!url) return;
+      try {
+        showToast("⏳ Đang chuẩn bị tải file về máy...", "info");
+        const res = await fetch(url);
+        const blob = await res.blob();
+        const ext = (url.split("?")[0].split(".").pop() || "jpg").toLowerCase();
+        const fileName = fallbackFilename || `ThanhXuan11T2_${Date.now()}.${ext}`;
+        triggerBrowserDownload(blob, fileName);
+        showToast("✅ Đã tải về máy thành công!", "success");
+      } catch (e) {
+        window.open(url, "_blank");
+      }
+    }
+
+    function openLightboxById(id, event) { 
+      if (event) event.stopPropagation();
+      const p = photosData.find(x => String(x.id) === String(id)); 
+      if (!p) return; 
       currentLightboxPhoto = p; 
 
-      const safeUrl = p.public_url || "";
+      const safeUrl = String(p.public_url || "");
       const isVideo = safeUrl.match(/\.(mp4|webm|mov|ogg)$/i) || safeUrl.includes("video");
 
       const imgEl = document.getElementById("lightboxImg");
       const vidEl = document.getElementById("lightboxVid");
 
-      if(isVideo) {
-        if(imgEl) { imgEl.classList.add("hidden"); imgEl.src = ""; }
-        if(vidEl) { vidEl.classList.remove("hidden"); vidEl.src = safeUrl; }
+      if (isVideo) {
+        if (imgEl) { imgEl.classList.add("hidden"); imgEl.src = ""; }
+        if (vidEl) { vidEl.classList.remove("hidden"); vidEl.src = safeUrl; }
       } else {
-        if(vidEl) { vidEl.classList.add("hidden"); vidEl.pause(); vidEl.src = ""; }
-        if(imgEl) { imgEl.classList.remove("hidden"); imgEl.src = safeUrl; }
+        if (vidEl) { vidEl.classList.add("hidden"); vidEl.pause(); vidEl.src = ""; }
+        if (imgEl) { imgEl.classList.remove("hidden"); imgEl.src = safeUrl; }
       }
 
       const alb = albumsData.find(a => a.slug === p.album_slug);
@@ -5917,7 +6064,14 @@ async function refreshAdminVisitLogs() {
       document.getElementById("lightboxCaption").textContent = p.caption || "Kỷ niệm thanh xuân"; 
       document.getElementById("lightboxUploader").textContent = `Người đăng: ${p.uploader_name || "Ẩn danh"}`;
       document.getElementById("lightboxDate").textContent = `Ngày đăng: ${formatDateVN(p.created_at)}`;
-      document.getElementById("lightboxDownloadBtn").href = safeUrl; 
+
+      const dlBtn = document.getElementById("lightboxDownloadBtn");
+      if (dlBtn) {
+        dlBtn.onclick = () => {
+          const ext = (safeUrl.split("?")[0].split(".").pop() || (isVideo ? "mp4" : "jpg")).toLowerCase();
+          downloadMediaUrlToDevice(safeUrl, `11T2_${slugifyVietnamese(p.caption || 'kyniem')}.${ext}`);
+        };
+      }
 
       // 1. NÚT ĐẶT LÀM BÌA
       const coverBtn = document.getElementById("lightboxSetCoverBtn");
@@ -5952,7 +6106,7 @@ async function refreshAdminVisitLogs() {
           const { error } = await supabaseClient.from("photos").delete().eq("id", p.id);
           if (error) throw error;
 
-          photosData = photosData.filter(photo => photo.id !== p.id);
+          photosData = photosData.filter(photo => String(photo.id) !== String(p.id));
           closeLightbox();
           renderAllSections();
           showToast("Đã xóa khoảnh khắc này khỏi hệ thống!", "success");
@@ -5964,15 +6118,26 @@ async function refreshAdminVisitLogs() {
         }
       };
 
-      document.getElementById("lightboxModal").classList.remove("hidden"); 
+      document.getElementById("lightboxModal")?.classList.remove("hidden"); 
     }
 
     function closeLightbox() { 
-      document.getElementById("lightboxModal").classList.add("hidden"); 
+      document.getElementById("lightboxModal")?.classList.add("hidden"); 
       const vidEl = document.getElementById("lightboxVid");
-      if(vidEl) vidEl.pause();
+      if (vidEl) {
+        vidEl.pause();
+        vidEl.src = "";
+      }
     }
 
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        const lb = document.getElementById("lightboxModal");
+        if (lb && !lb.classList.contains("hidden")) {
+          closeLightbox();
+        }
+      }
+    });
     // Utilities
     function showToast(message, type = "info") {
       const container = document.getElementById("toastContainer");
